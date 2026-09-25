@@ -1302,7 +1302,8 @@ align-items: center;
 justify-content: center;
 backdrop-filter: blur(10px);
 -webkit-backdrop-filter: blur(10px);
-padding: 1.5rem;
+padding: 1rem;
+overflow-y: auto; /* Izinkan scroll jika konten terlalu tinggi */
 }
 
 #alarm-overlay.active {
@@ -1329,6 +1330,9 @@ flex-direction: column;
 align-items: center;
 gap: 1.25rem;
 animation: modal-shake 0.5s ease;
+margin: auto; /* Memastikan tetap di tengah dan bisa di-scroll /
+max-height: 95vh; / Batasi tinggi agar muat layar HP /
+overflow-y: auto; / Scroll di dalam modal jika teks panjang */
 }
 
 @keyframes modal-shake {
@@ -1584,7 +1588,26 @@ display: none;
 }
 
 .footer {
-padding-bottom: 5rem;
+padding-bottom: 5rem; /* Ruang aman untuk bottom nav */
+}
+
+/* Perbaikan khusus untuk Alarm Modal di HP agar tombol terlihat */
+.alarm-modal-box {
+padding: 1.5rem;
+max-height: 90vh;
+overflow-y: auto;
+border-width: 2px;
+border-radius: 12px;
+gap: 1rem;
+}
+.alarm-icon-siren {
+font-size: 3rem;
+}
+.alarm-title {
+font-size: 1.3rem;
+}
+.alarm-msg {
+font-size: 1rem;
 }
 }
 
@@ -1598,17 +1621,17 @@ font-size: 2rem;
 .btn-pwa-header {
 display: none;
 }
-.alarm-modal-box {
-padding: 1.5rem;
-}
 .alarm-title {
-font-size: 1.5rem;
+font-size: 1.3rem;
 }
 .alarm-action-buttons {
 flex-direction: column;
+gap: 0.75rem;
 }
 .btn-alarm-stop, .btn-alarm-sms-trigger {
 width: 100%;
+padding: 0.8rem;
+font-size: 1rem;
 }
 .sms-banner-card {
 flex-direction: column;
