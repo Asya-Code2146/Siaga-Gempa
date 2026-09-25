@@ -1303,7 +1303,7 @@ justify-content: center;
 backdrop-filter: blur(10px);
 -webkit-backdrop-filter: blur(10px);
 padding: 1rem;
-overflow-y: auto; /* Izinkan scroll jika konten terlalu tinggi */
+overflow-y: auto;
 }
 
 #alarm-overlay.active {
@@ -1330,9 +1330,9 @@ flex-direction: column;
 align-items: center;
 gap: 1.25rem;
 animation: modal-shake 0.5s ease;
-margin: auto; /* Memastikan tetap di tengah dan bisa di-scroll /
-max-height: 95vh; / Batasi tinggi agar muat layar HP /
-overflow-y: auto; / Scroll di dalam modal jika teks panjang */
+margin: auto;
+max-height: 95vh;
+overflow-y: auto;
 }
 
 @keyframes modal-shake {
@@ -1519,6 +1519,8 @@ display: none;
 }
 .header-actions {
 gap: 0.4rem;
+flex-wrap: wrap;
+justify-content: flex-end;
 }
 .btn-icon {
 width: 36px;
@@ -1588,10 +1590,9 @@ display: none;
 }
 
 .footer {
-padding-bottom: 5rem; /* Ruang aman untuk bottom nav */
+padding-bottom: 5rem;
 }
 
-/* Perbaikan khusus untuk Alarm Modal di HP agar tombol terlihat */
 .alarm-modal-box {
 padding: 1.5rem;
 max-height: 90vh;
@@ -1619,7 +1620,8 @@ font-size: 1.5rem;
 font-size: 2rem;
 }
 .btn-pwa-header {
-display: none;
+padding: 0.35rem 0.5rem;
+font-size: 0.7rem;
 }
 .alarm-title {
 font-size: 1.3rem;
