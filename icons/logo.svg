@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0f1d"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#1f2937"/>
+    </linearGradient>
+    <linearGradient id="pulseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="50%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Background Circle with Cyber Glow -->
+  <rect width="512" height="512" rx="110" fill="url(#bgGrad)"/>
+  <rect width="504" height="504" x="4" y="4" rx="106" fill="none" stroke="#ef4444" stroke-width="6" stroke-opacity="0.4"/>
+  
+  <!-- Seismic Concentric Pulse Rings -->
+  <circle cx="256" cy="270" r="180" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-opacity="0.2" stroke-dasharray="8 6"/>
+  <circle cx="256" cy="270" r="140" fill="none" stroke="#f97316" stroke-width="3" stroke-opacity="0.35"/>
+  <circle cx="256" cy="270" r="95" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-opacity="0.5"/>
+  
+  <!-- Seismograph Wave Line -->
+  <path d="M 60 270 L 170 270 L 195 210 L 220 330 L 256 160 L 290 380 L 320 230 L 345 300 L 370 270 L 452 270" 
+        fill="none" stroke="url(#pulseGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+        
+  <!-- Center Epicenter Beacon -->
+  <circle cx="256" cy="160" r="16" fill="#ffffff" filter="url(#glow)"/>
+  <circle cx="256" cy="160" r="26" fill="none" stroke="#ef4444" stroke-width="4"/>
+  
+  <!-- Alert Shield Flame Icon on Top -->
+  <path d="M 256 80 Q 285 120 285 145 A 29 29 0 0 1 227 145 Q 227 120 256 80 Z" fill="#ef4444" filter="url(#glow)"/>
+  
+  <!-- Text Label -->
+  <text x="256" y="455" font-family="'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="900" fill="#f8fafc" text-anchor="middle" letter-spacing="4">SIAGAGEMPA</text>
+  <text x="256" y="485" font-family="'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="3">EMERGENCY SYSTEM</text>
+</svg>
