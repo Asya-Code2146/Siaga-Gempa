@@ -1484,7 +1484,8 @@ body {
 @media (max-width: 860px) {
   .app-container {
     grid-template-columns: 1fr;
-    padding: 1rem 1rem 5rem 1rem; 
+    padding: 1rem 1rem 1rem 1rem;
+    gap: 1rem;
   }
   .app-sidebar {
     display: none; 
@@ -1510,10 +1511,61 @@ body {
   .header-status-pills {
     display: none; 
   }
+  .header {
+    padding: 0.5rem 0.75rem;
+  }
+  .header-actions {
+    gap: 0.4rem;
+  }
+  .btn-sos-header, .btn-pwa-header {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  .btn-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
   .brand-name {
     font-size: 1.15rem;
   }
+  .brand-tag {
+    font-size: 0.6rem;
+  }
   #map {
     height: 320px;
+  }
+  .footer {
+    padding-bottom: 5rem; /* Memberi ruang agar tidak tertutup bottom nav */
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  .hero-mag-highlight {
+    font-size: 2.4rem;
+  }
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .alarm-modal-box {
+    padding: 1.5rem;
+  }
+  .alarm-title {
+    font-size: 1.5rem;
+  }
+  .btn-sos-huge {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+  .sms-banner-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .earthquake-list-grid {
+    grid-template-columns: 1fr;
   }
 }
