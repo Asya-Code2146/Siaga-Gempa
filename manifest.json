@@ -1,0 +1,49 @@
+{
+  "name": "Siaga Gempa — Kesiapsiagaan Bencana Wilayah Aceh",
+  "short_name": "Siaga Gempa",
+  "description": "Edukasi kesiapsiagaan bencana gempa bumi dan tsunami untuk wilayah Aceh dengan sistem peringatan dini, panduan tiga fase, dan peta jalur evakuasi.",
+  "start_url": "index.html",
+  "id": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#10242e",
+  "theme_color": "#10242e",
+  "orientation": "any",
+  "categories": ["weather", "utilities", "safety"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Gempa Terkini",
+      "url": "index.html#data",
+      "description": "Lihat data gempa bumi terbaru"
+    },
+    {
+      "name": "Kirim SOS SMS",
+      "url": "index.html#emergency",
+      "description": "Kirim pesan darurat ke kontak keluarga"
+    },
+    {
+      "name": "Panduan Evakuasi",
+      "url": "index.html#guide",
+      "description": "Prosedur keselamatan saat gempa"
+    }
+  ]
+}

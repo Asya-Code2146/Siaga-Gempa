@@ -1,0 +1,6 @@
+[2026-09-25 01:55:16] KE: 081234567890 | PESAN: Tes Darurat SiagaGempa | Posisi: https://maps.google.com/?q=-6.20,106.81
+[2026-09-25 01:55:48] KE: 081234567890 | PESAN: Tes Darurat SiagaGempa | Posisi: https://maps.google.com/?q=-6.20,106.81
+[2026-09-25 03:45:57] KE: 115 | PESAN: [DARURAT GEMPA] Saya memerlukan pertolongan segera! Waktu: 10.45.57. Terdeteksi gempa M 3.7 (Pusat gempa berada di darat 17 km Timur Jantho Aceh Besar). Lokasi GPS belum terdeteksi.
+[2026-09-25 03:45:57] KE: 081234567890 | PESAN: [DARURAT GEMPA] Saya memerlukan pertolongan segera! Waktu: 10.45.57. Terdeteksi gempa M 3.7 (Pusat gempa berada di darat 17 km Timur Jantho Aceh Besar). Lokasi GPS belum terdeteksi.
+[2026-09-25 03:46:19] KE: 115 | PESAN: [DARURAT GEMPA] Saya memerlukan pertolongan segera! Waktu: 10.46.19. Terdeteksi gempa M 3.7 (Pusat gempa berada di darat 17 km Timur Jantho Aceh Besar). Lokasi GPS belum terdeteksi.
+[2026-09-25 03:46:20] KE: 081234567890 | PESAN: [DARURAT GEMPA] Saya memerlukan pertolongan segera! Waktu: 10.46.19. Terdeteksi gempa M 3.7 (Pusat gempa berada di darat 17 km Timur Jantho Aceh Besar). Lokasi GPS belum terdeteksi.
