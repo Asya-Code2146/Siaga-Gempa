@@ -3,25 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <meta name="theme-color" content="#060911">
+  <meta name="theme-color" content="#050b13">
   <meta name="description" content="SiagaGempa - Platform PWA siaga darurat bencana gempa bumi real-time di Indonesia dengan peta interaktif episentrum, peringatan dini otomatis, dan SOS SMS darurat.">
   <title>SiagaGempa - Platform Siaga Darurat Bencana Gempa Bumi</title>
-
 
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/svg+xml" href="icons/logo.svg">
   <link rel="apple-touch-icon" href="icons/icon2.png">
 
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-
 
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  
   <div id="alarm-overlay" role="dialog" aria-modal="true" aria-labelledby="alarm-title-text">
     <div class="alarm-modal-box">
       <div class="alarm-icon-siren">🚨</div>
@@ -30,10 +26,10 @@
         Terdeteksi gempa bumi berskala besar atau berpotensi tsunami! Segera lindungi kepala, jauhi bangunan rapuh, dan evakuasi ke tempat tinggi/lapang!
       </p>
 
-      <div style="background:rgba(255,255,255,0.06); padding:1rem; border-radius:12px; width:100%; border:1px solid rgba(255,255,255,0.1);">
-        <h2 id="alarm-mag-text" style="color:#facc15; font-size:1.8rem; font-weight:900;">Magnitudo: - SR</h2>
-        <p id="alarm-loc-text" style="color:#ffffff; font-size:1rem; margin-top:0.25rem;">Lokasi: -</p>
-        <p id="alarm-tsunami-text" style="color:#fca5a5; font-size:0.9rem; font-weight:700; margin-top:0.25rem;">Status: -</p>
+      <div class="alarm-info-box">
+        <h2 id="alarm-mag-text" class="alarm-mag-value">Magnitudo: - SR</h2>
+        <p id="alarm-loc-text" class="alarm-loc-value">Lokasi: -</p>
+        <p id="alarm-tsunami-text" class="alarm-tsunami-value">Status: -</p>
       </div>
 
       <div class="alarm-sms-status" id="alarm-sms-box">
@@ -51,54 +47,53 @@
     </div>
   </div>
 
- 
-  <div id="pwa-modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(6,9,17,0.88); backdrop-filter:blur(10px); z-index:99998; align-items:center; justify-content:center; padding:1.5rem;">
-    <div class="glass" style="max-width:520px; width:100%; padding:2rem; border-radius:20px; border:1px solid rgba(6,182,212,0.4); box-shadow:0 0 40px rgba(6,182,212,0.25); animation:modal-shake 0.3s ease;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
-        <div style="display:flex; align-items:center; gap:0.75rem;">
-          <img src="icons/icon-192.png" alt="Logo" style="width:38px; height:38px; border-radius:8px;">
+  <div id="pwa-modal-overlay" class="pwa-modal-overlay" style="display:none;">
+    <div class="glass pwa-modal-box">
+      <div class="pwa-modal-header">
+        <div class="pwa-modal-brand">
+          <img src="icons/icon-192.png" alt="Logo">
           <div>
-            <h2 style="font-size:1.25rem; font-weight:800; color:#fff;">Pasang Aplikasi SiagaGempa</h2>
-            <span style="font-size:0.75rem; color:#38bdf8; font-weight:700;">Progressive Web App (PWA)</span>
+            <h2 class="pwa-modal-title">Pasang Aplikasi SiagaGempa</h2>
+            <span class="pwa-modal-kicker">Progressive Web App (PWA)</span>
           </div>
         </div>
-        <button id="btn-close-pwa-modal" style="background:transparent; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer;">✕</button>
+        <button id="btn-close-pwa-modal" class="pwa-modal-close">✕</button>
       </div>
 
-      <p style="color:#cbd5e1; font-size:0.88rem; line-height:1.5; margin-bottom:1.25rem;">
+      <p class="pwa-modal-desc">
         SiagaGempa dapat dipasang langsung di layar utama smartphone atau laptop Anda untuk respon cepat bencana dan akses darurat saat jaringan offline.
       </p>
 
-      <div style="display:flex; flex-direction:column; gap:0.85rem; margin-bottom:1.5rem;">
-        <div style="background:rgba(0,0,0,0.35); padding:0.9rem; border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
-          <strong style="color:#38bdf8; display:block; font-size:0.9rem; margin-bottom:0.25rem;">📱 Pengguna Android (Chrome):</strong>
-          <span style="font-size:0.82rem; color:#94a3b8;">
+      <div class="pwa-steps-wrap">
+        <div class="pwa-step pwa-step-android">
+          <strong>📱 Pengguna Android (Chrome):</strong>
+          <span>
             Klik menu titik tiga (⋮) di pojok kanan atas Chrome &gt; pilih <strong>"Instal Aplikasi"</strong> atau <strong>"Tambahkan ke Layar Utama"</strong>.
           </span>
         </div>
 
-        <div style="background:rgba(0,0,0,0.35); padding:0.9rem; border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
-          <strong style="color:#a78bfa; display:block; font-size:0.9rem; margin-bottom:0.25rem;">🍏 Pengguna iPhone / iPad (Safari):</strong>
-          <span style="font-size:0.82rem; color:#94a3b8;">
+        <div class="pwa-step pwa-step-ios">
+          <strong>🍏 Pengguna iPhone / iPad (Safari):</strong>
+          <span>
             Klik tombol <strong>Bagikan / Share</strong> (ikon kotak dengan panah ke atas) &gt; pilih <strong>"Tambah ke Layar Utama" (Add to Home Screen)</strong>.
           </span>
         </div>
 
-        <div style="background:rgba(0,0,0,0.35); padding:0.9rem; border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
-          <strong style="color:#34d399; display:block; font-size:0.9rem; margin-bottom:0.25rem;">💻 Komputer / Laptop (Chrome &amp; Edge):</strong>
-          <span style="font-size:0.82rem; color:#94a3b8;">
+        <div class="pwa-step pwa-step-desktop">
+          <strong>💻 Komputer / Laptop (Chrome &amp; Edge):</strong>
+          <span>
             Klik ikon <strong>Instal</strong> (komputer kecil dengan panah ke bawah) di sebelah kanan address bar browser (di samping bintang bookmark).
           </span>
         </div>
       </div>
 
-      <button id="btn-trigger-native-prompt" style="width:100%; padding:0.85rem; border-radius:10px; background:linear-gradient(135deg, #0284c7, #06b6d4); color:#fff; border:none; font-weight:800; font-size:0.95rem; cursor:pointer;">
+      <button id="btn-trigger-native-prompt" class="pwa-modal-cta">
         ⚡ Jalankan Dialog Instalasi Otomatis
       </button>
     </div>
   </div>
 
-  <div id="offline-notice-bar" style="display:none; background:#b91c1c; color:#fff; text-align:center; padding:0.4rem 1rem; font-size:0.85rem; font-weight:700; z-index:1001;">
+  <div id="offline-notice-bar" class="offline-notice-bar" style="display:none;">
     ⚠️ MODE OFFLINE: Internet terputus. Fitur darurat PWA &amp; SMS Darurat tetap aktif tanpa jaringan.
   </div>
 
@@ -139,9 +134,9 @@
   </header>
 
   <div class="app-container">
-    
+
     <aside class="app-sidebar">
-      <nav class="glass" style="padding: 0.75rem;">
+      <nav class="glass sidebar-nav">
         <ul class="nav-menu">
           <li class="nav-item">
             <button class="nav-link active" data-target-tab="dashboard">
@@ -179,40 +174,39 @@
       <div class="glass sidebar-widget">
         <div class="widget-title">
           <span>Panduan Klasifikasi</span>
-          <span style="font-size: 0.9rem;">⚠️</span>
+          <span>⚠️</span>
         </div>
         <ul class="classification-guide-list">
           <li class="guide-pill">
             <span class="guide-badge lvl1">Lvl 1</span>
             <div>
               <strong>Gempa Lemah</strong>
-              <div style="font-size:0.75rem; color:var(--text-muted);">&lt; 5.0 SR • Relatif Aman</div>
+              <div class="guide-sub">&lt; 5.0 SR • Relatif Aman</div>
             </div>
           </li>
           <li class="guide-pill">
             <span class="guide-badge lvl2">Lvl 2</span>
             <div>
               <strong>Gempa Sedang</strong>
-              <div style="font-size:0.75rem; color:var(--text-muted);">5.0 - 5.9 SR • Waspada</div>
+              <div class="guide-sub">5.0 - 5.9 SR • Waspada</div>
             </div>
           </li>
           <li class="guide-pill">
             <span class="guide-badge lvl3">Lvl 3</span>
             <div>
               <strong>Sangat Bahaya</strong>
-              <div style="font-size:0.75rem; color:var(--text-muted);">&ge; 6.0 SR • Potensi Tsunami</div>
+              <div class="guide-sub">&ge; 6.0 SR • Potensi Tsunami</div>
             </div>
           </li>
         </ul>
       </div>
 
-      <!-- Quick Location & GPS Widget -->
       <div class="glass sidebar-widget">
         <div class="widget-title">
           <span>Sensor Lokasi GPS</span>
           <span>📍</span>
         </div>
-        <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.75rem;">
+        <div class="widget-desc">
           Aktifkan GPS untuk menghitung jarak nyata Anda ke pusat episentrum gempa.
         </div>
         <button id="btn-activate-gps" class="btn-loc-action btn-loc-detect">
@@ -224,7 +218,7 @@
     <main class="main-content">
 
       <section id="tab-dashboard" class="view-section active">
-        
+
         <div class="hero-earthquake-card">
           <div class="hero-main-info">
             <div class="hero-subtitle">Official Emergency Guide &amp; Real-time Monitoring</div>
@@ -232,7 +226,7 @@
               <span class="hero-title">Magnitudo Terkini:</span>
               <span class="hero-mag-highlight" id="hero-val-mag">6.2</span>
             </div>
-            
+
             <div class="hero-details-row">
               <div class="hero-detail-item">
                 <span>📍 Lokasi:</span>
@@ -264,7 +258,6 @@
         </div>
 
         <div class="warning-levels-grid">
-          <!-- Level 1 Card -->
           <div class="level-card lvl-1" onclick="window.earthquakeService.simulateEarthquake(1)">
             <div class="lvl-card-header">
               <span class="lvl-tag">Level Peringatan 1</span>
@@ -300,16 +293,16 @@
         </div>
 
         <div class="dashboard-main-grid">
-          
+
           <div class="glass map-container-card">
             <div class="map-card-header">
               <div class="map-title">
                 <span>🗺️ Peta Episentrum &amp; Persebaran Seismik</span>
               </div>
               <div class="map-legend">
-                <span class="legend-item"><span style="color:#ef4444;">●</span> Episentrum</span>
-                <span class="legend-item"><span style="color:#06b6d4;">●</span> Lokasi Anda</span>
-                <span class="legend-item"><span style="color:#f59e0b;">- -</span> Radius Gempa</span>
+                <span class="legend-item"><span class="legend-dot c-red">●</span> Episentrum</span>
+                <span class="legend-item"><span class="legend-dot c-cyan">●</span> Lokasi Anda</span>
+                <span class="legend-item"><span class="legend-dot c-amber">- -</span> Radius Gempa</span>
               </div>
             </div>
 
@@ -329,7 +322,7 @@
 
             <div class="loc-metric-box">
               <div class="loc-metric-label">Koordinat GPS Anda</div>
-              <div style="font-size:0.95rem; font-weight:700; color:#fff;" id="user-coords-text">
+              <div class="loc-coords-value" id="user-coords-text">
                 Belum diaktifkan
               </div>
               <div class="loc-metric-sub">Kalkulasi presisi Haversine spherical math</div>
@@ -339,11 +332,11 @@
               📤 Bagikan Lokasi Saya
             </button>
 
-            <button class="btn-loc-action btn-loc-detect btn-trigger-sos-sms" style="border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;">
+            <button class="btn-loc-action btn-loc-detect btn-trigger-sos-sms">
               🆘 Kirim Pesan Darurat (SMS)
             </button>
 
-            <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.4;">
+            <div class="field-note">
               *Data GPS hanya diproses secara lokal di browser Anda untuk keperluan keamanan dan kalkulasi jarak darurat.
             </div>
           </div>
@@ -355,8 +348,8 @@
       <section id="tab-data" class="view-section">
         <div class="glass data-header-bar">
           <div>
-            <h2 style="font-size:1.4rem; font-weight:800; color:#fff;">Data Gempa Terkini &amp; Riwayat</h2>
-            <p style="font-size:0.85rem; color:var(--text-muted);">
+            <h2 class="data-header-title">Data Gempa Terkini &amp; Riwayat</h2>
+            <p class="data-header-desc">
               Data real-time bersumber resmi dari BMKG (Badan Meteorologi, Klimatologi, dan Geofisika Indonesia).
             </p>
           </div>
@@ -368,24 +361,24 @@
               <button class="filter-btn" data-filter="dirasakan">Dirasakan</button>
               <button class="filter-btn" data-filter="tsunami">Tsunami</button>
             </div>
-            <div style="font-size:0.8rem; color:var(--cyan-accent); font-weight:700;">
+            <div class="auto-refresh-label">
               Auto-refresh: <span id="auto-refresh-timer">30s</span>
             </div>
           </div>
         </div>
 
         <div class="earthquake-list-grid" id="earthquake-history-list">
-          <div style="grid-column: 1/-1; text-align:center; padding: 2rem; color:#94a3b8;">
+          <div class="eq-loading-msg">
             Sedang mengambil data gempa terkini dari BMKG...
           </div>
         </div>
       </section>
 
       <section id="tab-guide" class="view-section">
-        
+
         <div class="evacuation-hero">
           <h2>🛡️ Protokol Emas Keselamatan: Drop, Cover, Hold On</h2>
-          <p style="color:#cbd5e1; max-width:800px; font-size:0.95rem;">
+          <p class="evac-hero-desc">
             Saat getaran gempa bumi terjadi secara mendadak, jangan panik dan jangan langsung berlari keluar gedung yang berisiko tertimpa reruntuhan. Terapkan 3 langkah penyelamatan utama berikut:
           </p>
         </div>
@@ -417,9 +410,9 @@
         </div>
 
         <div class="guide-two-col">
-          
-          <div class="glass" style="padding:1.5rem;">
-            <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:1rem; color:#fff;">
+
+          <div class="glass card-panel">
+            <h3 class="panel-title">
               🚨 Nomor Telepon Darurat Nasional Indonesia
             </h3>
             <ul class="speed-dial-list">
@@ -461,16 +454,16 @@
             </ul>
           </div>
 
-          <div class="glass" style="padding:1.5rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-              <h3 style="font-size:1.15rem; font-weight:800; color:#fff;">
+          <div class="glass card-panel">
+            <div class="system-section-header">
+              <h3 class="panel-title" style="margin-bottom:0;">
                 🎒 Checklist Tas Siaga Bencana
               </h3>
-              <span id="gobag-progress-text" style="font-size:0.8rem; font-weight:700; color:var(--cyan-accent);">
+              <span id="gobag-progress-text" class="progress-badge">
                 0 / 6 Siap
               </span>
             </div>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+            <p class="field-note" style="margin-bottom:1rem;">
               Persiapkan tas darurat anti-air yang mudah dijangkau saat harus evakuasi cepat. Ceklis barang yang sudah Anda siapkan:
             </p>
 
@@ -519,11 +512,11 @@
       </section>
 
       <section id="tab-emergency" class="view-section">
-        
+
         <div class="sms-banner-card">
           <div class="sms-banner-text">
             <h3>🚨 Tombol Cepat Pengiriman SMS Darurat</h3>
-            <p style="color:#f1f5f9; font-size:0.9rem; max-width:650px;">
+            <p class="banner-desc">
               Fitur ini membuka aplikasi SMS bawaan ponsel Anda secara instan dengan format pesan darurat &amp; koordinat Google Maps yang sudah otomatis terisi. Bekerja 100% tanpa internet ketika jaringan seluler data mati!
             </p>
           </div>
@@ -534,9 +527,9 @@
         </div>
 
         <div class="contacts-layout">
-          
-          <div class="glass" style="padding:1.5rem;">
-            <h3 style="font-size:1.15rem; font-weight:800; color:#fff; margin-bottom:1rem;">
+
+          <div class="glass card-panel">
+            <h3 class="panel-title">
               👤 Pengaturan Kontak &amp; Identitas SOS
             </h3>
 
@@ -545,8 +538,8 @@
               <input type="text" id="input-user-sos-name" class="input-cyber" placeholder="Contoh: Budi Santoso">
             </div>
 
-            <form id="form-add-contact" style="margin-top:1.5rem; border-top:1px solid var(--border-subtle); padding-top:1.25rem;">
-              <h4 style="font-size:0.95rem; font-weight:700; color:#cbd5e1; margin-bottom:0.75rem;">
+            <form id="form-add-contact" class="contact-form-divider">
+              <h4 class="panel-subheading">
                 + Tambah Nomor Kontak Darurat Baru
               </h4>
               <div class="form-group">
@@ -573,21 +566,21 @@
               </button>
             </form>
           </div>
-          <div class="glass" style="padding:1.5rem;">
-            <h3 style="font-size:1.15rem; font-weight:800; color:#fff; margin-bottom:1rem;">
+          <div class="glass card-panel">
+            <h3 class="panel-title">
               📋 Daftar Kontak Tersimpan
             </h3>
             <ul id="saved-contacts-container" class="saved-contacts-list">
-            
+
             </ul>
 
-            <h4 style="font-size:0.95rem; font-weight:700; color:#cbd5e1; margin-top:1.75rem; margin-bottom:0.4rem;">
+            <h4 class="panel-subheading" style="margin-top:1.75rem;">
               ✉️ Pratinjau Teks Pesan SMS Otomatis:
             </h4>
             <div id="sms-preview-content" class="sms-preview-box">
               Memuat pratinjau pesan...
             </div>
-            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.4rem;">
+            <div class="field-note" style="margin-top:0.4rem;">
               *Tautan Google Maps akan otomatis terisi koordinat lintang/bujur GPS presisi tinggi Anda.
             </div>
           </div>
@@ -597,9 +590,9 @@
       </section>
 
       <section id="tab-system" class="view-section">
-        
+
         <div class="system-grid">
-        
+
           <div class="glass metric-card">
             <div class="metric-header">
               <span>Status Koneksi Internet</span>
@@ -608,7 +601,7 @@
             <div class="metric-body">
               <div class="metric-value" id="sys-conn-metric">Online</div>
             </div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">Event listener online/offline browser</div>
+            <div class="field-note">Event listener online/offline browser</div>
           </div>
 
           <div class="glass metric-card">
@@ -619,7 +612,7 @@
             <div class="metric-body">
               <div class="metric-value" id="sys-latency-metric">Mengukur...</div>
             </div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">Kecepatan transmisi ke gateway BMKG</div>
+            <div class="field-note">Kecepatan transmisi ke gateway BMKG</div>
           </div>
 
           <div class="glass metric-card">
@@ -628,34 +621,34 @@
               <span>📦</span>
             </div>
             <div class="metric-body">
-              <div class="metric-value" style="font-size:1.4rem; color:#10b981;">Siaga Gempa v2</div>
+              <div class="metric-value metric-value-accent">Siaga Gempa v2</div>
             </div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">Asset cached &amp; background push ready</div>
+            <div class="field-note">Asset cached &amp; background push ready</div>
           </div>
         </div>
 
-        <div class="glass" style="padding:1.5rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-            <h3 style="font-size:1.15rem; font-weight:800; color:#fff;">
+        <div class="glass card-panel">
+          <div class="system-section-header">
+            <h3 class="panel-title" style="margin-bottom:0;">
               🛡️ Audit Izin &amp; Sensor Perangkat
             </h3>
-            <button id="btn-request-notif" class="btn-card-map" style="font-size:0.85rem; padding:0.45rem 0.95rem;">
+            <button id="btn-request-notif" class="btn-outline btn-small">
               🔔 Minta Izin Notifikasi Push
             </button>
           </div>
-          <div id="permissions-matrix-list" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.75rem;">
-         
+          <div id="permissions-matrix-list" class="permissions-grid">
+
           </div>
         </div>
 
         <div class="simulator-panel">
-          <div style="display:flex; align-items:center; gap:0.6rem;">
+          <div class="simulator-heading">
             <span style="font-size:1.4rem;">🧪</span>
-            <h3 style="font-size:1.2rem; font-weight:800; color:#c4b5fd;">
+            <h3 class="simulator-title">
               Pusat Simulasi Peringatan Dini Gempa (Test Bench)
             </h3>
           </div>
-          <p style="font-size:0.9rem; color:#cbd5e1; margin-top:0.4rem;">
+          <p class="simulator-desc">
             Gunakan tombol pengujian berikut untuk menguji respon sistem (notifikasi push, sirine audio Web Audio API, getar perangkat, dan overlay alarm darurat):
           </p>
 
@@ -705,16 +698,16 @@
       <span class="mob-icon">⚙️</span>
       <span>Status</span>
     </button>
-  </nav> 
+  </nav>
 
   <footer class="footer">
     <p>
-      &copy; 2026 <strong>SiagaGempa</strong>.  
+      &copy; 2026 <strong>SiagaGempa</strong>.
       <a href="https://data.bmkg.go.id" target="_blank" rel="noopener noreferrer">BMKG Indonesia</a>.
     </p>
   </footer>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <script src="js/notifications.js"></script>
