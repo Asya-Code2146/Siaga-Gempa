@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const CACHE_NAME = 'siagagempa-pwa-v3.0';
+=======
+const CACHE_NAME = 'siagagempa-pwa-v2.2';
+>>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
 
 const STATIC_ASSETS = [
   './',
@@ -7,13 +11,23 @@ const STATIC_ASSETS = [
   'css/style.css',
   'js/notifications.js',
   'js/earthquake.js',
+<<<<<<< HEAD
+=======
+  'js/map.js',
+>>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
   'js/emergency.js',
   'js/system.js',
   'js/app.js',
   'icons/logo.svg',
   'icons/icon-192.png',
   'icons/icon-512.png',
+<<<<<<< HEAD
   'icons/icon2.png'
+=======
+  'icons/icon2.png',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+>>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
 ];
 
 self.addEventListener('install', (event) => {
