@@ -1,24 +1,13 @@
 {
-<<<<<<< HEAD
   "name": "Siaga Gempa — Kesiapsiagaan Bencana Wilayah Aceh",
   "short_name": "Siaga Gempa",
   "description": "Edukasi kesiapsiagaan bencana gempa bumi dan tsunami untuk wilayah Aceh dengan sistem peringatan dini, panduan tiga fase, dan peta jalur evakuasi.",
-=======
-  "name": "SiagaGempa - PWA Siaga Darurat Bencana",
-  "short_name": "SiagaGempa",
-  "description": "Platform siaga darurat bencana gempa bumi real-time di Indonesia dengan peta interaktif episentrum, peringatan dini otomatis, dan SOS SMS darurat.",
->>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
   "start_url": "index.html",
   "id": "index.html",
   "scope": "./",
   "display": "standalone",
-<<<<<<< HEAD
-  "background_color": "#10242e",
-  "theme_color": "#10242e",
-=======
-  "background_color": "#060911",
-  "theme_color": "#060911",
->>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
+  "background_color": "#0e2027",
+  "theme_color": "#0e2027",
   "orientation": "any",
   "categories": ["weather", "utilities", "safety"],
   "icons": [
@@ -42,19 +31,14 @@
   ],
   "shortcuts": [
     {
-      "name": "Gempa Terkini",
-      "url": "index.html#data",
-      "description": "Lihat data gempa bumi terbaru"
+      "name": "Siaga Gempa",
+      "url": "index.html",
+      "description": "Buka Aplikasi Siaga Gempa"
     },
     {
-      "name": "Kirim SOS SMS",
-      "url": "index.html#emergency",
-      "description": "Kirim pesan darurat ke kontak keluarga"
-    },
-    {
-      "name": "Panduan Evakuasi",
-      "url": "index.html#guide",
-      "description": "Prosedur keselamatan saat gempa"
+      "name": "Jalur Evakuasi",
+      "url": "index.html#evakuasi",
+      "description": "Peta jalur evakuasi dan titik kumpul utama"
     }
   ]
 }

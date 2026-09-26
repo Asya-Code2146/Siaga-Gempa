@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const CACHE_NAME = 'siagagempa-pwa-v3.0';
-=======
-const CACHE_NAME = 'siagagempa-pwa-v2.2';
->>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
+const CACHE_NAME = 'siagagempa-pwa-v3.2';
 
 const STATIC_ASSETS = [
   './',
@@ -11,23 +7,13 @@ const STATIC_ASSETS = [
   'css/style.css',
   'js/notifications.js',
   'js/earthquake.js',
-<<<<<<< HEAD
-=======
-  'js/map.js',
->>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
   'js/emergency.js',
   'js/system.js',
   'js/app.js',
   'icons/logo.svg',
   'icons/icon-192.png',
   'icons/icon-512.png',
-<<<<<<< HEAD
   'icons/icon2.png'
-=======
-  'icons/icon2.png',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
->>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
 ];
 
 self.addEventListener('install', (event) => {
@@ -61,8 +47,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-
-  if (url.pathname.includes('earthquake.php') || url.hostname.includes('bmkg.go.id')) {
+  if (url.hostname.includes('bmkg.go.id')) {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
@@ -72,10 +57,7 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => {
-       
-          return caches.match(event.request);
-        })
+        .catch(() => caches.match(event.request))
     );
     return;
   }
@@ -96,7 +78,6 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       });
     }).catch(() => {
-     
       if (event.request.headers.get('accept')?.includes('text/html')) {
         return caches.match('index.html');
       }
@@ -106,9 +87,8 @@ self.addEventListener('fetch', (event) => {
 
 self.addEventListener('push', (event) => {
   let payload = {
-    title: '⚠️ SiagaGempa - Peringatan Gempa!',
-    body: 'Terdeteksi aktivitas seismik di Indonesia. Buka aplikasi untuk info detail.',
-    url: 'index.html#dashboard'
+    title: '⚠️ Siaga Gempa - Peringatan Gempa!',
+    body: 'Terdeteksi aktivitas seismik di Indonesia. Buka aplikasi untuk info detail.'
   };
 
   if (event.data) {
@@ -119,34 +99,34 @@ self.addEventListener('push', (event) => {
     }
   }
 
-  const notificationOptions = {
+  const options = {
     body: payload.body,
     icon: 'icons/logo.svg',
     badge: 'icons/logo.svg',
-    vibrate: [400, 200, 400, 200, 800],
-    data: { url: payload.url || 'index.html#dashboard' }
+    vibrate: [500, 200, 500, 200, 1000],
+    data: { url: 'index.html' }
   };
 
   event.waitUntil(
-    self.registration.showNotification(payload.title, notificationOptions)
+    self.registration.showNotification(payload.title, options)
   );
 });
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const targetUrl = event.notification.data?.url || 'index.html#dashboard';
-
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if ('focus' in client) {
-          client.navigate(targetUrl);
-          return client.focus();
+      if (clientList.length > 0) {
+        let client = clientList[0];
+        for (let i = 0; i < clientList.length; i++) {
+          if (clientList[i].focused) {
+            client = clientList[i];
+            break;
+          }
         }
+        return client.focus();
       }
-      if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
-      }
+      return clients.openWindow('index.html');
     })
   );
 });

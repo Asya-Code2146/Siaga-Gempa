@@ -3,31 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<<<<<<< HEAD
-  <meta name="theme-color" content="#10242e">
+  <meta name="theme-color" content="#0e2027">
   <meta name="description" content="Siaga Gempa - Edukasi Kesiapsiagaan Bencana dan Sistem Peringatan Dini Gempa & Tsunami Wilayah Aceh. Pasang sebagai aplikasi langsung dari layar utama.">
   <title>Siaga Gempa — Kesiapsiagaan Bencana Wilayah Aceh</title>
-=======
-  <meta name="theme-color" content="#050b13">
-  <meta name="description" content="SiagaGempa - Platform PWA siaga darurat bencana gempa bumi real-time di Indonesia dengan peta interaktif episentrum, peringatan dini otomatis, dan SOS SMS darurat.">
-  <title>SiagaGempa - Platform Siaga Darurat Bencana Gempa Bumi</title>
->>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
 
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/svg+xml" href="icons/logo.svg">
   <link rel="apple-touch-icon" href="icons/icon2.png">
 
-<<<<<<< HEAD
-=======
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-
->>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<<<<<<< HEAD
   <!-- ========================================================
        FULL-SCREEN ALARM TAKEOVER (LEVEL 3 & TSUNAMI ACEH/SUMATRA)
        ======================================================== -->
@@ -54,38 +41,11 @@
         </a>
         <button id="btn-stop-alarm" class="btn-alarm-stop">
           🔕 Matikan Alarm (Saya Sudah Berlindung)
-=======
-  <div id="alarm-overlay" role="dialog" aria-modal="true" aria-labelledby="alarm-title-text">
-    <div class="alarm-modal-box">
-      <div class="alarm-icon-siren">🚨</div>
-      <h1 class="alarm-title" id="alarm-title-text">PERINGATAN DARURAT TINGKAT TINGGI</h1>
-      <p class="alarm-msg">
-        Terdeteksi gempa bumi berskala besar atau berpotensi tsunami! Segera lindungi kepala, jauhi bangunan rapuh, dan evakuasi ke tempat tinggi/lapang!
-      </p>
-
-      <div class="alarm-info-box">
-        <h2 id="alarm-mag-text" class="alarm-mag-value">Magnitudo: - SR</h2>
-        <p id="alarm-loc-text" class="alarm-loc-value">Lokasi: -</p>
-        <p id="alarm-tsunami-text" class="alarm-tsunami-value">Status: -</p>
-      </div>
-
-      <div class="alarm-sms-status" id="alarm-sms-box">
-        💡 Tombol di bawah akan langsung membuka SMS darurat dengan koordinat GPS Anda.
-      </div>
-
-      <div class="alarm-action-buttons">
-        <button id="btn-stop-alarm" class="btn-alarm-stop">
-          🔕 MATIKAN ALARM
-        </button>
-        <button class="btn-alarm-sms-trigger btn-trigger-sos-sms">
-          📱 KIRIM SOS SMS SEKARANG
->>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
         </button>
       </div>
     </div>
   </div>
 
-<<<<<<< HEAD
   <!-- ========================================================
        TOAST NOTIFICATION (GEMPA BIASA / LUAR SUMATRA-ACEH)
        ======================================================== -->
@@ -160,14 +120,17 @@
         </div>
       </div>
 
-      <!-- Sisi Kanan: Mockup Smartphone Interaktif -->
+      <!-- Sisi Kanan: Mockup Smartphone Interaktif dengan Animasi -->
       <div class="hero-mockup-wrapper">
-        <div class="phone-mockup-frame">
+        <div class="phone-mockup-frame" id="phone-mockup">
           <div class="mockup-inner-screen">
             
             <div class="mockup-top-bar">
               <span>9:41</span>
-              <span>Siaga Gempa</span>
+              <div>
+                <span class="mockup-status-dot-pulse"></span>
+                <span>Siaga Gempa</span>
+              </div>
             </div>
 
             <!-- Kartu Peringatan Dini -->
@@ -183,7 +146,7 @@
 
             <!-- Tiga Tombol Interaktif Fase -->
             <div class="mockup-three-actions">
-              <button class="mockup-action-box" data-fase="sebelum" onclick="window.appController?.selectMockupPhase('sebelum')">
+              <button class="mockup-action-box" id="btn-mockup-sebelum" data-fase="sebelum" onclick="window.appController?.selectMockupPhase('sebelum')">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                   <polyline points="9 22 9 12 15 12 15 22"/>
@@ -191,7 +154,7 @@
                 <span>Sebelum</span>
               </button>
 
-              <button class="mockup-action-box active" data-fase="saat" onclick="window.appController?.selectMockupPhase('saat')">
+              <button class="mockup-action-box active" id="btn-mockup-saat" data-fase="saat" onclick="window.appController?.selectMockupPhase('saat')">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
                   <line x1="12" y1="9" x2="12" y2="13"/>
@@ -200,7 +163,7 @@
                 <span>Saat</span>
               </button>
 
-              <button class="mockup-action-box" data-fase="sesudah" onclick="window.appController?.selectMockupPhase('sesudah')">
+              <button class="mockup-action-box" id="btn-mockup-sesudah" data-fase="sesudah" onclick="window.appController?.selectMockupPhase('sesudah')">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M2 12c2.5-4 5.5-4 8 0s5.5 4 8 0 5.5-4 8 0"/>
                 </svg>
@@ -209,7 +172,7 @@
             </div>
 
             <!-- Kartu Titik Kumpul Terdekat -->
-            <div class="mockup-card-evac" onclick="window.emergencyService?.openNearestEvacGoogleMaps()">
+            <div class="mockup-card-evac" onclick="window.emergencyService?.openNearestEvacGoogleMaps()" title="Klik untuk membuka rute di Google Maps">
               <div class="evac-label">Titik kumpul terdekat</div>
               <div class="evac-location">
                 <span id="mockup-evac-name">Lapangan Blang Padang - 8 mnt</span>
@@ -218,9 +181,9 @@
             </div>
 
             <!-- Dots Indicator Carousel -->
-            <div class="mockup-dots-indicator">
-              <span class="mockup-dot active"></span>
+            <div class="mockup-dots-indicator" id="mockup-dots">
               <span class="mockup-dot"></span>
+              <span class="mockup-dot active"></span>
               <span class="mockup-dot"></span>
               <span class="mockup-dot"></span>
             </div>
@@ -360,25 +323,20 @@
       <div class="evac-map-card-wrapper">
         <div class="evac-map-canvas-container">
           <svg class="evac-map-svg" viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Background land & coastal water curves -->
             <path d="M0 0 H400 V240 H0 Z" fill="#e8eee9"/>
             <path d="M0 60 Q120 40 220 70 T400 50 V0 H0 Z" fill="#d8e5df"/>
             <path d="M0 100 Q150 85 260 110 T400 95 V0 H0 Z" fill="#e2ede7" opacity="0.6"/>
 
-            <!-- Coastline edge stroke -->
             <path d="M0 70 Q120 50 220 80 T400 60" stroke="#cbd5e1" stroke-width="2" fill="none"/>
 
-            <!-- Jalur Evakuasi Dashed Lines -->
             <path d="M 100 180 L 220 120" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4 4"/>
             <path d="M 180 160 L 220 120" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4 4"/>
             <path d="M 280 180 L 220 120" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4 4"/>
 
-            <!-- Permukiman Padat (Teal Dots) -->
             <circle cx="100" cy="180" r="6" fill="#0d9488"/>
             <circle cx="180" cy="160" r="6" fill="#0d9488"/>
             <circle cx="280" cy="180" r="6" fill="#0d9488"/>
 
-            <!-- Titik Kumpul Utama (Red Pin / Dot) -->
             <circle cx="220" cy="120" r="7" fill="#ef4444"/>
             <circle cx="220" cy="120" r="14" stroke="#ef4444" stroke-width="1.5" stroke-opacity="0.4" fill="none"/>
             <text x="234" y="124" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700" fill="#1e293b">Titik Kumpul Utama</text>
@@ -710,721 +668,9 @@
     </div>
   </div>
 
-  <!-- ========================================================
-       FLOATING TEST BENCH (UJI COBA SIMULASI CEPAT)
-       ======================================================== -->
-  <div class="floating-test-bench">
-    <div id="test-bench-menu" class="test-bench-menu">
-      <div class="test-menu-header">🧪 Pusat Uji Coba Sistem</div>
-      
-      <!-- Uji Coba 1: Gempa Level 3 & Tsunami Aceh (Alarm Layar Penuh) -->
-      <button class="btn-test-action danger-test" onclick="window.earthquakeService?.simulateEarthquake(3)">
-        <span>🚨</span>
-        <span>Tes Gempa Lvl 3 Aceh (Alarm Penuh)</span>
-      </button>
-
-      <!-- Uji Coba 2: Gempa Biasa Luar Daerah (Hanya Notifikasi Biasa) -->
-      <button class="btn-test-action info-test" onclick="window.earthquakeService?.simulateEarthquake(1)">
-        <span>🔔</span>
-        <span>Tes Gempa Biasa Luar Aceh (Toast)</span>
-      </button>
-
-      <!-- Buka Panduan Instalasi -->
-      <button class="btn-test-action" onclick="window.systemManager?.openInstallModal()">
-        <span>📱</span>
-        <span>Panduan Pasang Aplikasi</span>
-      </button>
-
-      <!-- Buka Pengaturan Izin -->
-      <button class="btn-test-action" onclick="window.systemManager?.openPermissionModal()">
-        <span>🛡️</span>
-        <span>Pengaturan Perizinan</span>
-      </button>
-
-      <!-- Reset ke Normal BMKG -->
-      <button class="btn-test-action" onclick="window.earthquakeService?.resetSimulation()">
-        <span>🔄</span>
-        <span>Reset Data BMKG Normal</span>
-      </button>
-    </div>
-
-    <button id="btn-toggle-bench" class="btn-toggle-test-bench" onclick="window.systemManager?.toggleTestBenchMenu()">
-      <span>🧪</span>
-      <span>Uji Simulasi & Izin</span>
-    </button>
-  </div>
-
   <!-- SCRIPTS -->
   <script src="js/notifications.js"></script>
   <script src="js/earthquake.js"></script>
-=======
-  <div id="pwa-modal-overlay" class="pwa-modal-overlay" style="display:none;">
-    <div class="glass pwa-modal-box">
-      <div class="pwa-modal-header">
-        <div class="pwa-modal-brand">
-          <img src="icons/icon-192.png" alt="Logo">
-          <div>
-            <h2 class="pwa-modal-title">Pasang Aplikasi SiagaGempa</h2>
-            <span class="pwa-modal-kicker">Progressive Web App (PWA)</span>
-          </div>
-        </div>
-        <button id="btn-close-pwa-modal" class="pwa-modal-close">✕</button>
-      </div>
-
-      <p class="pwa-modal-desc">
-        SiagaGempa dapat dipasang langsung di layar utama smartphone atau laptop Anda untuk respon cepat bencana dan akses darurat saat jaringan offline.
-      </p>
-
-      <div class="pwa-steps-wrap">
-        <div class="pwa-step pwa-step-android">
-          <strong>📱 Pengguna Android (Chrome):</strong>
-          <span>
-            Klik menu titik tiga (⋮) di pojok kanan atas Chrome &gt; pilih <strong>"Instal Aplikasi"</strong> atau <strong>"Tambahkan ke Layar Utama"</strong>.
-          </span>
-        </div>
-
-        <div class="pwa-step pwa-step-ios">
-          <strong>🍏 Pengguna iPhone / iPad (Safari):</strong>
-          <span>
-            Klik tombol <strong>Bagikan / Share</strong> (ikon kotak dengan panah ke atas) &gt; pilih <strong>"Tambah ke Layar Utama" (Add to Home Screen)</strong>.
-          </span>
-        </div>
-
-        <div class="pwa-step pwa-step-desktop">
-          <strong>💻 Komputer / Laptop (Chrome &amp; Edge):</strong>
-          <span>
-            Klik ikon <strong>Instal</strong> (komputer kecil dengan panah ke bawah) di sebelah kanan address bar browser (di samping bintang bookmark).
-          </span>
-        </div>
-      </div>
-
-      <button id="btn-trigger-native-prompt" class="pwa-modal-cta">
-        ⚡ Jalankan Dialog Instalasi Otomatis
-      </button>
-    </div>
-  </div>
-
-  <div id="offline-notice-bar" class="offline-notice-bar" style="display:none;">
-    ⚠️ MODE OFFLINE: Internet terputus. Fitur darurat PWA &amp; SMS Darurat tetap aktif tanpa jaringan.
-  </div>
-
-  <header class="header">
-    <a href="#dashboard" class="header-brand" data-target-tab="dashboard">
-      <img src="icons/logo.svg" alt="SiagaGempa Logo" class="brand-icon">
-      <div class="brand-title">
-        <span class="brand-name">SiagaGempa</span>
-        <span class="brand-tag">Emergency System</span>
-      </div>
-    </a>
-
-    <div class="header-status-pills">
-      <div class="status-pill" id="header-sys-status">
-        <span class="pill-dot dot-green"></span>
-        <span>Sistem: Normal</span>
-      </div>
-      <div class="status-pill" id="header-conn-status">
-        <span class="pill-dot dot-green"></span>
-        <span>Online</span>
-      </div>
-    </div>
-
-    <div class="header-actions">
-      <button id="btn-manual-refresh" class="btn-icon" title="Perbarui Data BMKG Sekarang">
-        🔄
-      </button>
-      <button id="btn-toggle-sound" class="btn-icon" title="Aktifkan / Matikan Suara Sirine">
-        🔊
-      </button>
-      <button id="btn-pwa-install" class="btn-pwa-header" title="Pasang Aplikasi di HP / Komputer">
-        ⚡ Pasang App
-      </button>
-      <button class="btn-sos-header btn-trigger-sos-sms" title="Kirim Pesan SOS Darurat">
-        🆘 SOS SMS
-      </button>
-    </div>
-  </header>
-
-  <div class="app-container">
-
-    <aside class="app-sidebar">
-      <nav class="glass sidebar-nav">
-        <ul class="nav-menu">
-          <li class="nav-item">
-            <button class="nav-link active" data-target-tab="dashboard">
-              <span class="nav-icon">📊</span>
-              <span>Dashboard Gempa</span>
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" data-target-tab="data">
-              <span class="nav-icon">🌊</span>
-              <span>Data &amp; Riwayat</span>
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" data-target-tab="guide">
-              <span class="nav-icon">🛡️</span>
-              <span>Panduan Keselamatan</span>
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" data-target-tab="emergency">
-              <span class="nav-icon">📱</span>
-              <span>Kontak Darurat &amp; SMS</span>
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" data-target-tab="system">
-              <span class="nav-icon">⚙️</span>
-              <span>Status Sistem &amp; Jaringan</span>
-            </button>
-          </li>
-        </ul>
-      </nav>
-
-      <div class="glass sidebar-widget">
-        <div class="widget-title">
-          <span>Panduan Klasifikasi</span>
-          <span>⚠️</span>
-        </div>
-        <ul class="classification-guide-list">
-          <li class="guide-pill">
-            <span class="guide-badge lvl1">Lvl 1</span>
-            <div>
-              <strong>Gempa Lemah</strong>
-              <div class="guide-sub">&lt; 5.0 SR • Relatif Aman</div>
-            </div>
-          </li>
-          <li class="guide-pill">
-            <span class="guide-badge lvl2">Lvl 2</span>
-            <div>
-              <strong>Gempa Sedang</strong>
-              <div class="guide-sub">5.0 - 5.9 SR • Waspada</div>
-            </div>
-          </li>
-          <li class="guide-pill">
-            <span class="guide-badge lvl3">Lvl 3</span>
-            <div>
-              <strong>Sangat Bahaya</strong>
-              <div class="guide-sub">&ge; 6.0 SR • Potensi Tsunami</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div class="glass sidebar-widget">
-        <div class="widget-title">
-          <span>Sensor Lokasi GPS</span>
-          <span>📍</span>
-        </div>
-        <div class="widget-desc">
-          Aktifkan GPS untuk menghitung jarak nyata Anda ke pusat episentrum gempa.
-        </div>
-        <button id="btn-activate-gps" class="btn-loc-action btn-loc-detect">
-          🎯 Aktifkan GPS Real-time
-        </button>
-      </div>
-    </aside>
-
-    <main class="main-content">
-
-      <section id="tab-dashboard" class="view-section active">
-
-        <div class="hero-earthquake-card">
-          <div class="hero-main-info">
-            <div class="hero-subtitle">Official Emergency Guide &amp; Real-time Monitoring</div>
-            <div class="hero-title-wrap">
-              <span class="hero-title">Magnitudo Terkini:</span>
-              <span class="hero-mag-highlight" id="hero-val-mag">6.2</span>
-            </div>
-
-            <div class="hero-details-row">
-              <div class="hero-detail-item">
-                <span>📍 Lokasi:</span>
-                <strong id="hero-val-loc">Memuat data gempa...</strong>
-              </div>
-              <div class="hero-detail-item">
-                <span>📏 Kedalaman:</span>
-                <strong id="hero-val-depth">- km</strong>
-              </div>
-              <div class="hero-detail-item">
-                <span>🕒 Waktu:</span>
-                <strong id="hero-val-time">-</strong>
-              </div>
-              <div class="hero-detail-item">
-                <span>🌐 Koordinat:</span>
-                <strong id="hero-val-coords">-</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="hero-action-box">
-            <div id="hero-tsunami-badge" class="badge-tsunami-status tsunami-safe">
-              🛡️ Tidak berpotensi tsunami
-            </div>
-            <a id="hero-btn-gmaps" href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="btn-gmaps-direct">
-              🗺️ Buka di Google Maps ↗
-            </a>
-          </div>
-        </div>
-
-        <div class="warning-levels-grid">
-          <div class="level-card lvl-1" onclick="window.earthquakeService.simulateEarthquake(1)">
-            <div class="lvl-card-header">
-              <span class="lvl-tag">Level Peringatan 1</span>
-              <span class="lvl-icon">🟢</span>
-            </div>
-            <div class="lvl-card-body">
-              <h3 class="lvl-title">Gempa Lemah</h3>
-              <p class="lvl-desc">&lt; 5.0 SR • Getaran minor dirasakan sebagian orang, kondisi aman.</p>
-            </div>
-          </div>
-
-          <div class="level-card lvl-2" onclick="window.earthquakeService.simulateEarthquake(2)">
-            <div class="lvl-card-header">
-              <span class="lvl-tag">Level Peringatan 2</span>
-              <span class="lvl-icon">🟠</span>
-            </div>
-            <div class="lvl-card-body">
-              <h3 class="lvl-title">Gempa Sedang</h3>
-              <p class="lvl-desc">5.0 - 5.9 SR • Waspada getaran nyata, jauhi kaca dan barang rapuh.</p>
-            </div>
-          </div>
-
-          <div class="level-card lvl-3" onclick="window.earthquakeService.simulateEarthquake(3)">
-            <div class="lvl-card-header">
-              <span class="lvl-tag">Level Peringatan 3</span>
-              <span class="lvl-icon">🚨</span>
-            </div>
-            <div class="lvl-card-body">
-              <h3 class="lvl-title">Gempa Keras / Tsunami</h3>
-              <p class="lvl-desc">&ge; 6.0 SR • Sangat bahaya! Sirine aktif, evakuasi segera ke tempat aman.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="dashboard-main-grid">
-
-          <div class="glass map-container-card">
-            <div class="map-card-header">
-              <div class="map-title">
-                <span>🗺️ Peta Episentrum &amp; Persebaran Seismik</span>
-              </div>
-              <div class="map-legend">
-                <span class="legend-item"><span class="legend-dot c-red">●</span> Episentrum</span>
-                <span class="legend-item"><span class="legend-dot c-cyan">●</span> Lokasi Anda</span>
-                <span class="legend-item"><span class="legend-dot c-amber">- -</span> Radius Gempa</span>
-              </div>
-            </div>
-
-            <div id="map"></div>
-          </div>
-
-          <div class="glass location-status-card">
-            <div class="map-title">
-              <span>📍 Lokasi Saya &amp; Jarak</span>
-            </div>
-
-            <div class="loc-metric-box">
-              <div class="loc-metric-label">Jarak ke Pusat Episentrum</div>
-              <div class="loc-metric-val" id="user-dist-text">- km</div>
-              <div class="loc-metric-sub" id="user-dist-status">Aktifkan GPS untuk kalkulasi</div>
-            </div>
-
-            <div class="loc-metric-box">
-              <div class="loc-metric-label">Koordinat GPS Anda</div>
-              <div class="loc-coords-value" id="user-coords-text">
-                Belum diaktifkan
-              </div>
-              <div class="loc-metric-sub">Kalkulasi presisi Haversine spherical math</div>
-            </div>
-
-            <button id="btn-share-location" class="btn-loc-action btn-loc-share">
-              📤 Bagikan Lokasi Saya
-            </button>
-
-            <button class="btn-loc-action btn-loc-detect btn-trigger-sos-sms">
-              🆘 Kirim Pesan Darurat (SMS)
-            </button>
-
-            <div class="field-note">
-              *Data GPS hanya diproses secara lokal di browser Anda untuk keperluan keamanan dan kalkulasi jarak darurat.
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-      <section id="tab-data" class="view-section">
-        <div class="glass data-header-bar">
-          <div>
-            <h2 class="data-header-title">Data Gempa Terkini &amp; Riwayat</h2>
-            <p class="data-header-desc">
-              Data real-time bersumber resmi dari BMKG (Badan Meteorologi, Klimatologi, dan Geofisika Indonesia).
-            </p>
-          </div>
-
-          <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
-            <div class="filter-pills">
-              <button class="filter-btn active" data-filter="all">Semua</button>
-              <button class="filter-btn" data-filter="m5">M &ge; 5.0</button>
-              <button class="filter-btn" data-filter="dirasakan">Dirasakan</button>
-              <button class="filter-btn" data-filter="tsunami">Tsunami</button>
-            </div>
-            <div class="auto-refresh-label">
-              Auto-refresh: <span id="auto-refresh-timer">30s</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="earthquake-list-grid" id="earthquake-history-list">
-          <div class="eq-loading-msg">
-            Sedang mengambil data gempa terkini dari BMKG...
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-guide" class="view-section">
-
-        <div class="evacuation-hero">
-          <h2>🛡️ Protokol Emas Keselamatan: Drop, Cover, Hold On</h2>
-          <p class="evac-hero-desc">
-            Saat getaran gempa bumi terjadi secara mendadak, jangan panik dan jangan langsung berlari keluar gedung yang berisiko tertimpa reruntuhan. Terapkan 3 langkah penyelamatan utama berikut:
-          </p>
-        </div>
-
-        <div class="drop-cover-hold-grid">
-          <div class="step-card">
-            <div class="step-num-badge">1</div>
-            <div class="step-title">DROP (Merunduk)</div>
-            <div class="step-desc">
-              Segera jatuhkan tubuh Anda ke lantai dengan posisi merangkak bertumpu pada tangan dan lutut sebelum guncangan menjatuhkan Anda.
-            </div>
-          </div>
-
-          <div class="step-card">
-            <div class="step-num-badge">2</div>
-            <div class="step-title">COVER (Lindungi)</div>
-            <div class="step-desc">
-              Lindungi kepala dan leher Anda menggunakan kedua lengan, bantal, helm, atau berlindunglah di bawah meja yang kokoh dan kuat.
-            </div>
-          </div>
-
-          <div class="step-card">
-            <div class="step-num-badge">3</div>
-            <div class="step-title">HOLD ON (Berpegangan)</div>
-            <div class="step-desc">
-              Pegang erat kaki meja atau pelindung Anda sampai guncangan gempa benar-benar berhenti secara total dan aman untuk bergerak.
-            </div>
-          </div>
-        </div>
-
-        <div class="guide-two-col">
-
-          <div class="glass card-panel">
-            <h3 class="panel-title">
-              🚨 Nomor Telepon Darurat Nasional Indonesia
-            </h3>
-            <ul class="speed-dial-list">
-              <li class="speed-dial-item">
-                <div class="dial-info">
-                  <strong>Panggilan Darurat Nasional (112)</strong>
-                  <span>Layanan Terpadu Bebas Pulsa</span>
-                </div>
-                <a href="tel:112" class="btn-dial-now">📞 Panggil 112</a>
-              </li>
-              <li class="speed-dial-item">
-                <div class="dial-info">
-                  <strong>BASARNAS - Pencarian &amp; Pertolongan (115)</strong>
-                  <span>Evakuasi Bencana Nasional</span>
-                </div>
-                <a href="tel:115" class="btn-dial-now">📞 Panggil 115</a>
-              </li>
-              <li class="speed-dial-item">
-                <div class="dial-info">
-                  <strong>Ambulans &amp; Medis Gawat Darurat (118)</strong>
-                  <span>Penanganan Medis &amp; Luka</span>
-                </div>
-                <a href="tel:118" class="btn-dial-now">📞 Panggil 118</a>
-              </li>
-              <li class="speed-dial-item">
-                <div class="dial-info">
-                  <strong>Kepolisian Republik Indonesia (110)</strong>
-                  <span>Keamanan &amp; Ketertiban Darurat</span>
-                </div>
-                <a href="tel:110" class="btn-dial-now">📞 Panggil 110</a>
-              </li>
-              <li class="speed-dial-item">
-                <div class="dial-info">
-                  <strong>Pemadam Kebakaran (113)</strong>
-                  <span>Kebakaran &amp; Penyelamatan Khusus</span>
-                </div>
-                <a href="tel:113" class="btn-dial-now">📞 Panggil 113</a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="glass card-panel">
-            <div class="system-section-header">
-              <h3 class="panel-title" style="margin-bottom:0;">
-                🎒 Checklist Tas Siaga Bencana
-              </h3>
-              <span id="gobag-progress-text" class="progress-badge">
-                0 / 6 Siap
-              </span>
-            </div>
-            <p class="field-note" style="margin-bottom:1rem;">
-              Persiapkan tas darurat anti-air yang mudah dijangkau saat harus evakuasi cepat. Ceklis barang yang sudah Anda siapkan:
-            </p>
-
-            <ul class="checklist-items">
-              <li>
-                <label class="checklist-label">
-                  <input type="checkbox" class="checklist-checkbox" data-id="item_doc">
-                  <span>Dokumen Penting (KTP, KK, Surat Tanah/Ijazah dlm map kedap air)</span>
-                </label>
-              </li>
-              <li>
-                <label class="checklist-label">
-                  <input type="checkbox" class="checklist-checkbox" data-id="item_firstaid">
-                  <span>Kotak P3K &amp; Obat-obatan Khusus Pribadi</span>
-                </label>
-              </li>
-              <li>
-                <label class="checklist-label">
-                  <input type="checkbox" class="checklist-checkbox" data-id="item_food">
-                  <span>Air Mineral Bersih &amp; Makanan Instan / Tahan Lama (min. 3 hari)</span>
-                </label>
-              </li>
-              <li>
-                <label class="checklist-label">
-                  <input type="checkbox" class="checklist-checkbox" data-id="item_light">
-                  <span>Senter LED, Baterai Cadangan &amp; Peluit Penanda Suara</span>
-                </label>
-              </li>
-              <li>
-                <label class="checklist-label">
-                  <input type="checkbox" class="checklist-checkbox" data-id="item_powerbank">
-                  <span>Powerbank Terisi Penuh &amp; Kabel Charger Smartphone</span>
-                </label>
-              </li>
-              <li>
-                <label class="checklist-label">
-                  <input type="checkbox" class="checklist-checkbox" data-id="item_cloth">
-                  <span>Pakaian Ganti, Masker Medis / Debu &amp; Selimut Darurat</span>
-                </label>
-              </li>
-            </ul>
-          </div>
-
-        </div>
-
-      </section>
-
-      <section id="tab-emergency" class="view-section">
-
-        <div class="sms-banner-card">
-          <div class="sms-banner-text">
-            <h3>🚨 Tombol Cepat Pengiriman SMS Darurat</h3>
-            <p class="banner-desc">
-              Fitur ini membuka aplikasi SMS bawaan ponsel Anda secara instan dengan format pesan darurat &amp; koordinat Google Maps yang sudah otomatis terisi. Bekerja 100% tanpa internet ketika jaringan seluler data mati!
-            </p>
-          </div>
-          <button class="btn-sos-huge btn-trigger-sos-sms">
-            <span>🆘</span>
-            <span>KIRIM SOS SMS SEKARANG</span>
-          </button>
-        </div>
-
-        <div class="contacts-layout">
-
-          <div class="glass card-panel">
-            <h3 class="panel-title">
-              👤 Pengaturan Kontak &amp; Identitas SOS
-            </h3>
-
-            <div class="form-group">
-              <label for="input-user-sos-name">Nama Lengkap Anda (Untuk Pesan SOS):</label>
-              <input type="text" id="input-user-sos-name" class="input-cyber" placeholder="Contoh: Budi Santoso">
-            </div>
-
-            <form id="form-add-contact" class="contact-form-divider">
-              <h4 class="panel-subheading">
-                + Tambah Nomor Kontak Darurat Baru
-              </h4>
-              <div class="form-group">
-                <label for="input-contact-name">Nama Kontak / Kerabat:</label>
-                <input type="text" id="input-contact-name" class="input-cyber" placeholder="Contoh: Ayah / Ibu / Istri" required>
-              </div>
-              <div class="form-group">
-                <label for="input-contact-phone">Nomor Telepon / Handphone:</label>
-                <input type="tel" id="input-contact-phone" class="input-cyber" placeholder="Contoh: 081234567890" required>
-              </div>
-              <div class="form-group">
-                <label for="input-contact-relation">Hubungan:</label>
-                <select id="input-contact-relation" class="input-cyber">
-                  <option value="Keluarga Inti">Keluarga Inti</option>
-                  <option value="Orang Tua">Orang Tua</option>
-                  <option value="Pasangan">Pasangan</option>
-                  <option value="Saudara">Saudara</option>
-                  <option value="Teman Dekat">Teman Dekat</option>
-                  <option value="Layanan Medis / SAR">Layanan Medis / SAR</option>
-                </select>
-              </div>
-              <button type="submit" class="btn-form-submit">
-                💾 Simpan Kontak Darurat
-              </button>
-            </form>
-          </div>
-          <div class="glass card-panel">
-            <h3 class="panel-title">
-              📋 Daftar Kontak Tersimpan
-            </h3>
-            <ul id="saved-contacts-container" class="saved-contacts-list">
-
-            </ul>
-
-            <h4 class="panel-subheading" style="margin-top:1.75rem;">
-              ✉️ Pratinjau Teks Pesan SMS Otomatis:
-            </h4>
-            <div id="sms-preview-content" class="sms-preview-box">
-              Memuat pratinjau pesan...
-            </div>
-            <div class="field-note" style="margin-top:0.4rem;">
-              *Tautan Google Maps akan otomatis terisi koordinat lintang/bujur GPS presisi tinggi Anda.
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-      <section id="tab-system" class="view-section">
-
-        <div class="system-grid">
-
-          <div class="glass metric-card">
-            <div class="metric-header">
-              <span>Status Koneksi Internet</span>
-              <span>📶</span>
-            </div>
-            <div class="metric-body">
-              <div class="metric-value" id="sys-conn-metric">Online</div>
-            </div>
-            <div class="field-note">Event listener online/offline browser</div>
-          </div>
-
-          <div class="glass metric-card">
-            <div class="metric-header">
-              <span>Latensi Server / API</span>
-              <span>⚡</span>
-            </div>
-            <div class="metric-body">
-              <div class="metric-value" id="sys-latency-metric">Mengukur...</div>
-            </div>
-            <div class="field-note">Kecepatan transmisi ke gateway BMKG</div>
-          </div>
-
-          <div class="glass metric-card">
-            <div class="metric-header">
-              <span>PWA Service Worker</span>
-              <span>📦</span>
-            </div>
-            <div class="metric-body">
-              <div class="metric-value metric-value-accent">Siaga Gempa v2</div>
-            </div>
-            <div class="field-note">Asset cached &amp; background push ready</div>
-          </div>
-        </div>
-
-        <div class="glass card-panel">
-          <div class="system-section-header">
-            <h3 class="panel-title" style="margin-bottom:0;">
-              🛡️ Audit Izin &amp; Sensor Perangkat
-            </h3>
-            <button id="btn-request-notif" class="btn-outline btn-small">
-              🔔 Minta Izin Notifikasi Push
-            </button>
-          </div>
-          <div id="permissions-matrix-list" class="permissions-grid">
-
-          </div>
-        </div>
-
-        <div class="simulator-panel">
-          <div class="simulator-heading">
-            <span style="font-size:1.4rem;">🧪</span>
-            <h3 class="simulator-title">
-              Pusat Simulasi Peringatan Dini Gempa (Test Bench)
-            </h3>
-          </div>
-          <p class="simulator-desc">
-            Gunakan tombol pengujian berikut untuk menguji respon sistem (notifikasi push, sirine audio Web Audio API, getar perangkat, dan overlay alarm darurat):
-          </p>
-
-          <div class="simulator-btn-row">
-            <button id="btn-sim-lvl1" class="btn-sim sim-lvl1">
-              <span>🟢</span>
-              <span>Test Gempa Level 1 (M 4.2)</span>
-            </button>
-            <button id="btn-sim-lvl2" class="btn-sim sim-lvl2">
-              <span>🟠</span>
-              <span>Test Gempa Level 2 (M 5.7)</span>
-            </button>
-            <button id="btn-sim-lvl3" class="btn-sim sim-lvl3">
-              <span>🚨</span>
-              <span>Test Gempa Level 3 (M 7.4 Tsunami)</span>
-            </button>
-            <button id="btn-sim-reset" class="btn-sim sim-reset">
-              <span>🔄</span>
-              <span>Reset ke Data Asli BMKG</span>
-            </button>
-          </div>
-        </div>
-
-      </section>
-
-    </main>
-  </div>
-
-  <nav class="mobile-bottom-nav">
-    <button class="mob-nav-btn active" data-target-tab="dashboard">
-      <span class="mob-icon">📊</span>
-      <span>Dashboard</span>
-    </button>
-    <button class="mob-nav-btn" data-target-tab="data">
-      <span class="mob-icon">🌊</span>
-      <span>Data</span>
-    </button>
-    <button class="mob-nav-btn" data-target-tab="guide">
-      <span class="mob-icon">🛡️</span>
-      <span>Panduan</span>
-    </button>
-    <button class="mob-nav-btn" data-target-tab="emergency">
-      <span class="mob-icon">📱</span>
-      <span>SOS SMS</span>
-    </button>
-    <button class="mob-nav-btn" data-target-tab="system">
-      <span class="mob-icon">⚙️</span>
-      <span>Status</span>
-    </button>
-  </nav>
-
-  <footer class="footer">
-    <p>
-      &copy; 2026 <strong>SiagaGempa</strong>.
-      <a href="https://data.bmkg.go.id" target="_blank" rel="noopener noreferrer">BMKG Indonesia</a>.
-    </p>
-  </footer>
-
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-  <script src="js/notifications.js"></script>
-  <script src="js/earthquake.js"></script>
-  <script src="js/map.js"></script>
->>>>>>> 682d02fbbdc02aac0ff47485f37481372b722f11
   <script src="js/emergency.js"></script>
   <script src="js/system.js"></script>
   <script src="js/app.js"></script>
