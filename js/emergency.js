@@ -73,12 +73,17 @@ class EmergencyService {
           const c = contacts[0];
           const name = c.name ? c.name[0] : 'Kontak Darurat';
           const tel = c.tel ? c.tel[0] : '';
-          localStorage.setItem('siagagempa_contact_name', name);
-          localStorage.setItem('siagagempa_contact_phone', tel);
-
+          // Store contacts in multi-contact array
+          const contactsKey = 'siagagempa_contacts';
+          let contacts = [];
+          try {
+            contacts = JSON.parse(localStorage.getItem(contactsKey) || '[]');
+          } catch (e) {}
+          contacts.push({ name, phone: tel });
+          localStorage.setItem(contactsKey, JSON.stringify(contacts));
           const permBtn = document.getElementById('btn-perm-contacts');
           if (permBtn) {
-            permBtn.textContent = `✓ ${name}`;
+            permBtn.textContent = `✓ ${contacts.length} kontak`;
             permBtn.classList.add('granted');
           }
 
@@ -150,6 +155,45 @@ END:VCARD`;
       0
     );
   }
+  /**
+   * Kirim pesan SOS ke kontak darurat pertama atau gunakan Web Share / clipboard.
+   */
+  async sendSOSMessage() {
+    const contacts = JSON.parse(localStorage.getItem('siagagempa_contacts') || '[]');
+    if (contacts.length === 0) {
+      alert('Tidak ada kontak SOS yang disimpan. Tambahkan dulu di Pengaturan Izin Kontak.');
+      return;
+    }
+    // Pastikan lokasi tersedia
+    if (!this.userCoords) {
+      this.startLocationTracking();
+    }
+    const locLink = this.userCoords
+      ? `https://www.google.com/maps/search/?api=1&query=${this.userCoords.lat},${this.userCoords.lon}`
+      : 'Lokasi tidak tersedia';
+    const msg = `SOS! Saya berada di ${locLink}. Tolong bantu!`;
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      const phone = contacts[0].phone;
+      const smsUrl = `sms:${phone}?body=${encodeURIComponent(msg)}`;
+      window.open(smsUrl);
+    } else if (navigator.share) {
+      try {
+        await navigator.share({ title: 'SOS', text: msg, url: locLink });
+      } catch (e) {
+        console.warn('Share cancelled or failed', e);
+      }
+    } else if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(msg);
+        alert('Pesan SOS disalin ke clipboard. Silakan kirim secara manual.');
+      } catch (e) {
+        console.warn('Clipboard write failed', e);
+      }
+    }
+    window.notificationManager?.showNormalToast('SOS terkirim', 'Aksi SOS telah diproses.', 0);
+  }
 }
+
 
 window.emergencyService = new EmergencyService();
