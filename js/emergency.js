@@ -68,22 +68,22 @@ class EmergencyService {
     if ('contacts' in navigator && 'ContactsManager' in window) {
       try {
         const props = ['name', 'tel'];
-        const contacts = await navigator.contacts.select(props, { multiple: false });
-        if (contacts && contacts.length > 0) {
-          const c = contacts[0];
+        const picked = await navigator.contacts.select(props, { multiple: false });
+        if (picked && picked.length > 0) {
+          const c = picked[0];
           const name = c.name ? c.name[0] : 'Kontak Darurat';
           const tel = c.tel ? c.tel[0] : '';
           // Store contacts in multi-contact array
           const contactsKey = 'siagagempa_contacts';
-          let contacts = [];
+          let savedContacts = [];
           try {
-            contacts = JSON.parse(localStorage.getItem(contactsKey) || '[]');
+            savedContacts = JSON.parse(localStorage.getItem(contactsKey) || '[]');
           } catch (e) {}
-          contacts.push({ name, phone: tel });
-          localStorage.setItem(contactsKey, JSON.stringify(contacts));
+          savedContacts.push({ name, phone: tel });
+          localStorage.setItem(contactsKey, JSON.stringify(savedContacts));
           const permBtn = document.getElementById('btn-perm-contacts');
           if (permBtn) {
-            permBtn.textContent = `✓ ${contacts.length} kontak`;
+            permBtn.textContent = `✓ ${savedContacts.length} kontak`;
             permBtn.classList.add('granted');
           }
 
@@ -156,44 +156,183 @@ END:VCARD`;
     );
   }
   /**
-   * Kirim pesan SOS ke kontak darurat pertama atau gunakan Web Share / clipboard.
+   * Buka alur SOS: selalu tampilkan modal pilih kontak dulu (step 1).
+   * Jika hanya 1 kontak, langsung lanjut ke step compose.
    */
-  async sendSOSMessage() {
-    const contacts = JSON.parse(localStorage.getItem('siagagempa_contacts') || '[]');
+  openSOSFlow() {
+    const contacts = this._getContacts();
+
+    this._renderSOSModal(contacts);
+    this._showSOSModal();
+
+    if (contacts.length === 1) {
+      // Hanya 1 kontak → langsung lanjut ke step compose
+      this._openComposeStep(contacts[0]);
+    }
+  }
+
+  /** Ambil semua kontak dari localStorage (support format lama & baru) */
+  _getContacts() {
+    let contacts = [];
+    try {
+      contacts = JSON.parse(localStorage.getItem('siagagempa_contacts') || '[]');
+    } catch (e) {}
+
+    // Fallback: format lama (nama + nomor terpisah)
     if (contacts.length === 0) {
-      alert('Tidak ada kontak SOS yang disimpan. Tambahkan dulu di Pengaturan Izin Kontak.');
+      const name = localStorage.getItem('siagagempa_contact_name');
+      const phone = localStorage.getItem('siagagempa_contact_phone');
+      if (phone) contacts = [{ name: name || 'Keluarga', phone }];
+    }
+
+    return contacts;
+  }
+
+  /** Render daftar kontak ke dalam modal step 1 */
+  _renderSOSModal(contacts) {
+    const listEl = document.getElementById('sos-contacts-list');
+    const noContactEl = document.getElementById('sos-no-contact');
+    if (!listEl || !noContactEl) return;
+
+    if (contacts.length === 0) {
+      listEl.style.display = 'none';
+      noContactEl.style.display = 'block';
       return;
     }
-    // Pastikan lokasi tersedia
+
+    noContactEl.style.display = 'none';
+    listEl.style.display = 'flex';
+    listEl.innerHTML = contacts.map((c) => `
+      <button class="sos-contact-card" onclick="window.emergencyService?._openComposeStep(${JSON.stringify(c).replace(/"/g, '&quot;')})">
+        <span class="sos-contact-avatar">${(c.name || '?')[0].toUpperCase()}</span>
+        <span class="sos-contact-info">
+          <strong>${c.name || 'Kontak Darurat'}</strong>
+          <small>${c.phone}</small>
+        </span>
+        <span class="sos-contact-arrow">→</span>
+      </button>
+    `).join('');
+  }
+
+  /** Tampilkan modal SOS */
+  _showSOSModal() {
+    const modal = document.getElementById('sos-contact-modal');
+    if (modal) modal.classList.add('active');
+    // Selalu mulai di step 1
+    this._showStep('pick');
+  }
+
+  /** Tutup modal SOS */
+  closeSOSModal() {
+    const modal = document.getElementById('sos-contact-modal');
+    if (modal) modal.classList.remove('active');
+    this._currentContact = null;
+  }
+
+  /** Ganti step yang ditampilkan: 'pick' | 'compose' */
+  _showStep(step) {
+    const pickEl = document.getElementById('sos-step-pick');
+    const composeEl = document.getElementById('sos-step-compose');
+    if (pickEl) pickEl.style.display = step === 'pick' ? 'block' : 'none';
+    if (composeEl) composeEl.style.display = step === 'compose' ? 'block' : 'none';
+  }
+
+  /**
+   * Buka step 2 compose pesan untuk kontak tertentu.
+   * Lokasi GPS diambil secara async dan langsung terisi di preview.
+   */
+  async _openComposeStep(contact) {
+    this._currentContact = contact;
+
+    // Update label tujuan
+    const toLabel = document.getElementById('sos-compose-to-label');
+    if (toLabel) toLabel.textContent = `Kepada: ${contact.name || 'Kontak Darurat'} (${contact.phone})`;
+
+    // Reset textarea
+    const textarea = document.getElementById('sos-message-body');
+    if (textarea) textarea.value = '';
+
+    // Update preview lokasi → "sedang mengambil"
+    const locTextEl = document.getElementById('sos-loc-text');
+    if (locTextEl) locTextEl.textContent = 'Sedang mengambil lokasi GPS...';
+
+    // Pindah ke step compose
+    this._showStep('compose');
+
+    // Ambil lokasi secara async (tidak blokir UI)
     if (!this.userCoords) {
-      this.startLocationTracking();
+      await this._getLocationAsync();
     }
+
+    // Isi preview lokasi
+    if (locTextEl) {
+      if (this.userCoords) {
+        const link = `https://maps.google.com/?q=${this.userCoords.lat},${this.userCoords.lon}`;
+        locTextEl.innerHTML = `Lokasi saya: <a href="${link}" target="_blank" rel="noopener" style="color:#0d9488;text-decoration:underline;">${link}</a>`;
+      } else {
+        locTextEl.textContent = 'Lokasi GPS tidak tersedia (tambahkan manual jika perlu).';
+      }
+    }
+  }
+
+  /** Kembali ke step pilih kontak */
+  goBackToContactPick() {
+    this._showStep('pick');
+  }
+
+  /**
+   * Konfirmasi kirim SMS: susun pesan dari textarea + lokasi, buka SMS app.
+   */
+  confirmSendSMS() {
+    const contact = this._currentContact;
+    if (!contact) return;
+
+    const textarea = document.getElementById('sos-message-body');
+    const userNote = (textarea ? textarea.value.trim() : '');
+
     const locLink = this.userCoords
-      ? `https://www.google.com/maps/search/?api=1&query=${this.userCoords.lat},${this.userCoords.lon}`
-      : 'Lokasi tidak tersedia';
-    const msg = `SOS! Saya berada di ${locLink}. Tolong bantu!`;
-    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-      const phone = contacts[0].phone;
-      const smsUrl = `sms:${phone}?body=${encodeURIComponent(msg)}`;
-      window.open(smsUrl);
-    } else if (navigator.share) {
-      try {
-        await navigator.share({ title: 'SOS', text: msg, url: locLink });
-      } catch (e) {
-        console.warn('Share cancelled or failed', e);
-      }
-    } else if (navigator.clipboard) {
-      try {
-        await navigator.clipboard.writeText(msg);
-        alert('Pesan SOS disalin ke clipboard. Silakan kirim secara manual.');
-      } catch (e) {
-        console.warn('Clipboard write failed', e);
-      }
+      ? `https://maps.google.com/?q=${this.userCoords.lat},${this.userCoords.lon}`
+      : null;
+
+    const locText = locLink
+      ? `Lokasi saya: ${locLink}`
+      : 'Lokasi GPS tidak tersedia.';
+
+    // Susun pesan: keterangan user (jika ada) + lokasi GPS
+    let msg = `🆘 DARURAT! Tolong bantu saya!\n${locText}`;
+    if (userNote) {
+      msg = `🆘 DARURAT! ${userNote}\n${locText}`;
     }
-    window.notificationManager?.showNormalToast('SOS terkirim', 'Aksi SOS telah diproses.', 0);
+
+    const smsUrl = `sms:${contact.phone}?body=${encodeURIComponent(msg)}`;
+    this.closeSOSModal();
+    window.open(smsUrl, '_self');
+  }
+
+  /** Ambil lokasi GPS secara async (Promise) */
+  _getLocationAsync() {
+    return new Promise((resolve) => {
+      if (!('geolocation' in navigator)) { resolve(); return; }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          this.userCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+          resolve();
+        },
+        () => resolve(),
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    });
+  }
+
+  /**
+   * @deprecated Gunakan openSOSFlow() sebagai gantinya.
+   * Dipertahankan agar tombol lama di modal izin tetap berfungsi.
+   */
+  async sendSOSMessage() {
+    this.openSOSFlow();
   }
 }
 
 
 window.emergencyService = new EmergencyService();
+

@@ -1949,3 +1949,293 @@ button {
     display: inline-flex !important;
   }
 }
+
+/* ========================================================
+   TOMBOL SOS DASHBOARD (HERO SECTION)
+   ======================================================== */
+.btn-sos-dashboard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #b91c1c, #dc2626);
+  color: #ffffff;
+  border-radius: var(--radius-xl);
+  font-size: 15px;
+  text-align: left;
+  width: 100%;
+  max-width: 340px;
+  box-shadow: 0 4px 20px rgba(185, 28, 28, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: sos-pulse 2.5s infinite;
+}
+
+.btn-sos-dashboard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(185, 28, 28, 0.6);
+}
+
+@keyframes sos-pulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(185, 28, 28, 0.45); }
+  50%       { box-shadow: 0 4px 28px rgba(220, 38, 38, 0.75); }
+}
+
+.sos-btn-icon {
+  font-size: 30px;
+  flex-shrink: 0;
+}
+
+.sos-btn-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.sos-btn-text strong {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.sos-btn-text small {
+  font-size: 12px;
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+/* ========================================================
+   MODAL SOS: PILIH KONTAK
+   ======================================================== */
+.sos-modal-box {
+  max-width: 420px;
+}
+
+.sos-contacts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0 8px;
+}
+
+.sos-contact-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.sos-contact-card:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.sos-contact-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #b91c1c;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sos-contact-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 2px;
+}
+
+.sos-contact-info strong {
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.sos-contact-info small {
+  font-size: 12.5px;
+  color: var(--text-dark-muted);
+}
+
+.sos-contact-arrow {
+  font-size: 18px;
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.sos-no-contact {
+  text-align: center;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  color: var(--text-dark-muted);
+}
+
+/* ========================================================
+   BADGE WARNA LEVEL GEMPA: TAMBAHAN KUNING & ORANGE
+   ======================================================== */
+.eq-mag-badge.yellow {
+  background: #fef9c3;
+  color: #854d0e;
+  border: 1.5px solid #fde047;
+}
+
+.eq-mag-badge.orange {
+  background: #ffedd5;
+  color: #9a3412;
+  border: 1.5px solid #fb923c;
+}
+
+/* ========================================================
+   LEGENDA 4 TINGKAT BAHAYA GEMPA
+   ======================================================== */
+.eq-level-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 24px;
+  padding: 14px 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  color: var(--text-dark-muted);
+}
+
+.eq-legend-title {
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-right: 4px;
+}
+
+.eq-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.eq-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.level-green .eq-legend-dot  { background: #22c55e; }
+.level-yellow .eq-legend-dot { background: #eab308; }
+.level-orange .eq-legend-dot { background: #f97316; }
+.level-red .eq-legend-dot    { background: #ef4444; }
+
+/* ========================================================
+   SOS MODAL: FORM COMPOSE PESAN
+   ======================================================== */
+.sos-compose-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.sos-compose-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.sos-message-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-dark);
+  background: #f8fafc;
+  resize: vertical;
+  min-height: 90px;
+  transition: border-color 0.2s ease;
+  line-height: 1.5;
+}
+
+.sos-message-textarea:focus {
+  outline: none;
+  border-color: #b91c1c;
+  background: #ffffff;
+}
+
+.sos-location-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: var(--radius-md);
+  font-size: 12.5px;
+  color: #065f46;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+.sos-loc-icon {
+  flex-shrink: 0;
+  font-size: 15px;
+  margin-top: 1px;
+}
+
+.sos-compose-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.sos-btn-back {
+  flex: 1;
+  padding: 11px 16px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--radius-lg);
+  background: #f8fafc;
+  color: var(--text-dark-muted);
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.sos-btn-back:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.sos-btn-send {
+  flex: 2;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #b91c1c, #dc2626);
+  color: #ffffff;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 16px rgba(185, 28, 28, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sos-btn-send:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(185, 28, 28, 0.5);
+}

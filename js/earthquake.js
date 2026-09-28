@@ -36,24 +36,18 @@ class EarthquakeService {
     const tsuLower = (tsunamiText || '').toLowerCase();
     const isTsunamiThreat = tsuLower.includes('tsunami') && !tsuLower.includes('tidak berpotensi');
 
-    if (magnitude >= 6.5 || isTsunamiThreat) {
-      return {
-        level: 3,
-        label: 'Level 3 - Sangat Bahaya / Potensi Tsunami',
-        isEmergency: true
-      };
+    if (isTsunamiThreat) {
+      // Merah: BAHAYA / WARNING — ada potensi tsunami (air naik)
+      return { level: 4, label: 'Bahaya / Warning — Potensi Tsunami', badgeClass: 'red', isEmergency: true };
+    } else if (magnitude >= 6.0) {
+      // Orange: WASPADA — M 6.0+ tapi tidak ada tsunami
+      return { level: 3, label: 'Waspada — M 6.0+ (Tanpa Tsunami)', badgeClass: 'orange', isEmergency: false };
     } else if (magnitude >= 5.0) {
-      return {
-        level: 2,
-        label: 'Level 2 - Sedang / Waspada',
-        isEmergency: false
-      };
+      // Kuning: SIAGA — M 5.0–5.9
+      return { level: 2, label: 'Siaga — Sedang', badgeClass: 'yellow', isEmergency: false };
     } else {
-      return {
-        level: 1,
-        label: 'Level 1 - Gempa Lemah / Relatif Aman',
-        isEmergency: false
-      };
+      // Hijau: RENDAH — M < 5.0
+      return { level: 1, label: 'Rendah — Relatif Aman', badgeClass: 'green', isEmergency: false };
     }
   }
 
@@ -243,9 +237,8 @@ class EarthquakeService {
 
     container.innerHTML = items.map(item => {
       const isSumatra = this.isSumatraAcehRegion(item.location, item.latitude, item.longitude);
-      let badgeClass = 'green';
-      if (item.magnitude >= 6.0) badgeClass = 'red';
-      else if (item.magnitude >= 5.0) badgeClass = 'amber';
+      const classification = this.classifyLevel(item.magnitude, item.tsunami);
+      const badgeClass = classification.badgeClass;
 
       return `
         <div class="eq-history-card">
@@ -288,7 +281,7 @@ class EarthquakeService {
     const isSumatra = this.isSumatraAcehRegion(eq.location, eq.latitude, eq.longitude);
     const classification = this.classifyLevel(eq.magnitude, eq.tsunami);
 
-    if (classification.level === 3 && isSumatra) {
+    if ((classification.level === 4 || (classification.level === 3 && isSumatra)) && isSumatra) {
       if (statusTitleEl) {
         statusTitleEl.textContent = `🚨 Gempa M ${eq.magnitude.toFixed(1)} & Tsunami!`;
         statusTitleEl.style.color = '#f87171';
