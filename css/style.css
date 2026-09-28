@@ -1766,6 +1766,24 @@ button {
   cursor: default;
 }
 
+/* Wrapper untuk dua tombol dalam satu permission-item-box */
+.perm-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Tombol SOS merah agar jelas berbeda */
+.btn-sos {
+  background: #b91c1c;
+  color: #ffffff;
+}
+
+.btn-sos:hover {
+  background: #991b1b;
+}
+
 .btn-allow-all-perm {
   width: 100%;
   padding: 14px;
