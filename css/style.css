@@ -4,7 +4,7 @@
   --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Color Palette - Matching reference image */
+
   --hero-dark-1: #0e2027;
   --hero-dark-2: #143834;
   --hero-dark-3: #184c3e;
@@ -76,9 +76,6 @@ button {
   transition: all 0.2s ease;
 }
 
-/* ========================================================
-   HEADER & NAVBAR
-   ======================================================== */
 .site-header {
   position: absolute;
   top: 0;
@@ -206,9 +203,6 @@ button {
   font-weight: 600;
 }
 
-/* ========================================================
-   HERO SECTION & SEISMIC AMBIENT ANIMATION
-   ======================================================== */
 .hero-section {
   position: relative;
   background: radial-gradient(circle at 85% 35%, rgba(33, 114, 91, 0.45) 0%, transparent 55%),
@@ -219,7 +213,6 @@ button {
   overflow: hidden;
 }
 
-/* Ambient Animated Seismic Wave in Background */
 .hero-seismic-aura {
   position: absolute;
   top: 40%;
@@ -376,9 +369,6 @@ button {
   font-size: 18px;
 }
 
-/* ========================================================
-   ANIMATED SMARTPHONE MOCKUP (INTERAKTIF & MUNCUL TERBUKA)
-   ======================================================== */
 .hero-mockup-wrapper {
   display: flex;
   justify-content: center;
@@ -400,7 +390,7 @@ button {
   aspect-ratio: 9 / 18.5;
   display: flex;
   flex-direction: column;
-  /* Animasi HP Muncul & Terbuka */
+
   animation: phoneEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards,
              phoneFloatBob 6s ease-in-out 1.2s infinite;
   transform-origin: center bottom;
@@ -433,7 +423,6 @@ button {
   50% { transform: translateY(-9px); }
 }
 
-/* Glass Sheen Light Streak Effect */
 .phone-mockup-frame::after {
   content: '';
   position: absolute;
@@ -632,9 +621,6 @@ button {
   border-radius: 4px;
 }
 
-/* ========================================================
-   3 FEATURE CARDS (UNDER HERO)
-   ======================================================== */
 .features-trio-section {
   max-width: var(--container-max);
   margin: -35px auto 60px;
@@ -679,9 +665,6 @@ button {
   color: rgba(255, 255, 255, 0.78);
 }
 
-/* ========================================================
-   SECTION: DATA GEMPA TERKINI & RIWAYAT REAL-TIME (BMKG)
-   ======================================================== */
 .earthquake-data-section {
   max-width: var(--container-max);
   margin: 0 auto 90px;
@@ -732,7 +715,6 @@ button {
   animation: statusPulse 1.8s infinite;
 }
 
-/* Highlight Card for Latest Earthquake */
 .latest-eq-spotlight-card {
   background: linear-gradient(135deg, #12332c 0%, #174238 60%, #1e5246 100%);
   border-radius: var(--radius-xl);
@@ -876,7 +858,6 @@ button {
   box-shadow: 0 4px 14px rgba(20, 62, 59, 0.2);
 }
 
-/* Earthquake History Grid */
 .eq-history-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -960,9 +941,6 @@ button {
   border: 1px solid #a7f3d0;
 }
 
-/* ========================================================
-   SECTION: TIGA FASE YANG PERLU DIKUASAI
-   ======================================================== */
 .three-phases-section {
   max-width: var(--container-max);
   margin: 0 auto 90px;
@@ -1060,9 +1038,6 @@ button {
   line-height: 1.5;
 }
 
-/* ========================================================
-   SECTION: JALUR EVAKUASI & ANIMATED PETA
-   ======================================================== */
 .evacuation-section {
   background-color: var(--bg-evac-section);
   padding: 85px 32px;
@@ -1108,7 +1083,6 @@ button {
   height: 100%;
 }
 
-/* Animated Marching Dashes for Evacuation Routes */
 .animated-evac-line {
   stroke-dasharray: 6 5;
   animation: marchingDash 1.2s linear infinite;
@@ -1227,9 +1201,6 @@ button {
   box-shadow: 0 12px 26px rgba(20, 62, 59, 0.3);
 }
 
-/* ========================================================
-   SECTION: EMERGENCY CONTACTS BANNER
-   ======================================================== */
 .emergency-banner-section {
   max-width: var(--container-max);
   margin: 0 auto 80px;
@@ -1326,9 +1297,6 @@ button {
   white-space: nowrap;
 }
 
-/* ========================================================
-   FOOTER
-   ======================================================== */
 .site-footer {
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   padding: 32px;
@@ -1349,9 +1317,6 @@ button {
   color: var(--text-dark-subtle);
 }
 
-/* ========================================================
-   FULL-SCREEN ALARM TAKEOVER (LEVEL 3 & TSUNAMI ACEH)
-   ======================================================== */
 #alarm-overlay {
   display: none;
   position: fixed;
@@ -1487,9 +1452,6 @@ button {
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* ========================================================
-   TOAST NOTIFICATION (GEMPA BIASA / LUAR DAERAH)
-   ======================================================== */
 .toast-container {
   position: fixed;
   top: 24px;
@@ -1556,9 +1518,6 @@ button {
   cursor: pointer;
 }
 
-/* ========================================================
-   MODALS: INSTALASI & PERIZINAN
-   ======================================================== */
 .custom-modal-overlay {
   display: none;
   position: fixed;
@@ -1766,7 +1725,6 @@ button {
   cursor: default;
 }
 
-/* Wrapper untuk dua tombol dalam satu permission-item-box */
 .perm-btn-group {
   display: flex;
   flex-direction: column;
@@ -1774,7 +1732,6 @@ button {
   flex-shrink: 0;
 }
 
-/* Tombol SOS merah agar jelas berbeda */
 .btn-sos {
   background: #b91c1c;
   color: #ffffff;
@@ -1798,9 +1755,6 @@ button {
   background: #0d2a28;
 }
 
-/* ========================================================
-   RESPONSIVE DESIGN (HP, TABLET, DESKTOP)
-   ======================================================== */
 @media (max-width: 1024px) {
   .hero-container {
     grid-template-columns: 1fr;
@@ -1938,9 +1892,6 @@ button {
   }
 }
 
-/* ========================================================
-   STANDALONE PWA RULES: HIDE INSTALL BUTTONS
-   ======================================================== */
 @media (display-mode: standalone) {
   .btn-install-pwa {
     display: none !important;
@@ -1950,9 +1901,6 @@ button {
   }
 }
 
-/* ========================================================
-   TOMBOL SOS DASHBOARD (HERO SECTION)
-   ======================================================== */
 .btn-sos-dashboard {
   display: flex;
   align-items: center;
@@ -2004,9 +1952,6 @@ button {
   font-weight: 400;
 }
 
-/* ========================================================
-   MODAL SOS: PILIH KONTAK
-   ======================================================== */
 .sos-modal-box {
   max-width: 420px;
 }
@@ -2084,9 +2029,6 @@ button {
   color: var(--text-dark-muted);
 }
 
-/* ========================================================
-   BADGE WARNA LEVEL GEMPA: TAMBAHAN KUNING & ORANGE
-   ======================================================== */
 .eq-mag-badge.yellow {
   background: #fef9c3;
   color: #854d0e;
@@ -2099,9 +2041,6 @@ button {
   border: 1.5px solid #fb923c;
 }
 
-/* ========================================================
-   LEGENDA 4 TINGKAT BAHAYA GEMPA
-   ======================================================== */
 .eq-level-legend {
   display: flex;
   align-items: center;
@@ -2141,9 +2080,6 @@ button {
 .level-orange .eq-legend-dot { background: #f97316; }
 .level-red .eq-legend-dot    { background: #ef4444; }
 
-/* ========================================================
-   SOS MODAL: FORM COMPOSE PESAN
-   ======================================================== */
 .sos-compose-area {
   display: flex;
   flex-direction: column;
@@ -2240,9 +2176,6 @@ button {
   box-shadow: 0 6px 22px rgba(185, 28, 28, 0.5);
 }
 
-/* ========================================================
-   HERO SOS ROW — tombol SOS + Tambah Kontak berdampingan
-   ======================================================== */
 .hero-sos-row {
   display: flex;
   flex-wrap: wrap;
@@ -2303,10 +2236,6 @@ button {
   opacity: 0.75;
   font-weight: 400;
 }
-
-/* ========================================================
-   MODAL TAMBAH / KELOLA KONTAK SOS
-   ======================================================== */
 .add-contact-saved-list {
   display: flex;
   flex-direction: column;
@@ -2428,9 +2357,6 @@ button {
   transform: translateY(-1px);
 }
 
-/* ========================================================
-   RIWAYAT GEMPA REAL-TIME: ANIMASI HIGHLIGHT DATA BARU
-   ======================================================== */
 @keyframes eq-new-entry {
   0%   { background-color: #d1fae5; transform: scale(1.01); box-shadow: 0 0 0 3px rgba(13,148,136,0.3); }
   60%  { background-color: #ecfdf5; transform: scale(1.005); }
@@ -2440,8 +2366,6 @@ button {
 .eq-history-card.is-new {
   animation: eq-new-entry 1.8s ease forwards;
 }
-
-/* Badge "BARU" di kartu gempa terkini */
 .eq-new-badge {
   display: inline-block;
   background: #0d9488;
@@ -2462,7 +2386,6 @@ button {
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* Indikator "Update" di header riwayat saat data baru datang */
 .live-updated-flash {
   animation: live-flash 1s ease;
 }
@@ -2472,7 +2395,6 @@ button {
   40% { color: #0d9488; font-weight: 700; }
 }
 
-/* Mobile: hero-sos-row stack vertikal */
 @media (max-width: 480px) {
   .hero-sos-row {
     flex-direction: column;
@@ -2484,9 +2406,6 @@ button {
   }
 }
 
-/* ========================================================
-   LIVE HEADER ACTIONS & MANUAL REFRESH BUTTON
-   ======================================================== */
 .live-header-actions {
   display: flex;
   align-items: center;
@@ -2537,9 +2456,6 @@ button {
   100% { transform: rotate(360deg); }
 }
 
-/* ========================================================
-   PRESET KONTAK RESMI & ACTION LINK MODAL SOS
-   ======================================================== */
 .quick-preset-contacts {
   margin-bottom: 16px;
   padding: 12px 14px;
@@ -2616,9 +2532,6 @@ button {
   transform: translateY(-1px);
 }
 
-/* ========================================================
-   BADGE REAL-TIME GEMPA TERKINI (HARI INI & DIRASAKAN)
-   ======================================================== */
 .eq-tag-today {
   display: inline-block;
   background: linear-gradient(135deg, #10b981, #059669);
