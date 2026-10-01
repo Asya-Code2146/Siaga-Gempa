@@ -41,7 +41,6 @@ export default async function handler(req, res) {
       });
     };
 
-    // 1. autogempa (paling baru)
     if (autoRes.status === 'fulfilled' && autoRes.value.ok) {
       const autoData = await autoRes.value.json();
       if (autoData?.Infogempa?.gempa) {
@@ -49,7 +48,6 @@ export default async function handler(req, res) {
       }
     }
 
-    // 2. gempadirasakan (realtime hari ini & kemarin)
     if (dirasakanRes.status === 'fulfilled' && dirasakanRes.value.ok) {
       const dData = await dirasakanRes.value.json();
       const dList = dData?.Infogempa?.gempa;
@@ -59,8 +57,7 @@ export default async function handler(req, res) {
         }
       }
     }
-
-    // 3. gempaterkini (M 5.0+)
+    
     if (listRes.status === 'fulfilled' && listRes.value.ok) {
       const listData = await listRes.value.json();
       const gempaList = listData?.Infogempa?.gempa;
