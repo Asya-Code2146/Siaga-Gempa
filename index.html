@@ -119,14 +119,24 @@
           <div class="hero-check-item">Akses satu ketukan</div>
         </div>
 
-        <!-- Tombol SOS Dashboard -->
-        <button id="btn-dashboard-sos" class="btn-sos-dashboard" onclick="window.emergencyService?.openSOSFlow()">
-          <span class="sos-btn-icon">🆘</span>
-          <span class="sos-btn-text">
-            <strong>Kirim SMS SOS</strong>
-            <small>Pesan + lokasi GPS otomatis terisi</small>
-          </span>
-        </button>
+        <!-- Tombol SOS Dashboard + Tambah Kontak -->
+        <div class="hero-sos-row">
+          <button id="btn-dashboard-sos" class="btn-sos-dashboard" onclick="window.emergencyService?.openSOSFlow()" title="Buka menu kirim SMS darurat">
+            <span class="sos-btn-icon">🆘</span>
+            <span class="sos-btn-text">
+              <strong>Kirim SMS SOS</strong>
+              <small>Pesan + lokasi GPS otomatis terisi</small>
+            </span>
+          </button>
+
+          <button id="btn-add-contact-hero" class="btn-add-contact-hero" onclick="window.emergencyService?.openAddContactModal()" title="Tambah nomor kontak darurat keluarga atau kerabat">
+            <span class="add-contact-icon">👤➕</span>
+            <span class="add-contact-text">
+              <strong>+ Tambah Kontak</strong>
+              <small id="hero-contact-count">0 kontak tersimpan</small>
+            </span>
+          </button>
+        </div>
       </div>
 
       <!-- Sisi Kanan: Mockup Smartphone Interaktif dengan Animasi -->
@@ -237,9 +247,15 @@
         <h2>Gempa Terkini Real-Time</h2>
         <p>Data langsung dari BMKG · diperbarui otomatis setiap 60 detik</p>
       </div>
-      <div class="live-refresh-badge">
-        <span class="live-dot-beacon"></span>
-        <span>Live · Refresh <span id="live-countdown-sec">60s</span></span>
+      <div class="live-header-actions">
+        <button id="btn-manual-refresh-eq" class="btn-manual-refresh" onclick="window.earthquakeService?.manualRefresh()" title="Muat ulang data BMKG sekarang">
+          <span class="refresh-icon" id="manual-refresh-icon">🔄</span>
+          <span>Perbarui Data</span>
+        </button>
+        <div class="live-refresh-badge">
+          <span class="live-dot-beacon"></span>
+          <span>Live · <span id="live-countdown-sec">60s</span></span>
+        </div>
       </div>
     </div>
 
@@ -764,12 +780,19 @@
           <!-- Diisi oleh JS -->
         </div>
 
+        <!-- Tombol Tambah Kontak Baru Langsung dari Modal SOS -->
+        <div class="sos-add-contact-action">
+          <button type="button" class="btn-sos-add-contact-link" onclick="window.emergencyService?.closeSOSModal(); window.emergencyService?.openAddContactModal();">
+            <span>➕</span> Tambah Kontak Darurat Baru
+          </button>
+        </div>
+
         <!-- Jika belum ada kontak -->
         <div id="sos-no-contact" class="sos-no-contact" style="display:none;">
           <p>⚠️ Belum ada kontak SOS tersimpan.</p>
-          <p>Tambahkan kontak darurat terlebih dahulu di <strong>Pengaturan Izin → Akses Kontak Darurat</strong>.</p>
-          <button class="btn-perm-action" onclick="window.emergencyService?.closeSOSModal(); window.systemManager?.openPermissionModal();">
-            Atur Kontak Sekarang
+          <p>Tambahkan kontak darurat terlebih dahulu agar SMS SOS dapat langsung dikirim ke keluarga atau petugas.</p>
+          <button class="btn-perm-action" onclick="window.emergencyService?.closeSOSModal(); window.emergencyService?.openAddContactModal();">
+            + Tambah Kontak Sekarang
           </button>
         </div>
       </div>
@@ -799,6 +822,62 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL TAMBAH KONTAK SOS (DARI HERO & MODAL LAIN)
+       ======================================================== -->
+  <div id="add-contact-modal" class="custom-modal-overlay">
+    <div class="custom-modal-box">
+      <div class="modal-header-row">
+        <div>
+          <h3>👤 Kelola Kontak SOS</h3>
+          <p>Tambah atau kelola kontak darurat penerima pesan SMS SOS Anda.</p>
+        </div>
+        <button class="btn-close-modal" onclick="window.emergencyService?.closeAddContactModal()">✕</button>
+      </div>
+
+      <!-- Quick Preset Kontak Resmi Bencana -->
+      <div class="quick-preset-contacts">
+        <span class="quick-preset-title">⚡ Tambah Cepat Kontak Resmi Bencana:</span>
+        <div class="quick-preset-btns">
+          <button type="button" class="btn-preset-pill" onclick="window.emergencyService?.addPresetContact('BPBD Aceh (Darurat Bencana)', '117')">
+            + BPBD Aceh (117)
+          </button>
+          <button type="button" class="btn-preset-pill" onclick="window.emergencyService?.addPresetContact('Panggilan Darurat Nasional', '112')">
+            + Darurat Bebas Pulsa (112)
+          </button>
+          <button type="button" class="btn-preset-pill" onclick="window.emergencyService?.addPresetContact('BMKG Call Center Gempa', '196')">
+            + BMKG Gempa (196)
+          </button>
+        </div>
+      </div>
+
+      <!-- Daftar Kontak Tersimpan -->
+      <div class="add-contact-section-label">Kontak Tersimpan:</div>
+      <div id="add-contact-saved-list" class="add-contact-saved-list">
+        <!-- Diisi oleh JS -->
+      </div>
+
+      <!-- Form Tambah Kontak Baru -->
+      <div class="add-contact-form-section">
+        <h5 style="font-size:14px; color:var(--text-dark-muted); margin-bottom:12px;">+ Tambah Kontak Keluarga / Kerabat Baru</h5>
+        <div class="add-contact-form-fields">
+          <input type="text" id="new-contact-name" class="add-contact-input" placeholder="Nama (misal: Ibu, Ayah, Kakak, Pak RT)">
+          <input type="tel" id="new-contact-phone" class="add-contact-input" placeholder="Nomor HP (misal: 081234567890)">
+        </div>
+        <button class="btn-save-new-contact" onclick="window.emergencyService?.saveNewContactFromModal()">
+          ✅ Simpan Kontak Darurat
+        </button>
+      </div>
+
+      <!-- Gunakan Contact Picker API (jika tersedia) -->
+      <div id="contact-picker-section" style="display:none; margin-top:12px; padding-top:12px; border-top:1px solid #e2e8f0;">
+        <button class="btn-perm-action" style="width:100%;" onclick="window.emergencyService?.pickOrSetupContacts()">
+          📱 Pilih dari Buku Kontak HP
+        </button>
+      </div>
     </div>
   </div>
 

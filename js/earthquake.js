@@ -1,5 +1,6 @@
 /**
  * Siaga Gempa - Live BMKG Earthquake Data Service & History Manager
+ * Real-time integration: autogempa.json, gempadirasakan.json & gempaterkini.json
  */
 
 class EarthquakeService {
@@ -9,11 +10,15 @@ class EarthquakeService {
     this.currentFilter = 'all';
     this.refreshTimer = null;
     this.countdownSec = 60;
+    this.isRefreshing = false;
     this.sumatraKeywords = [
       'aceh', 'banda aceh', 'meulaboh', 'sabang', 'simeulue', 'lhokseumawe',
       'pidie', 'sigli', 'nagan raya', 'takengon', 'subulussalam', 'singkil',
-      'tapaktuan', 'bireuen', 'langsa', 'sumatera', 'sumatra', 'nias',
-      'mentawai', 'padang', 'medan', 'sibolga', 'bengkulu', 'lampung', 'sumut', 'sumbar'
+      'tapaktuan', 'bireuen', 'langsa', 'calang', 'jantho', 'bener meriah',
+      'gayo lues', 'aceh jaya', 'aceh besar', 'aceh barat', 'aceh selatan',
+      'aceh timur', 'aceh utara', 'sumatera', 'sumatra', 'nias', 'mentawai',
+      'padang', 'medan', 'sibolga', 'bengkulu', 'lampung', 'sumut', 'sumbar',
+      'riau', 'jambi'
     ];
   }
 
@@ -37,72 +42,221 @@ class EarthquakeService {
     const isTsunamiThreat = tsuLower.includes('tsunami') && !tsuLower.includes('tidak berpotensi');
 
     if (isTsunamiThreat) {
-      // Merah: BAHAYA / WARNING — ada potensi tsunami (air naik)
       return { level: 4, label: 'Bahaya / Warning — Potensi Tsunami', badgeClass: 'red', isEmergency: true };
     } else if (magnitude >= 6.0) {
-      // Orange: WASPADA — M 6.0+ tapi tidak ada tsunami
       return { level: 3, label: 'Waspada — M 6.0+ (Tanpa Tsunami)', badgeClass: 'orange', isEmergency: false };
     } else if (magnitude >= 5.0) {
-      // Kuning: SIAGA — M 5.0–5.9
       return { level: 2, label: 'Siaga — Sedang', badgeClass: 'yellow', isEmergency: false };
     } else {
-      // Hijau: RENDAH — M < 5.0
       return { level: 1, label: 'Rendah — Relatif Aman', badgeClass: 'green', isEmergency: false };
     }
   }
 
-  async fetchLiveEarthquakeData() {
+  /**
+   * Cek apakah waktu gempa terjadi hari ini (WIB / Local)
+   */
+  checkIsToday(dateString, dateTimeStr) {
     try {
-      // 1. Fetch Gempa Terbaru Real-time
-      const autoRes = await fetch('https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json');
-      if (autoRes.ok) {
-        const data = await autoRes.json();
-        if (data?.Infogempa?.gempa) {
-          const g = data.Infogempa.gempa;
+      if (dateTimeStr) {
+        const itemDate = new Date(dateTimeStr);
+        const now = new Date();
+        return itemDate.toDateString() === now.toDateString();
+      }
+      if (dateString) {
+        const now = new Date();
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const todayStr = `${String(now.getDate()).padStart(2, '0')} ${months[now.getMonth()]} ${now.getFullYear()}`;
+        return dateString.includes(todayStr);
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  /**
+   * Helper konversi tanggal string BMKG ke timestamp milidetik untuk sorting
+   */
+  parseTimestamp(item) {
+    if (item.dateTime) {
+      const ts = Date.parse(item.dateTime);
+      if (!isNaN(ts)) return ts;
+    }
+    // Fallback parse dari "01 Okt 2026" & "07:43:06 WIB"
+    try {
+      const monthMap = {
+        'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'Mei': 4, 'Jun': 5,
+        'Jul': 6, 'Agu': 7, 'Sep': 8, 'Okt': 9, 'Nov': 10, 'Des': 11
+      };
+      const parts = (item.time || '').split(' ');
+      if (parts.length >= 4) {
+        const day = parseInt(parts[0], 10);
+        const month = monthMap[parts[1]] ?? 0;
+        const year = parseInt(parts[2], 10);
+        const timeParts = (parts[3] || '00:00:00').split(':');
+        const hour = parseInt(timeParts[0] || '0', 10);
+        const min = parseInt(timeParts[1] || '0', 10);
+        const sec = parseInt(timeParts[2] || '0', 10);
+        return new Date(Date.UTC(year, month, day, hour - 7, min, sec)).getTime();
+      }
+    } catch (e) {}
+    return 0;
+  }
+
+  /**
+   * Ambil data gempa real-time BMKG secara komprehensif:
+   * Menggabungkan autogempa.json (paling baru detik ini),
+   * gempadirasakan.json (gempa dirasakan hari ini & terkini),
+   * dan gempaterkini.json (gempa M 5.0+ terbaru).
+   */
+  async fetchLiveEarthquakeData() {
+    const cacheBuster = `?t=${Date.now()}`;
+    let fetchedAuto = null;
+    let rawItems = [];
+
+    try {
+      const [autoRes, dirasakanRes, terkiniRes] = await Promise.allSettled([
+        fetch(`https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json${cacheBuster}`),
+        fetch(`https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json${cacheBuster}`),
+        fetch(`https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json${cacheBuster}`)
+      ]);
+
+      // 1. Parse Gempa Terkini Utama (autogempa)
+      if (autoRes.status === 'fulfilled' && autoRes.value.ok) {
+        const autoData = await autoRes.value.json();
+        const g = autoData?.Infogempa?.gempa;
+        if (g) {
           const coords = (g.Coordinates || '').split(',');
           const lat = coords[0] ? parseFloat(coords[0].trim()) : 5.55;
           const lon = coords[1] ? parseFloat(coords[1].trim()) : 95.32;
+          const timeStr = `${g.Tanggal || ''} ${g.Jam || ''}`.trim();
 
-          this.latestEarthquake = {
+          fetchedAuto = {
             id: 'latest',
             magnitude: parseFloat(g.Magnitude || 0),
             depth: parseInt((g.Kedalaman || '0').replace(/[^0-9]/g, '')),
             location: g.Wilayah || 'Banda Aceh',
-            time: `${g.Tanggal || ''} ${g.Jam || ''}`.trim(),
+            time: timeStr,
+            dateTime: g.DateTime || '',
             latitude: lat,
             longitude: lon,
             tsunami: g.Potensi || 'Tidak berpotensi tsunami',
-            dirasakan: g.Dirasakan || '-'
+            dirasakan: g.Dirasakan || '-',
+            isLatest: true,
+            isToday: this.checkIsToday(g.Tanggal, g.DateTime)
           };
+          rawItems.push(fetchedAuto);
         }
       }
 
-      // 2. Fetch Daftar Riwayat Gempa M 5.0+ Terbaru
-      const listRes = await fetch('https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json');
-      if (listRes.ok) {
-        const listData = await listRes.json();
-        if (listData?.Infogempa?.gempa && Array.isArray(listData.Infogempa.gempa)) {
-          this.historyList = listData.Infogempa.gempa.map((item, index) => {
+      // 2. Parse Gempa Dirasakan (Real-time terkini: hari ini, kemarin, dll.)
+      if (dirasakanRes.status === 'fulfilled' && dirasakanRes.value.ok) {
+        const dData = await dirasakanRes.value.json();
+        const list = dData?.Infogempa?.gempa;
+        if (Array.isArray(list)) {
+          list.forEach((item, idx) => {
             const coords = (item.Coordinates || '').split(',');
-            return {
-              id: index + 1,
+            const lat = coords[0] ? parseFloat(coords[0].trim()) : 0;
+            const lon = coords[1] ? parseFloat(coords[1].trim()) : 0;
+            const timeStr = `${item.Tanggal || ''} ${item.Jam || ''}`.trim();
+
+            rawItems.push({
+              id: `dirasakan_${idx}`,
               magnitude: parseFloat(item.Magnitude || 0),
               depth: parseInt((item.Kedalaman || '0').replace(/[^0-9]/g, '')),
               location: item.Wilayah || 'Wilayah Indonesia',
-              time: `${item.Tanggal || ''} ${item.Jam || ''}`.trim(),
-              latitude: coords[0] ? parseFloat(coords[0].trim()) : 0,
-              longitude: coords[1] ? parseFloat(coords[1].trim()) : 0,
-              tsunami: item.Potensi || 'Tidak berpotensi tsunami'
-            };
+              time: timeStr,
+              dateTime: item.DateTime || '',
+              latitude: lat,
+              longitude: lon,
+              tsunami: item.Potensi || (item.Dirasakan ? `Dirasakan: ${item.Dirasakan}` : 'Tidak berpotensi tsunami'),
+              dirasakan: item.Dirasakan || '-',
+              isLatest: false,
+              isToday: this.checkIsToday(item.Tanggal, item.DateTime)
+            });
           });
         }
       }
+
+      // 3. Parse Gempa M 5.0+
+      if (terkiniRes.status === 'fulfilled' && terkiniRes.value.ok) {
+        const tData = await terkiniRes.value.json();
+        const list = tData?.Infogempa?.gempa;
+        if (Array.isArray(list)) {
+          list.forEach((item, idx) => {
+            const coords = (item.Coordinates || '').split(',');
+            const lat = coords[0] ? parseFloat(coords[0].trim()) : 0;
+            const lon = coords[1] ? parseFloat(coords[1].trim()) : 0;
+            const timeStr = `${item.Tanggal || ''} ${item.Jam || ''}`.trim();
+
+            rawItems.push({
+              id: `terkini_${idx}`,
+              magnitude: parseFloat(item.Magnitude || 0),
+              depth: parseInt((item.Kedalaman || '0').replace(/[^0-9]/g, '')),
+              location: item.Wilayah || 'Wilayah Indonesia',
+              time: timeStr,
+              dateTime: item.DateTime || '',
+              latitude: lat,
+              longitude: lon,
+              tsunami: item.Potensi || 'Tidak berpotensi tsunami',
+              dirasakan: item.Dirasakan || '-',
+              isLatest: false,
+              isToday: this.checkIsToday(item.Tanggal, item.DateTime)
+            });
+          });
+        }
+      }
+
+      // Jika direct fetch dari browser ke BMKG kosong (misal karena offline / adblock), coba lewat API proxy internal
+      if (rawItems.length === 0) {
+        console.info('Direct BMKG returned empty, trying internal /api/earthquake...');
+        const proxyRes = await fetch(`/api/earthquake${cacheBuster}`);
+        if (proxyRes.ok) {
+          const proxyData = await proxyRes.json();
+          if (Array.isArray(proxyData) && proxyData.length > 0) {
+            rawItems = proxyData.map((item, idx) => ({
+              id: item.id || idx,
+              magnitude: item.magnitude,
+              depth: item.depth,
+              location: item.location,
+              time: item.time,
+              dateTime: item.dateTime || '',
+              latitude: item.latitude,
+              longitude: item.longitude,
+              tsunami: item.tsunami,
+              dirasakan: item.dirasakan || '-',
+              isLatest: item.is_latest || false,
+              isToday: this.checkIsToday(item.time, item.dateTime)
+            }));
+          }
+        }
+      }
     } catch (err) {
-      console.warn('BMKG Live API fallback to offline cached data:', err);
-      this.loadFallbackData();
+      console.warn('BMKG Live API fetch error, fallback to cache:', err);
     }
 
-    if (!this.latestEarthquake) {
+    // Deduplikasi berdasarkan waktu & koordinat unik
+    if (rawItems.length > 0) {
+      const seen = new Set();
+      const deduped = [];
+
+      for (const item of rawItems) {
+        // Kunci unik: lokasi singkat + tanggal/jam
+        const key = `${item.location.slice(0, 20)}_${item.time}`.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          deduped.push(item);
+        }
+      }
+
+      // Urutkan dari yang paling baru (timestamp terbesar / terbaru di atas)
+      deduped.sort((a, b) => {
+        const tsA = this.parseTimestamp(a);
+        const tsB = this.parseTimestamp(b);
+        return tsB - tsA;
+      });
+
+      this.historyList = deduped;
+      this.latestEarthquake = fetchedAuto || deduped[0];
+    } else if (!this.latestEarthquake) {
       this.loadFallbackData();
     }
 
@@ -115,78 +269,91 @@ class EarthquakeService {
   loadFallbackData() {
     this.latestEarthquake = {
       id: 'fallback_latest',
-      magnitude: 4.9,
+      magnitude: 4.8,
       depth: 10,
-      location: 'Pusat gempa berada di laut 46 km utara Ruteng-Manggarai',
-      time: '26 Sep 2026 02:39:29 WIB',
-      latitude: -8.23,
-      longitude: 120.31,
-      tsunami: 'Tidak berpotensi tsunami',
-      dirasakan: 'II - III Kab. Manggarai'
+      location: 'Pusat gempa berada di laut 54 km barat laut Calang-Aceh Jaya',
+      time: '30 Sep 2026 09:35:54 WIB',
+      latitude: 4.84,
+      longitude: 95.14,
+      tsunami: 'Dirasakan di Calang, Banda Aceh, Aceh Besar',
+      dirasakan: 'III-IV Calang, III Aceh Besar, III Banda Aceh, II Sigli',
+      isToday: false
     };
 
     this.historyList = [
+      this.latestEarthquake,
       {
         id: 1,
+        magnitude: 4.5,
+        depth: 10,
+        location: 'Pusat gempa berada di laut 127 km Barat Daya Kota Sabang',
+        time: '28 Sep 2026 21:43:09 WIB',
+        latitude: 5.19,
+        longitude: 94.41,
+        tsunami: 'Dirasakan di Sabang & Banda Aceh',
+        dirasakan: 'III-IV Aceh Besar, III-IV Banda Aceh',
+        isToday: false
+      },
+      {
+        id: 2,
+        magnitude: 3.4,
+        depth: 10,
+        location: 'Pusat gempa berada di darat 18 km barat Bener Meriah',
+        time: '28 Sep 2026 00:54:05 WIB',
+        latitude: 4.76,
+        longitude: 96.70,
+        tsunami: 'Tidak berpotensi tsunami',
+        dirasakan: 'III Aceh Tengah, III Bener Meriah',
+        isToday: false
+      },
+      {
+        id: 3,
         magnitude: 5.2,
         depth: 10,
         location: '127 km BaratLaut TAHUNA-KEP.SANGIHE-SULUT',
         time: '22 Sep 2026 06:48:13 WIB',
         latitude: 4.74,
         longitude: 125.30,
-        tsunami: 'Tidak berpotensi tsunami'
-      },
-      {
-        id: 2,
-        magnitude: 5.3,
-        depth: 10,
-        location: '26 km BaratDaya PULAUPUAH-SULTENG',
-        time: '21 Sep 2026 14:31:07 WIB',
-        latitude: -0.70,
-        longitude: 122.45,
-        tsunami: 'Tidak berpotensi tsunami'
-      },
-      {
-        id: 3,
-        magnitude: 5.3,
-        depth: 10,
-        location: '34 km TimurLaut RUTENG-MANGGARAI-NTT',
-        time: '21 Sep 2026 08:41:37 WIB',
-        latitude: -8.33,
-        longitude: 120.59,
-        tsunami: 'Tidak berpotensi tsunami'
-      },
-      {
-        id: 4,
-        magnitude: 5.2,
-        depth: 10,
-        location: '198 km BaratDaya BAYAH-BANTEN (Pesisir Selatan)',
-        time: '18 Sep 2026 21:36:17 WIB',
-        latitude: -8.64,
-        longitude: 105.74,
-        tsunami: 'Tidak berpotensi tsunami'
-      },
-      {
-        id: 5,
-        magnitude: 5.6,
-        depth: 10,
-        location: '186 km BaratDaya BAYAH-BANTEN',
-        time: '14 Sep 2026 16:27:39 WIB',
-        latitude: -8.54,
-        longitude: 105.78,
-        tsunami: 'Tidak berpotensi tsunami'
-      },
-      {
-        id: 6,
-        magnitude: 6.2,
-        depth: 145,
-        location: '42 km TimurLaut PULAUDOI-MALUT',
-        time: '14 Sep 2026 17:58:04 WIB',
-        latitude: 2.52,
-        longitude: 128.09,
-        tsunami: 'Tidak berpotensi tsunami'
+        tsunami: 'Tidak berpotensi tsunami',
+        dirasakan: '-',
+        isToday: false
       }
     ];
+  }
+
+  /**
+   * Manual Refresh dipicu oleh tombol pengguna
+   */
+  async manualRefresh() {
+    if (this.isRefreshing) return;
+    this.isRefreshing = true;
+
+    const icon = document.getElementById('manual-refresh-icon');
+    if (icon) icon.classList.add('spinning');
+
+    const btn = document.getElementById('btn-manual-refresh-eq');
+    if (btn) btn.classList.add('loading');
+
+    try {
+      await this.fetchLiveEarthquakeData();
+      this.countdownSec = 60;
+      const timerEl = document.getElementById('live-countdown-sec');
+      if (timerEl) timerEl.textContent = '60s';
+
+      window.notificationManager?.showNormalToast(
+        'Data Gempa Real-Time Diperbarui',
+        `Berhasil memuat data gempa terkini langsung dari BMKG.`,
+        0
+      );
+    } catch (e) {
+      console.warn('Manual refresh failed:', e);
+    } finally {
+      this.isRefreshing = false;
+      setTimeout(() => {
+        if (icon) icon.classList.remove('spinning');
+        if (btn) btn.classList.remove('loading');
+      }, 500);
+    }
   }
 
   renderSpotlightUI() {
@@ -223,7 +390,10 @@ class EarthquakeService {
     } else if (this.currentFilter === 'm5') {
       items = items.filter(i => i.magnitude >= 5.0);
     } else if (this.currentFilter === 'tsunami') {
-      items = items.filter(i => i.tsunami.toLowerCase().includes('tsunami') && !i.tsunami.toLowerCase().includes('tidak'));
+      items = items.filter(i => {
+        const tsu = (i.tsunami || '').toLowerCase();
+        return tsu.includes('tsunami') && !tsu.includes('tidak berpotensi');
+      });
     }
 
     if (items.length === 0) {
@@ -235,23 +405,33 @@ class EarthquakeService {
       return;
     }
 
-    container.innerHTML = items.map(item => {
+    container.innerHTML = items.map((item, idx) => {
       const isSumatra = this.isSumatraAcehRegion(item.location, item.latitude, item.longitude);
       const classification = this.classifyLevel(item.magnitude, item.tsunami);
       const badgeClass = classification.badgeClass;
+      const isTopRecent = idx === 0 || item.isToday;
 
       return `
-        <div class="eq-history-card">
+        <div class="eq-history-card ${isTopRecent ? 'is-realtime-entry' : ''}">
           <div class="eq-mag-badge ${badgeClass}">
             ${item.magnitude.toFixed(1)}
           </div>
           <div class="eq-info-block">
-            <div class="eq-location-name">${item.location}</div>
+            <div class="eq-location-name">
+              ${item.location}
+              ${item.isToday ? '<span class="eq-tag-today">⚡ HARI INI</span>' : ''}
+              ${idx === 0 ? '<span class="eq-tag-latest">🔥 TERBARU</span>' : ''}
+            </div>
             <div class="eq-meta-details">
               <span>🕒 ${item.time}</span>
               <span>📏 Kedalaman: ${item.depth} km</span>
               <span>🛡️ ${item.tsunami}</span>
             </div>
+            ${item.dirasakan && item.dirasakan !== '-' ? `
+              <div class="eq-meta-dirasakan">
+                <span>📢 <strong>Dirasakan:</strong> ${item.dirasakan}</span>
+              </div>
+            ` : ''}
             ${isSumatra ? '<span class="eq-tag-sumatra">📍 Zona Sumatra-Aceh</span>' : ''}
           </div>
         </div>

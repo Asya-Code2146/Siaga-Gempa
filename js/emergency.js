@@ -10,6 +10,13 @@ class EmergencyService {
       lat: 5.5526,
       lon: 95.3175
     };
+
+    // Update count di hero button saat service ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => this.updateHeroContactCount());
+    } else {
+      setTimeout(() => this.updateHeroContactCount(), 0);
+    }
   }
 
   startLocationTracking() {
@@ -86,6 +93,7 @@ class EmergencyService {
             permBtn.textContent = `✓ ${savedContacts.length} kontak`;
             permBtn.classList.add('granted');
           }
+          this.updateHeroContactCount();
 
           alert(`✅ Kontak darurat berhasil dihubungkan:\n${name} (${tel})`);
           return;
@@ -110,6 +118,7 @@ class EmergencyService {
         permBtn.textContent = `✓ ${newName || 'Tersimpan'}`;
         permBtn.classList.add('granted');
       }
+      this.updateHeroContactCount();
 
       alert(`✅ Nomor kontak darurat ${newName} (${newPhone}) tersimpan aman di aplikasi!`);
     }
@@ -330,6 +339,175 @@ END:VCARD`;
    */
   async sendSOSMessage() {
     this.openSOSFlow();
+  }
+
+  /** =====================================================
+   *  FITUR KELOLA KONTAK SOS (Modal Tambah Kontak)
+   *  ===================================================== */
+
+  /** Buka modal kelola kontak dari hero section */
+  openAddContactModal() {
+    const modal = document.getElementById('add-contact-modal');
+    if (!modal) return;
+
+    // Tampilkan opsi Contact Picker API jika tersedia
+    const pickerSection = document.getElementById('contact-picker-section');
+    if (pickerSection) {
+      pickerSection.style.display = ('contacts' in navigator && 'ContactsManager' in window)
+        ? 'block' : 'none';
+    }
+
+    // Kosongkan input
+    const nameInput = document.getElementById('new-contact-name');
+    const phoneInput = document.getElementById('new-contact-phone');
+    if (nameInput) nameInput.value = '';
+    if (phoneInput) phoneInput.value = '';
+
+    this._renderAddContactList();
+    modal.classList.add('active');
+  }
+
+  /** Tutup modal kelola kontak */
+  closeAddContactModal() {
+    const modal = document.getElementById('add-contact-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  /** Render daftar kontak tersimpan di modal kelola kontak */
+  _renderAddContactList() {
+    const listEl = document.getElementById('add-contact-saved-list');
+    if (!listEl) return;
+
+    const contacts = this._getContacts();
+
+    if (contacts.length === 0) {
+      listEl.innerHTML = `<div class="no-contacts-msg">⚠️ Belum ada kontak SOS tersimpan.</div>`;
+      return;
+    }
+
+    listEl.innerHTML = contacts.map((c, idx) => `
+      <div class="saved-contact-row">
+        <div class="saved-contact-avatar">${(c.name || '?')[0].toUpperCase()}</div>
+        <div class="saved-contact-info">
+          <strong>${c.name || 'Kontak Darurat'}</strong>
+          <small>${c.phone}</small>
+        </div>
+        <button class="btn-delete-contact" title="Hapus kontak ini"
+          onclick="window.emergencyService?.deleteContact(${idx})">🗑️</button>
+      </div>
+    `).join('');
+  }
+
+  /**
+   * Tambahkan preset kontak resmi darurat bencana (BPBD 117, 112, BMKG 196)
+   */
+  addPresetContact(name, phone) {
+    const contactsKey = 'siagagempa_contacts';
+    let savedContacts = this._getContacts();
+
+    // Cek jika nomor sudah tersimpan
+    if (savedContacts.some(c => c.phone === phone)) {
+      alert(`⚠️ Nomor kontak ${name} (${phone}) sudah ada di daftar SOS Anda.`);
+      return;
+    }
+
+    savedContacts.push({ name, phone });
+    localStorage.setItem(contactsKey, JSON.stringify(savedContacts));
+
+    this._renderAddContactList();
+    this.updateHeroContactCount();
+
+    // Sinkronkan juga ke modal SOS jika sedang aktif
+    const sosModal = document.getElementById('sos-contact-modal');
+    if (sosModal && sosModal.classList.contains('active')) {
+      this._renderSOSModal(savedContacts);
+    }
+
+    window.notificationManager?.showNormalToast(
+      'Kontak Resmi Ditambahkan',
+      `✅ ${name} (${phone}) siap digunakan untuk SMS SOS darurat.`,
+      0
+    );
+  }
+
+  /** Simpan kontak baru dari form di modal */
+  saveNewContactFromModal() {
+    const nameInput = document.getElementById('new-contact-name');
+    const phoneInput = document.getElementById('new-contact-phone');
+
+    const name = (nameInput?.value || '').trim();
+    let phone = (phoneInput?.value || '').trim().replace(/[^0-9+]/g, '');
+
+    if (!phone) {
+      alert('⚠️ Masukkan nomor telepon terlebih dahulu!');
+      phoneInput?.focus();
+      return;
+    }
+
+    const contactsKey = 'siagagempa_contacts';
+    let savedContacts = this._getContacts();
+
+    // Cek duplikat nomor
+    if (savedContacts.some(c => c.phone.replace(/[^0-9+]/g, '') === phone)) {
+      alert('⚠️ Nomor ini sudah ada di daftar kontak SOS.');
+      return;
+    }
+
+    savedContacts.push({ name: name || 'Kontak Darurat', phone });
+    localStorage.setItem(contactsKey, JSON.stringify(savedContacts));
+
+    // Kosongkan input
+    if (nameInput) nameInput.value = '';
+    if (phoneInput) phoneInput.value = '';
+
+    this._renderAddContactList();
+    this.updateHeroContactCount();
+
+    // Sinkronkan juga ke modal SOS jika sedang aktif
+    const sosModal = document.getElementById('sos-contact-modal');
+    if (sosModal && sosModal.classList.contains('active')) {
+      this._renderSOSModal(savedContacts);
+    }
+
+    window.notificationManager?.showNormalToast(
+      'Kontak Tersimpan',
+      `✅ ${name || 'Kontak Darurat'} (${phone}) berhasil ditambahkan ke daftar SOS.`,
+      0
+    );
+  }
+
+  /** Hapus kontak berdasarkan index */
+  deleteContact(index) {
+    let contacts = this._getContacts();
+    const removed = contacts.splice(index, 1);
+    localStorage.setItem('siagagempa_contacts', JSON.stringify(contacts));
+
+    this._renderAddContactList();
+    this.updateHeroContactCount();
+
+    // Sinkronkan juga ke modal SOS jika sedang aktif
+    const sosModal = document.getElementById('sos-contact-modal');
+    if (sosModal && sosModal.classList.contains('active')) {
+      this._renderSOSModal(contacts);
+    }
+
+    if (removed.length > 0) {
+      window.notificationManager?.showNormalToast(
+        'Kontak Dihapus',
+        `🗑️ ${removed[0].name} berhasil dihapus dari daftar SOS.`,
+        0
+      );
+    }
+  }
+
+  /** Perbarui label jumlah kontak di hero section */
+  updateHeroContactCount() {
+    const countEl = document.getElementById('hero-contact-count');
+    if (!countEl) return;
+    const n = this._getContacts().length;
+    countEl.textContent = n === 0
+      ? '0 kontak tersimpan'
+      : `${n} kontak tersimpan`;
   }
 }
 

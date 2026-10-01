@@ -8,59 +8,66 @@ export default async function handler(req, res) {
   }
 
   try {
-    const [autoRes, listRes] = await Promise.all([
+    const [autoRes, dirasakanRes, listRes] = await Promise.allSettled([
       fetch('https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json'),
+      fetch('https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json'),
       fetch('https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json')
     ]);
 
     const results = [];
+    const seen = new Set();
 
-    if (autoRes.ok) {
-      const autoData = await autoRes.json();
-      const g = autoData?.Infogempa?.gempa;
-      if (g) {
-        const coords = (g.Coordinates || '').split(',');
-        results.push({
-          id: 1,
-          magnitude: parseFloat(g.Magnitude || 0),
-          depth: parseInt((g.Kedalaman || '0').replace(/[^0-9]/g, '')),
-          location: g.Wilayah || '',
-          time: `${g.Tanggal || ''} ${g.Jam || ''}`.trim(),
-          latitude: coords[0] ? parseFloat(coords[0].trim()) : 0,
-          longitude: coords[1] ? parseFloat(coords[1].trim()) : 0,
-          tsunami: g.Potensi || 'Tidak berpotensi tsunami',
-          dirasakan: g.Dirasakan || '-',
-          shakemap: g.Shakemap ? `https://data.bmkg.go.id/DataMKG/TEWS/${g.Shakemap}` : '',
-          is_latest: true
-        });
+    const addEntry = (g, isLatest = false) => {
+      const gTime = `${g.Tanggal || ''} ${g.Jam || ''}`.trim();
+      const loc = g.Wilayah || '';
+      const key = `${loc.slice(0, 20)}_${gTime}`.toLowerCase();
+      if (seen.has(key)) return;
+      seen.add(key);
+
+      const coords = (g.Coordinates || '').split(',');
+      results.push({
+        id: results.length + 1,
+        magnitude: parseFloat(g.Magnitude || 0),
+        depth: parseInt((g.Kedalaman || '0').replace(/[^0-9]/g, '')),
+        location: loc,
+        time: gTime,
+        dateTime: g.DateTime || '',
+        latitude: coords[0] ? parseFloat(coords[0].trim()) : 0,
+        longitude: coords[1] ? parseFloat(coords[1].trim()) : 0,
+        tsunami: g.Potensi || (g.Dirasakan ? `Dirasakan: ${g.Dirasakan}` : 'Tidak berpotensi tsunami'),
+        dirasakan: g.Dirasakan || '-',
+        shakemap: g.Shakemap ? `https://data.bmkg.go.id/DataMKG/TEWS/${g.Shakemap}` : '',
+        is_latest: isLatest
+      });
+    };
+
+    // 1. autogempa (paling baru)
+    if (autoRes.status === 'fulfilled' && autoRes.value.ok) {
+      const autoData = await autoRes.value.json();
+      if (autoData?.Infogempa?.gempa) {
+        addEntry(autoData.Infogempa.gempa, true);
       }
     }
 
-    if (listRes.ok) {
-      const listData = await listRes.json();
+    // 2. gempadirasakan (realtime hari ini & kemarin)
+    if (dirasakanRes.status === 'fulfilled' && dirasakanRes.value.ok) {
+      const dData = await dirasakanRes.value.json();
+      const dList = dData?.Infogempa?.gempa;
+      if (Array.isArray(dList)) {
+        for (const g of dList) {
+          addEntry(g, false);
+        }
+      }
+    }
+
+    // 3. gempaterkini (M 5.0+)
+    if (listRes.status === 'fulfilled' && listRes.value.ok) {
+      const listData = await listRes.value.json();
       const gempaList = listData?.Infogempa?.gempa;
       if (Array.isArray(gempaList)) {
-        let idx = 2;
         for (const g of gempaList) {
-          const gTime = `${g.Tanggal || ''} ${g.Jam || ''}`.trim();
-          if (results.length > 0 && results[0].location === g.Wilayah && results[0].time === gTime) {
-            continue;
-          }
-          const coords = (g.Coordinates || '').split(',');
-          results.push({
-            id: idx++,
-            magnitude: parseFloat(g.Magnitude || 0),
-            depth: parseInt((g.Kedalaman || '0').replace(/[^0-9]/g, '')),
-            location: g.Wilayah || '',
-            time: gTime,
-            latitude: coords[0] ? parseFloat(coords[0].trim()) : 0,
-            longitude: coords[1] ? parseFloat(coords[1].trim()) : 0,
-            tsunami: g.Potensi || 'Tidak berpotensi tsunami',
-            dirasakan: g.Dirasakan || '-',
-            shakemap: '',
-            is_latest: false
-          });
-          if (results.length >= 15) break;
+          addEntry(g, false);
+          if (results.length >= 25) break;
         }
       }
     }
