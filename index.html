@@ -14,10 +14,6 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-  <!-- ========================================================
-       FULL-SCREEN ALARM TAKEOVER (LEVEL 3 & TSUNAMI ACEH/SUMATRA)
-       ======================================================== -->
   <div id="alarm-overlay" role="dialog" aria-modal="true" aria-labelledby="alarm-main-heading">
     <div class="alarm-takeover-box">
       <div class="alarm-siren-flasher">🚨</div>
@@ -46,14 +42,8 @@
     </div>
   </div>
 
-  <!-- ========================================================
-       TOAST NOTIFICATION (GEMPA BIASA / LUAR SUMATRA-ACEH)
-       ======================================================== -->
   <div id="toast-container" class="toast-container"></div>
 
-  <!-- ========================================================
-       HEADER / NAVBAR
-       ======================================================== -->
   <header class="site-header">
     <div class="header-container">
       <a href="#" class="brand-link">
@@ -65,7 +55,6 @@
         <a href="#fitur" class="nav-link-item">Fitur Aplikasi</a>
         <a href="#evakuasi" class="nav-link-item">Jalur Evakuasi</a>
         
-        <!-- Tombol Pasang Aplikasi (Akan disembunyikan otomatis jika sudah diinstal / mode PWA) -->
         <button id="btn-header-install" class="btn-header-install btn-install-pwa" title="Pasang Aplikasi di Layar Utama">
           <span>+</span>
           <span>Pasang Aplikasi</span>
@@ -76,13 +65,8 @@
     </div>
   </header>
 
-  <!-- ========================================================
-       HERO SECTION
-       ======================================================== -->
   <section class="hero-section">
     <div class="hero-container">
-      
-      <!-- Sisi Kiri: Teks & Tombol Utama -->
       <div class="hero-content">
         <div class="hero-pill-badge">
           Tersedia sebagai aplikasi • bekerja tanpa internet
@@ -98,7 +82,7 @@
         </p>
 
         <div class="hero-actions-row">
-          <!-- Tombol Pasang (Akan disembunyikan jika sudah terinstal) -->
+      
           <button id="btn-hero-install" class="btn-hero-primary btn-install-pwa">
             <span>+</span>
             <span>Pasang sebagai Aplikasi</span>
@@ -119,7 +103,6 @@
           <div class="hero-check-item">Akses satu ketukan</div>
         </div>
 
-        <!-- Tombol SOS Dashboard + Tambah Kontak -->
         <div class="hero-sos-row">
           <button id="btn-dashboard-sos" class="btn-sos-dashboard" onclick="window.emergencyService?.openSOSFlow()" title="Buka menu kirim SMS darurat">
             <span class="sos-btn-icon">🆘</span>
@@ -139,7 +122,6 @@
         </div>
       </div>
 
-      <!-- Sisi Kanan: Mockup Smartphone Interaktif dengan Animasi -->
       <div class="hero-mockup-wrapper">
         <div class="phone-mockup-frame" id="phone-mockup">
           <div class="mockup-inner-screen">
@@ -151,8 +133,6 @@
                 <span>Siaga Gempa</span>
               </div>
             </div>
-
-            <!-- Kartu Peringatan Dini -->
             <div class="mockup-card-alert" id="mockup-alert-card">
               <div class="card-label">
                 <span>📍</span>
@@ -163,7 +143,6 @@
               </div>
             </div>
 
-            <!-- Tiga Tombol Interaktif Fase -->
             <div class="mockup-three-actions">
               <button class="mockup-action-box" id="btn-mockup-sebelum" data-fase="sebelum" onclick="window.appController?.selectMockupPhase('sebelum')">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -190,7 +169,6 @@
               </button>
             </div>
 
-            <!-- Kartu Titik Kumpul Terdekat -->
             <div class="mockup-card-evac" onclick="window.emergencyService?.openNearestEvacGoogleMaps()" title="Klik untuk membuka rute di Google Maps">
               <div class="evac-label">Titik kumpul terdekat</div>
               <div class="evac-location">
@@ -199,7 +177,6 @@
               </div>
             </div>
 
-            <!-- Dots Indicator Carousel -->
             <div class="mockup-dots-indicator" id="mockup-dots">
               <span class="mockup-dot"></span>
               <span class="mockup-dot active"></span>
@@ -214,9 +191,6 @@
     </div>
   </section>
 
-  <!-- ========================================================
-       3 FEATURE CARDS (DI BAWAH HERO)
-       ======================================================== -->
   <section class="features-trio-section" id="fitur">
     <div class="features-trio-grid">
       
@@ -238,9 +212,6 @@
     </div>
   </section>
 
-  <!-- ========================================================
-       SECTION: DATA GEMPA TERKINI & RIWAYAT (BMKG REAL-TIME)
-       ======================================================== -->
   <section class="earthquake-data-section" id="gempa-realtime">
     <div class="data-section-header">
       <div class="data-header-left">
@@ -259,7 +230,6 @@
       </div>
     </div>
 
-    <!-- Spotlight Gempa Terbaru -->
     <div class="latest-eq-spotlight-card">
       <div class="spotlight-mag-wrap">
         <div class="spotlight-mag-num" id="spotlight-mag">—</div>
@@ -281,8 +251,7 @@
         <span>📍</span><span>Lihat di Peta</span>
       </a>
     </div>
-
-    <!-- Filter Riwayat -->
+    
     <div class="eq-filter-bar">
       <button class="eq-filter-btn active" data-filter="all" onclick="window.earthquakeService?.setFilter('all')">Semua</button>
       <button class="eq-filter-btn" data-filter="sumatra" onclick="window.earthquakeService?.setFilter('sumatra')">Zona Sumatra-Aceh</button>
@@ -290,16 +259,14 @@
       <button class="eq-filter-btn" data-filter="tsunami" onclick="window.earthquakeService?.setFilter('tsunami')">Potensi Tsunami</button>
     </div>
 
-    <!-- Grid Riwayat Gempa -->
     <div class="eq-history-grid" id="eq-history-container">
-      <!-- Diisi oleh earthquake.js -->
+   
       <div style="grid-column: 1 / -1; padding: 48px; text-align: center; color: var(--text-dark-muted);">
         <span style="font-size: 28px;">🌐</span>
         <p style="margin-top: 12px; font-size: 14px;">Memuat data riwayat gempa dari BMKG...</p>
       </div>
     </div>
 
-    <!-- Legenda 4 Tingkat Bahaya -->
     <div class="eq-level-legend">
       <span class="eq-legend-title">Tingkat Bahaya:</span>
       <span class="eq-legend-item level-green"><span class="eq-legend-dot"></span> Rendah (M &lt;5.0)</span>
@@ -309,9 +276,6 @@
     </div>
   </section>
 
-  <!-- ========================================================
-       SECTION: TIGA FASE YANG PERLU DIKUASAI
-       ======================================================== -->
   <section class="three-phases-section" id="tiga-fase">
     <div class="section-header-block">
       <h2 class="section-main-title">Tiga fase yang perlu dikuasai</h2>
@@ -322,7 +286,6 @@
 
     <div class="phases-cards-grid">
       
-      <!-- Card 1: Sebelum Gempa -->
       <div class="phase-white-card">
         <div class="phase-card-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -348,7 +311,6 @@
         </ul>
       </div>
 
-      <!-- Card 2: Saat Gempa -->
       <div class="phase-white-card">
         <div class="phase-card-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -375,7 +337,6 @@
         </ul>
       </div>
 
-      <!-- Card 3: Setelah Gempa -->
       <div class="phase-white-card">
         <div class="phase-card-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -403,13 +364,10 @@
     </div>
   </section>
 
-  <!-- ========================================================
-       SECTION: JALUR EVAKUASI & PETA
-       ======================================================== -->
   <section class="evacuation-section" id="evakuasi">
     <div class="evacuation-container">
       
-      <!-- Visual Peta Jalur Evakuasi Aceh -->
+
       <div class="evac-map-card-wrapper">
         <div class="evac-map-canvas-container">
           <svg class="evac-map-svg" viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -449,7 +407,7 @@
         </div>
       </div>
 
-      <!-- Teks Informasi Jalur Evakuasi -->
+ 
       <div class="evac-info-content">
         <h2>Tahu ke mana melangkah, sebelum harus melangkah cepat.</h2>
         <p class="evac-subtext">
@@ -476,10 +434,7 @@
 
     </div>
   </section>
-
-  <!-- ========================================================
-       SECTION: EMERGENCY CONTACTS BANNER
-       ======================================================== -->
+  
   <section class="emergency-banner-section">
     <div class="emergency-banner-box">
       <div class="emergency-banner-text">
@@ -498,13 +453,13 @@
           <span class="emergency-dial-label">Darurat nasional</span>
         </a>
 
-        <!-- 117 BPBD Aceh -->
+        
         <a href="tel:117" class="emergency-dial-card" title="Panggil BPBD Aceh 117">
           <span class="emergency-dial-number">117</span>
           <span class="emergency-dial-label">BPBD Aceh</span>
         </a>
 
-        <!-- BMKG Info Gempa -->
+     
         <a href="tel:196" class="emergency-dial-card" title="Call Center BMKG">
           <span class="emergency-dial-number">BMKG</span>
           <span class="emergency-dial-label">Info gempa</span>
@@ -513,9 +468,6 @@
     </div>
   </section>
 
-  <!-- ========================================================
-       FOOTER
-       ======================================================== -->
   <footer class="site-footer">
     <div class="footer-container">
       <div>Siaga Gempa — Edukasi Kesiapsiagaan Bencana Wilayah Aceh</div>
@@ -523,9 +475,6 @@
     </div>
   </footer>
 
-  <!-- ========================================================
-       MODAL 1: TATA CARA INSTALASI LENGKAP PER PERANGKAT
-       ======================================================== -->
   <div id="install-guide-modal" class="custom-modal-overlay">
     <div class="custom-modal-box">
       <div class="modal-header-row">
@@ -536,7 +485,7 @@
         <button class="btn-close-modal" onclick="window.systemManager?.closeInstallModal()">✕</button>
       </div>
 
-      <!-- Tab Navigasi Perangkat -->
+
       <div class="install-tabs-nav">
         <button class="tab-btn active" data-tab="android" onclick="window.systemManager?.switchInstallTab('android')">📱 Android</button>
         <button class="tab-btn" data-tab="pc" onclick="window.systemManager?.switchInstallTab('pc')">💻 Laptop / PC</button>
@@ -545,7 +494,6 @@
         <button class="tab-btn" data-tab="macos" onclick="window.systemManager?.switchInstallTab('macos')">🖥️ macOS</button>
       </div>
 
-      <!-- Tab Content: Android -->
       <div id="tab-pane-android" class="install-tab-pane active">
         <div class="install-step-list">
           <div class="install-step-item">
@@ -579,7 +527,7 @@
         </div>
       </div>
 
-      <!-- Tab Content: Laptop / PC -->
+    
       <div id="tab-pane-pc" class="install-tab-pane">
         <div class="install-step-list">
           <div class="install-step-item">
@@ -613,7 +561,6 @@
         </div>
       </div>
 
-      <!-- Tab Content: Tablet -->
       <div id="tab-pane-tablet" class="install-tab-pane">
         <div class="install-step-list">
           <div class="install-step-item">
@@ -631,9 +578,7 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Tab Content: iPhone (iOS) -->
       <div id="tab-pane-iphone" class="install-tab-pane">
         <div class="install-step-list">
           <div class="install-step-item">
@@ -667,7 +612,7 @@
         </div>
       </div>
 
-      <!-- Tab Content: macOS -->
+   
       <div id="tab-pane-macos" class="install-tab-pane">
         <div class="install-step-list">
           <div class="install-step-item">
@@ -693,9 +638,6 @@
     </div>
   </div>
 
-  <!-- ========================================================
-       MODAL 2: ONBOARDING PERIZINAN (NOTIFIKASI, LOKASI, KONTAK)
-       ======================================================== -->
   <div id="permission-modal" class="custom-modal-overlay">
     <div class="custom-modal-box">
       <div class="modal-header-row">
@@ -707,8 +649,7 @@
       </div>
 
       <div class="permission-items-list">
-        
-        <!-- Izin 1: Notifikasi Gempa Real-time -->
+
         <div class="permission-item-box">
           <div class="perm-info-left">
             <div class="perm-icon-box">🔔</div>
@@ -722,7 +663,6 @@
           </button>
         </div>
 
-        <!-- Izin 2: Lokasi GPS & Navigasi Google Maps -->
         <div class="permission-item-box">
           <div class="perm-info-left">
             <div class="perm-icon-box">📍</div>
@@ -736,7 +676,6 @@
           </button>
         </div>
 
-        <!-- Izin 3: Kontak Darurat -->
         <div class="permission-item-box">
           <div class="perm-info-left">
             <div class="perm-icon-box">👥</div>
@@ -759,13 +698,9 @@
     </div>
   </div>
 
-  <!-- ========================================================
-       MODAL SOS: PILIH KONTAK TUJUAN SMS SOS
-       ======================================================== -->
   <div id="sos-contact-modal" class="custom-modal-overlay">
     <div class="custom-modal-box sos-modal-box">
 
-      <!-- STEP 1: Pilih Kontak -->
       <div id="sos-step-pick">
         <div class="modal-header-row">
           <div>
@@ -775,19 +710,19 @@
           <button class="btn-close-modal" onclick="window.emergencyService?.closeSOSModal()">✕</button>
         </div>
 
-        <!-- Daftar kontak -->
+
         <div id="sos-contacts-list" class="sos-contacts-list">
-          <!-- Diisi oleh JS -->
+         
         </div>
 
-        <!-- Tombol Tambah Kontak Baru Langsung dari Modal SOS -->
+     
         <div class="sos-add-contact-action">
           <button type="button" class="btn-sos-add-contact-link" onclick="window.emergencyService?.closeSOSModal(); window.emergencyService?.openAddContactModal();">
             <span>➕</span> Tambah Kontak Darurat Baru
           </button>
         </div>
 
-        <!-- Jika belum ada kontak -->
+     
         <div id="sos-no-contact" class="sos-no-contact" style="display:none;">
           <p>⚠️ Belum ada kontak SOS tersimpan.</p>
           <p>Tambahkan kontak darurat terlebih dahulu agar SMS SOS dapat langsung dikirim ke keluarga atau petugas.</p>
@@ -797,7 +732,7 @@
         </div>
       </div>
 
-      <!-- STEP 2: Compose Pesan SOS -->
+    
       <div id="sos-step-compose" style="display:none;">
         <div class="modal-header-row">
           <div>
@@ -825,9 +760,6 @@
     </div>
   </div>
 
-  <!-- ========================================================
-       MODAL TAMBAH KONTAK SOS (DARI HERO & MODAL LAIN)
-       ======================================================== -->
   <div id="add-contact-modal" class="custom-modal-overlay">
     <div class="custom-modal-box">
       <div class="modal-header-row">
@@ -838,7 +770,7 @@
         <button class="btn-close-modal" onclick="window.emergencyService?.closeAddContactModal()">✕</button>
       </div>
 
-      <!-- Quick Preset Kontak Resmi Bencana -->
+    
       <div class="quick-preset-contacts">
         <span class="quick-preset-title">⚡ Tambah Cepat Kontak Resmi Bencana:</span>
         <div class="quick-preset-btns">
@@ -853,14 +785,12 @@
           </button>
         </div>
       </div>
-
-      <!-- Daftar Kontak Tersimpan -->
       <div class="add-contact-section-label">Kontak Tersimpan:</div>
       <div id="add-contact-saved-list" class="add-contact-saved-list">
-        <!-- Diisi oleh JS -->
+      
       </div>
 
-      <!-- Form Tambah Kontak Baru -->
+    
       <div class="add-contact-form-section">
         <h5 style="font-size:14px; color:var(--text-dark-muted); margin-bottom:12px;">+ Tambah Kontak Keluarga / Kerabat Baru</h5>
         <div class="add-contact-form-fields">
@@ -871,8 +801,6 @@
           ✅ Simpan Kontak Darurat
         </button>
       </div>
-
-      <!-- Gunakan Contact Picker API (jika tersedia) -->
       <div id="contact-picker-section" style="display:none; margin-top:12px; padding-top:12px; border-top:1px solid #e2e8f0;">
         <button class="btn-perm-action" style="width:100%;" onclick="window.emergencyService?.pickOrSetupContacts()">
           📱 Pilih dari Buku Kontak HP
@@ -881,7 +809,7 @@
     </div>
   </div>
 
-  <!-- SCRIPTS -->
+
   <script src="js/notifications.js"></script>
   <script src="js/earthquake.js"></script>
   <script src="js/emergency.js"></script>
