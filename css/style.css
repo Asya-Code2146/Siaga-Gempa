@@ -1879,22 +1879,88 @@ button {
 }
 
 @media (max-width: 768px) {
+  /* Header: lebih kompak di mobile */
   .site-header {
-    padding: 16px 20px;
+    padding: 12px 16px;
+  }
+
+  .header-nav {
+    gap: 8px;
   }
 
   .header-nav .nav-link-item {
     display: none;
   }
 
+  /* Perkecil tombol "Izin & GPS" di header mobile */
+  .btn-header-perm {
+    padding: 6px 10px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  /* Perkecil tombol "Pasang Aplikasi" di header mobile */
+  .btn-header-install {
+    padding: 6px 10px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  /* Badge "Terpasang" di header — perkecil */
+  .badge-app-installed {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+
+  /* Hero: single column, tanpa mockup HP di mobile */
   .hero-section {
-    padding: 100px 20px 60px;
+    padding: 90px 20px 50px;
+  }
+
+  .hero-container {
+    grid-template-columns: 1fr;
+    gap: 0;
+    text-align: center;
+  }
+
+  /* Sembunyikan mockup HP di mobile agar konten utama lebih lega */
+  .hero-mockup-wrapper {
+    display: none;
+  }
+
+  .hero-content {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .hero-actions-row {
+    justify-content: center;
+  }
+
+  .hero-check-list {
+    justify-content: center;
   }
 
   .hero-headline {
-    font-size: 34px;
+    font-size: 32px;
   }
 
+  .hero-description {
+    font-size: 15px;
+  }
+
+  .hero-sos-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-sos-dashboard,
+  .btn-add-contact-hero {
+    width: 100%;
+    max-width: 340px;
+  }
+
+  /* Features */
   .features-trio-section {
     margin-top: -20px;
     padding: 0 20px;
@@ -2672,13 +2738,63 @@ button {
 
 /* Mobile: hero-sos-row stack vertikal */
 @media (max-width: 480px) {
+  /* Hero pill badge — agar tidak overflow */
+  .hero-pill-badge {
+    font-size: 12px;
+    padding: 5px 12px;
+    text-align: center;
+  }
+
+  /* Headline lebih kecil di HP kecil */
+  .hero-headline {
+    font-size: 28px;
+  }
+
+  /* Tombol hero actions stack vertikal */
+  .hero-actions-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+  }
+
+  /* SOS row vertikal */
   .hero-sos-row {
     flex-direction: column;
+    align-items: center;
   }
+
   .hero-sos-row .btn-sos-dashboard,
   .btn-add-contact-hero {
     flex: none;
     width: 100%;
+    max-width: 320px;
+  }
+
+  /* Permission card pills: 2 kolom */
+  .perm-card-pills {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Sembunyikan teks panjang tombol header — tinggalkan ikon */
+  .btn-header-perm span:last-child {
+    display: none;
+  }
+
+  .btn-header-install span:last-child {
+    display: none;
+  }
+
+  .btn-header-perm,
+  .btn-header-install {
+    padding: 7px 10px;
+    font-size: 14px;
   }
 }
 
