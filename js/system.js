@@ -136,7 +136,7 @@ class SystemManager {
   }
 
   openPermissionModal() {
-    this.checkInitialPermissions();
+    this.updatePermissionStatuses();
     document.getElementById('permission-modal')?.classList.add('active');
   }
 
@@ -154,53 +154,162 @@ class SystemManager {
     }
   }
 
-  checkInitialPermissions() {
+  /**
+   * Perbarui status semua tombol izin di Hero Section dan Modal Pengaturan
+   */
+  updatePermissionStatuses() {
+    // 1. Cek Konteks Keamanan (HTTPS vs HTTP)
+    const isHttps = window.isSecureContext || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    const httpWarn = document.getElementById('insecure-http-warning');
+    if (httpWarn) {
+      httpWarn.style.display = isHttps ? 'none' : 'block';
+    }
+
+    // 2. Status Izin Notifikasi
+    const notifPill = document.getElementById('pill-perm-notif');
+    const notifTxt = document.getElementById('txt-perm-notif');
+    const notifBtn = document.getElementById('btn-perm-notif');
+
     if ('Notification' in window) {
-      const notifBtn = document.getElementById('btn-perm-notif');
       if (Notification.permission === 'granted') {
+        if (notifPill) { notifPill.className = 'perm-status-pill pill-success'; }
+        if (notifTxt) { notifTxt.textContent = '✓ Aktif'; }
         if (notifBtn) {
           notifBtn.textContent = '✓ Diizinkan';
           notifBtn.classList.add('granted');
         }
+      } else if (Notification.permission === 'denied') {
+        if (notifPill) { notifPill.className = 'perm-status-pill pill-danger'; }
+        if (notifTxt) { notifTxt.textContent = '❌ Ditolak'; }
+        if (notifBtn) {
+          notifBtn.textContent = '❌ Ditolak (Buka Setting)';
+          notifBtn.classList.remove('granted');
+        }
+      } else {
+        if (notifPill) { notifPill.className = 'perm-status-pill pill-warning'; }
+        if (notifTxt) { notifTxt.textContent = 'Aktifkan'; }
+        if (notifBtn) {
+          notifBtn.textContent = 'Izinkan';
+          notifBtn.classList.remove('granted');
+        }
       }
+    } else {
+      if (notifPill) { notifPill.className = 'perm-status-pill pill-neutral'; }
+      if (notifTxt) { notifTxt.textContent = 'Tidak Didukung'; }
     }
 
-    const savedContact = localStorage.getItem('siagagempa_contact_name');
-    if (savedContact) {
-      const cBtn = document.getElementById('btn-perm-contacts');
-      if (cBtn) {
-        cBtn.textContent = `✓ ${savedContact}`;
-        cBtn.classList.add('granted');
+    // 3. Status Izin GPS Lokasi
+    const locPill = document.getElementById('pill-perm-loc');
+    const locTxt = document.getElementById('txt-perm-loc');
+    const locBtn = document.getElementById('btn-perm-loc');
+
+    if (window.emergencyService?.userCoords) {
+      if (locPill) { locPill.className = 'perm-status-pill pill-success'; }
+      if (locTxt) { locTxt.textContent = '✓ Aktif'; }
+      if (locBtn) {
+        locBtn.textContent = '✓ GPS Aktif';
+        locBtn.classList.add('granted');
+      }
+    } else {
+      if (locPill) { locPill.className = 'perm-status-pill pill-warning'; }
+      if (locTxt) { locTxt.textContent = 'Aktifkan'; }
+    }
+
+    // 4. Status Kontak SOS
+    const contactPill = document.getElementById('pill-perm-contact');
+    const contactTxt = document.getElementById('txt-perm-contact');
+    const contactBtn = document.getElementById('btn-perm-contacts');
+    const contacts = window.emergencyService ? window.emergencyService._getContacts() : [];
+
+    if (contacts.length > 0) {
+      if (contactPill) { contactPill.className = 'perm-status-pill pill-success'; }
+      if (contactTxt) { contactTxt.textContent = `✓ ${contacts.length} Kontak`; }
+      if (contactBtn) {
+        contactBtn.textContent = `✓ ${contacts.length} kontak`;
+        contactBtn.classList.add('granted');
+      }
+    } else {
+      if (contactPill) { contactPill.className = 'perm-status-pill pill-neutral'; }
+      if (contactTxt) { contactTxt.textContent = '0 Kontak'; }
+      if (contactBtn) {
+        contactBtn.textContent = 'Atur Kontak';
+        contactBtn.classList.remove('granted');
       }
     }
   }
 
+  checkInitialPermissions() {
+    this.updatePermissionStatuses();
+  }
+
   async requestNotificationPermission() {
-    const res = await window.notificationManager?.requestPermission();
-    const btn = document.getElementById('btn-perm-notif');
-    if (res?.granted) {
-      if (btn) {
-        btn.textContent = '✓ Diizinkan';
-        btn.classList.add('granted');
+    // 1. Cek browser support
+    if (!('Notification' in window)) {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (isIOS) {
+        alert('ℹ️ Pada iPhone/iPad (iOS):\nFitur notifikasi Web Push memerlukan aplikasi dipasang ke Layar Utama (Home Screen).\n\nLangkah: Ketuk ikon Bagikan (Share) di Safari -> "Tambahkan ke Layar Utama" (Add to Home Screen).');
+      } else {
+        alert('Browser ponsel Anda tidak mendukung fitur Notifikasi Web Push.');
       }
+      return;
+    }
+
+    // 2. Cek jika sudah pernah ditolak
+    if (Notification.permission === 'denied') {
+      alert('⚠️ Izin notifikasi sebelumnya telah ditolak di browser HP Anda.\n\nCara mengaktifkan kembali:\n1. Ketuk ikon gembok / pengaturan situs di bilah alamat browser HP.\n2. Masuk ke "Izin" (Permissions) -> "Notifikasi".\n3. Pilih "Izinkan" (Allow), lalu segarkan halaman ini.');
+      this.updatePermissionStatuses();
+      return;
+    }
+
+    // 3. Minta izin ke browser
+    const res = await window.notificationManager?.requestPermission();
+    this.updatePermissionStatuses();
+
+    if (res?.granted) {
       window.notificationManager?.showNormalToast(
-        'Notifikasi Aktif',
-        'Pemberitahuan peringatan dini gempa & tsunami telah diizinkan.',
+        'Notifikasi Berhasil Diaktifkan',
+        'Ponsel Anda kini siap menerima notifikasi peringatan gempa & potensi tsunami secara otomatis!',
         0
       );
+      // Kirim contoh notifikasi browser sistem
+      window.notificationManager?.sendBrowserNotification('🔔 Siaga Gempa Aktif', {
+        body: 'Sistem peringatan dini gempa bumi & tsunami aktif di ponsel Anda.',
+        vibrate: [300, 100, 300]
+      });
     } else {
-      alert('Izin notifikasi belum diberikan. Anda dapat mengaktifkannya melalui pengaturan browser.');
+      alert('Izin notifikasi belum diberikan. Anda dapat mengaktifkannya kapan saja untuk mendapatkan peringatan dini.');
     }
+  }
+
+  /**
+   * Uji coba simulasi bunyi alarm & notifikasi gempa agar pengguna yakin HP-nya berfungsi
+   */
+  testEarthquakeNotification() {
+    if (!('Notification' in window) || Notification.permission !== 'granted') {
+      alert('⚠️ Izin notifikasi belum aktif di HP Anda. Silakan ketuk tombol "Aktifkan" pada Notifikasi terlebih dahulu.');
+      this.requestNotificationPermission();
+      return;
+    }
+
+    // Play tone & Show in-app Toast
+    window.notificationManager?.showNormalToast(
+      '🧪 Uji Coba: Gempa Simulasi',
+      'M 5.4 SR • Laut Banda Aceh • Ini adalah uji coba notifikasi Siaga Gempa.',
+      5.4
+    );
+
+    // Kirim notifikasi sistem browser ponsel
+    window.notificationManager?.sendBrowserNotification('🧪 Tes Siaga Gempa: Gempa M 5.4', {
+      body: 'Pusat gempa 35 km Barat Daya Banda Aceh. Notifikasi sistem dan getar berfungsi normal di ponsel Anda!',
+      vibrate: [500, 200, 500],
+      requireInteraction: false
+    });
   }
 
   async requestAllPermissions() {
     await this.requestNotificationPermission();
     window.emergencyService?.startLocationTracking();
-    await window.emergencyService?.pickOrSetupContacts();
-
-    setTimeout(() => {
-      this.closePermissionModal();
-    }, 1000);
+    this.updatePermissionStatuses();
   }
 }
 

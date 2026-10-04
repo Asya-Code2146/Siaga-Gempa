@@ -41,14 +41,14 @@ class NotificationManager {
 
   async requestPermission() {
     if (!('Notification' in window)) {
-      return { supported: false, granted: false };
+      return { supported: false, granted: false, reason: 'unsupported' };
     }
     try {
       const permission = await Notification.requestPermission();
-      return { supported: true, granted: permission === 'granted' };
+      return { supported: true, granted: permission === 'granted', status: permission };
     } catch (err) {
       console.error('Error requesting notification permission:', err);
-      return { supported: true, granted: false };
+      return { supported: true, granted: false, error: err.message };
     }
   }
 
@@ -60,17 +60,27 @@ class NotificationManager {
     if (!this.isPermissionGranted()) return;
 
     const defaultOptions = {
-      icon: 'icons/logo.svg',
-      badge: 'icons/logo.svg',
+      icon: 'icons/icon-192.png',
+      badge: 'icons/icon-192.png',
       vibrate: [500, 200, 500, 200, 1000],
-      tag: 'siaga-gempa-alert',
+      tag: options.tag || 'siaga-gempa-alert',
       renotify: true,
       ...options
     };
 
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready.then(reg => {
-        reg.showNotification(title, defaultOptions);
+        if (reg && reg.showNotification) {
+          reg.showNotification(title, defaultOptions);
+        } else {
+          new Notification(title, defaultOptions);
+        }
+      }).catch(() => {
+        try {
+          new Notification(title, defaultOptions);
+        } catch (e) {
+          console.warn('Direct notification error:', e);
+        }
       });
     } else {
       try {

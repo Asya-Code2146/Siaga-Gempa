@@ -260,10 +260,54 @@ class EarthquakeService {
       this.loadFallbackData();
     }
 
+    // Periksa dan kirim notifikasi otomatis jika terdeteksi gempa baru dari BMKG
+    if (this.latestEarthquake) {
+      this.checkAndNotifyNewEarthquake(this.latestEarthquake);
+    }
+
     this.renderSpotlightUI();
     this.renderHistoryUI();
     this.updateMockupDisplay();
     this.startAutoRefresh();
+  }
+
+  /**
+   * Cek apakah ada gempa baru dari BMKG dan kirimkan notifikasi serta alarm otomatis
+   */
+  checkAndNotifyNewEarthquake(eq) {
+    if (!eq) return;
+
+    // Buat identitas unik gempa berdasarkan waktu + magnitudo + lokasi
+    const eqId = `${eq.dateTime || eq.time}_${eq.magnitude}_${eq.location}`.replace(/[^a-zA-Z0-9]/g, '_');
+    const lastNotified = localStorage.getItem('siagagempa_last_notified_eq');
+
+    // Jika ini adalah pembukaan pertama kali aplikasi
+    if (!lastNotified) {
+      localStorage.setItem('siagagempa_last_notified_eq', eqId);
+      console.log('📌 Inisialisasi awal pemantau gempa BMKG. Gempa terkini tersimpan:', eqId);
+      return;
+    }
+
+    // Jika gempa baru terdeteksi (ID berbeda dengan yang terakhir dinotifikasi)
+    if (lastNotified !== eqId) {
+      console.log('🚨 GEMPA BARU TERDETEKSI DARI BMKG!', eq);
+      localStorage.setItem('siagagempa_last_notified_eq', eqId);
+
+      const isSumatra = this.isSumatraAcehRegion(eq.location, eq.latitude, eq.longitude);
+      const classification = this.classifyLevel(eq.magnitude, eq.tsunami);
+
+      // 1. Jika Darurat Tinggi / Potensi Tsunami atau Gempa Kuat Sumatra-Aceh (Level 3-4)
+      if (classification.isEmergency || (classification.level >= 3 && isSumatra)) {
+        window.notificationManager?.triggerEmergencyModal(eq);
+      } else {
+        // 2. Gempa Biasa / Luar Wilayah (Level 1-2): Notifikasi Toast & Notifikasi Sistem HP
+        window.notificationManager?.showNormalToast(
+          `⚠️ Gempa Baru BMKG: M ${eq.magnitude.toFixed(1)}`,
+          `${eq.location} • Kedalaman ${eq.depth} km • ${eq.tsunami}`,
+          eq.magnitude
+        );
+      }
+    }
   }
 
   loadFallbackData() {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'siagagempa-pwa-v3.3';
+const CACHE_NAME = 'siagagempa-pwa-v3.4';
 
 const STATIC_ASSETS = [
   './',
@@ -101,8 +101,8 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: payload.body,
-    icon: 'icons/logo.svg',
-    badge: 'icons/logo.svg',
+    icon: 'icons/icon-192.png',
+    badge: 'icons/icon-192.png',
     vibrate: [500, 200, 500, 200, 1000],
     data: { url: 'index.html' }
   };

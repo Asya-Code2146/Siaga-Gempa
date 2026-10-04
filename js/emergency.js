@@ -41,6 +41,8 @@ class EmergencyService {
           permBtn.classList.add('granted');
         }
 
+        window.systemManager?.updatePermissionStatuses();
+
         window.notificationManager?.showNormalToast(
           'Lokasi GPS Aktif',
           `Koordinat Anda: ${this.userCoords.lat.toFixed(4)}, ${this.userCoords.lon.toFixed(4)}. Integrasi Google Maps siap digunakan.`,
@@ -49,9 +51,17 @@ class EmergencyService {
       },
       (err) => {
         console.warn('GPS error:', err.message);
-        alert('Gagal mengambil lokasi GPS: ' + err.message + '. Pastikan izin lokasi browser diaktifkan.');
+        let msg = 'Gagal mengambil lokasi GPS: ' + err.message;
+        if (err.code === 1) { // PERMISSION_DENIED
+          msg = 'Izin lokasi (GPS) ditolak browser. Ketuk ikon gembok / pengaturan situs di bilah alamat browser HP Anda untuk mengizinkan akses lokasi.';
+        } else if (err.code === 2) { // POSITION_UNAVAILABLE
+          msg = 'Sinyal GPS tidak ditemukan. Pastikan fitur Lokasi / GPS di pengaturan HP Anda sudah dinyalakan.';
+        } else if (err.code === 3) { // TIMEOUT
+          msg = 'Waktu permintaan GPS habis. Coba pastikan HP berada di area terbuka.';
+        }
+        alert(msg);
       },
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }
     );
   }
 
@@ -69,7 +79,7 @@ class EmergencyService {
   /**
    * Akses Kontak Darurat:
    * Menggunakan Contact Picker API modern (navigator.contacts.select) jika didukung,
-   * atau menyediakan input penyimpanan kontak darurat keluarga.
+   * atau langsung membuka modal formulir tambah kontak darurat.
    */
   async pickOrSetupContacts() {
     if ('contacts' in navigator && 'ContactsManager' in window) {
@@ -80,48 +90,31 @@ class EmergencyService {
           const c = picked[0];
           const name = c.name ? c.name[0] : 'Kontak Darurat';
           const tel = c.tel ? c.tel[0] : '';
-          // Store contacts in multi-contact array
-          const contactsKey = 'siagagempa_contacts';
-          let savedContacts = [];
-          try {
-            savedContacts = JSON.parse(localStorage.getItem(contactsKey) || '[]');
-          } catch (e) {}
-          savedContacts.push({ name, phone: tel });
-          localStorage.setItem(contactsKey, JSON.stringify(savedContacts));
-          const permBtn = document.getElementById('btn-perm-contacts');
-          if (permBtn) {
-            permBtn.textContent = `✓ ${savedContacts.length} kontak`;
-            permBtn.classList.add('granted');
-          }
-          this.updateHeroContactCount();
+          if (tel) {
+            const contactsKey = 'siagagempa_contacts';
+            let savedContacts = this._getContacts();
+            savedContacts.push({ name, phone: tel });
+            localStorage.setItem(contactsKey, JSON.stringify(savedContacts));
 
-          alert(`✅ Kontak darurat berhasil dihubungkan:\n${name} (${tel})`);
-          return;
+            this.updateHeroContactCount();
+            this._renderAddContactList();
+            window.systemManager?.updatePermissionStatuses();
+
+            window.notificationManager?.showNormalToast(
+              'Kontak Terhubung',
+              `✅ Kontak darurat berhasil dihubungkan: ${name} (${tel})`,
+              0
+            );
+            return;
+          }
         }
       } catch (ex) {
         console.warn('Contact picker dibatalkan atau tidak didukung:', ex);
       }
     }
 
-    // Fallback: Dialog input kontak darurat keluarga
-    const curName = localStorage.getItem('siagagempa_contact_name') || '';
-    const curPhone = localStorage.getItem('siagagempa_contact_phone') || '';
-    const newPhone = prompt('Masukkan Nomor Telepon Kontak Darurat Keluarga Anda (misal: 081234567890):', curPhone);
-    
-    if (newPhone) {
-      const newName = prompt('Nama Kerabat / Kontak Darurat:', curName || 'Keluarga');
-      localStorage.setItem('siagagempa_contact_name', newName || 'Keluarga');
-      localStorage.setItem('siagagempa_contact_phone', newPhone);
-
-      const permBtn = document.getElementById('btn-perm-contacts');
-      if (permBtn) {
-        permBtn.textContent = `✓ ${newName || 'Tersimpan'}`;
-        permBtn.classList.add('granted');
-      }
-      this.updateHeroContactCount();
-
-      alert(`✅ Nomor kontak darurat ${newName} (${newPhone}) tersimpan aman di aplikasi!`);
-    }
+    // Fallback ramah: Langsung buka modal formulir Tambah Kontak (tanpa browser prompt)
+    this.openAddContactModal();
   }
 
   /**
@@ -290,12 +283,9 @@ END:VCARD`;
   }
 
   /**
-   * Konfirmasi kirim SMS: susun pesan dari textarea + lokasi, buka SMS app.
+   * Susun teks pesan darurat lengkap dengan tautan koordinat Google Maps
    */
-  confirmSendSMS() {
-    const contact = this._currentContact;
-    if (!contact) return;
-
+  _buildCurrentSOSMessage() {
     const textarea = document.getElementById('sos-message-body');
     const userNote = (textarea ? textarea.value.trim() : '');
 
@@ -304,18 +294,79 @@ END:VCARD`;
       : null;
 
     const locText = locLink
-      ? `Lokasi saya: ${locLink}`
-      : 'Lokasi GPS tidak tersedia.';
+      ? `Lokasi GPS saya: ${locLink}`
+      : 'Lokasi GPS: (Belum aktif/tidak terdeteksi)';
 
-    // Susun pesan: keterangan user (jika ada) + lokasi GPS
-    let msg = `🆘 DARURAT! Tolong bantu saya!\n${locText}`;
     if (userNote) {
-      msg = `🆘 DARURAT! ${userNote}\n${locText}`;
+      return `🆘 DARURAT GEMPA! ${userNote}\n${locText}`;
+    }
+    return `🆘 DARURAT! Tolong bantu saya, terjadi gempa bumi!\n${locText}`;
+  }
+
+  /**
+   * Konfirmasi kirim SMS: susun pesan dari textarea + lokasi, buka aplikasi SMS ponsel
+   */
+  confirmSendSMS() {
+    const contact = this._currentContact;
+    if (!contact) {
+      alert('Silakan pilih kontak tujuan terlebih dahulu.');
+      return;
     }
 
-    const smsUrl = `sms:${contact.phone}?body=${encodeURIComponent(msg)}`;
+    const cleanPhone = (contact.phone || '').replace(/[^0-9+]/g, '');
+    const msg = this._buildCurrentSOSMessage();
+
+    // Deteksi iOS (iPhone / iPad) vs Android
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const delimiter = isIOS ? '&' : '?';
+    const smsUrl = `sms:${cleanPhone}${delimiter}body=${encodeURIComponent(msg)}`;
+
     this.closeSOSModal();
-    window.open(smsUrl, '_self');
+
+    // Trigger menggunakan click link buatan (paling andal di semua browser HP)
+    const link = document.createElement('a');
+    link.href = smsUrl;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      link.remove();
+      // Fallback jika belum terbuka
+      try { window.location.href = smsUrl; } catch (e) {}
+    }, 300);
+  }
+
+  /**
+   * Kirim pesan darurat via WhatsApp (sangat andal di Indonesia & gratis kuota internet)
+   */
+  confirmSendWhatsApp() {
+    const contact = this._currentContact;
+    if (!contact) return;
+
+    let cleanPhone = (contact.phone || '').replace(/[^0-9]/g, '');
+    // Konversi nomor lokal 08xxx ke format internasional 628xxx
+    if (cleanPhone.startsWith('0')) {
+      cleanPhone = '62' + cleanPhone.substring(1);
+    }
+
+    const msg = this._buildCurrentSOSMessage();
+    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+
+    this.closeSOSModal();
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
+  }
+
+  /**
+   * Panggil Telepon Langsung (khusus untuk nomor darurat seperti 112, 117, 196, atau keluarga)
+   */
+  callCurrentContact() {
+    const contact = this._currentContact;
+    if (!contact) return;
+
+    const cleanPhone = (contact.phone || '').replace(/[^0-9+]/g, '');
+    this.closeSOSModal();
+    window.location.href = `tel:${cleanPhone}`;
   }
 
   /** Ambil lokasi GPS secara async (Promise) */
@@ -503,11 +554,13 @@ END:VCARD`;
   /** Perbarui label jumlah kontak di hero section */
   updateHeroContactCount() {
     const countEl = document.getElementById('hero-contact-count');
-    if (!countEl) return;
     const n = this._getContacts().length;
-    countEl.textContent = n === 0
-      ? '0 kontak tersimpan'
-      : `${n} kontak tersimpan`;
+    if (countEl) {
+      countEl.textContent = n === 0
+        ? '0 kontak tersimpan'
+        : `${n} kontak tersimpan`;
+    }
+    window.systemManager?.updatePermissionStatuses();
   }
 }
 
