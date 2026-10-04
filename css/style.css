@@ -1912,20 +1912,25 @@ button {
     padding: 5px 10px;
   }
 
-  /* Hero: single column, tanpa mockup HP di mobile */
+  /* Hero: single column, mockup di bawah konten */
   .hero-section {
     padding: 90px 20px 50px;
   }
 
   .hero-container {
     grid-template-columns: 1fr;
-    gap: 0;
+    gap: 40px;
     text-align: center;
   }
 
-  /* Sembunyikan mockup HP di mobile agar konten utama lebih lega */
+  /* Tampilkan mockup HP di mobile — di bawah konten */
   .hero-mockup-wrapper {
-    display: none;
+    display: flex;
+    justify-content: center;
+  }
+
+  .phone-mockup-frame {
+    max-width: 220px;
   }
 
   .hero-content {
