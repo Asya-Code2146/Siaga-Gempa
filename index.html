@@ -64,8 +64,9 @@
       <nav class="header-nav">
         <a href="#fitur" class="nav-link-item">Fitur Aplikasi</a>
         <a href="#evakuasi" class="nav-link-item">Jalur Evakuasi</a>
+        <a href="#bantuan" class="nav-link-item">Bantuan</a>
         
-        <!-- Tombol Pengaturan Izin Notifikasi & GPS -->
+
         <button id="btn-header-perm" class="btn-header-perm" onclick="window.systemManager?.openPermissionModal()" title="Pengaturan Izin Notifikasi & GPS">
           <span>🔔</span>
           <span>Izin & GPS</span>
@@ -555,10 +556,115 @@
   <!-- ========================================================
        FOOTER
        ======================================================== -->
+  <section class="faq-help-section" id="bantuan">
+    <div class="faq-help-container">
+
+      <div class="faq-help-header">
+        <div class="faq-help-badge">❓ Bantuan &amp; FAQ</div>
+        <h2 class="faq-help-title">Cara Pakai Siaga Gempa</h2>
+        <p class="faq-help-subtitle">Panduan singkat agar Anda bisa memanfaatkan semua fitur dengan mudah.</p>
+      </div>
+
+      <div class="faq-grid">
+
+        <div class="faq-card">
+          <div class="faq-card-icon">📲</div>
+          <h4>Cara Memasang Aplikasi</h4>
+          <ol class="faq-steps-list">
+            <li>Buka situs ini di <strong>Google Chrome</strong> (Android) atau <strong>Safari</strong> (iPhone).</li>
+            <li>Ketuk menu browser (titik tiga ⋮ atau ikon Bagikan 🔗).</li>
+            <li>Pilih <strong>"Instal Aplikasi"</strong> atau <strong>"Tambah ke Layar Utama"</strong>.</li>
+            <li>Konfirmasi dengan ketuk <strong>"Instal"</strong> atau <strong>"Tambah"</strong>.</li>
+            <li>Ikon Siaga Gempa kini muncul di layar utama HP Anda!</li>
+          </ol>
+        </div>
+
+        <div class="faq-card">
+          <div class="faq-card-icon">🔔</div>
+          <h4>Cara Aktifkan Notifikasi Gempa</h4>
+          <ol class="faq-steps-list">
+            <li>Ketuk tombol <strong>"🔔 Izin &amp; GPS"</strong> di pojok kanan atas.</li>
+            <li>Klik <strong>"Izinkan"</strong> saat browser meminta izin notifikasi.</li>
+            <li>Jika tidak muncul, buka pengaturan browser → Notifikasi → Izinkan situs ini.</li>
+            <li>Uji coba dengan tombol <strong>"🧪 Tes Notif"</strong> di kartu status izin.</li>
+          </ol>
+        </div>
+
+        <div class="faq-card">
+          <div class="faq-card-icon">🆘</div>
+          <h4>Cara Kirim Pesan SOS</h4>
+          <ol class="faq-steps-list">
+            <li>Tambah kontak darurat keluarga via tombol <strong>"👤➕ Tambah Kontak"</strong>.</li>
+            <li>Saat darurat, ketuk tombol merah <strong>"🆘 Kirim Pesan SOS"</strong>.</li>
+            <li>Pilih kontak penerima, tulis keterangan situasi Anda.</li>
+            <li>Kirim via <strong>SMS</strong> atau langsung ke <strong>WhatsApp</strong> — lokasi GPS otomatis disertakan.</li>
+          </ol>
+        </div>
+
+        <div class="faq-card">
+          <div class="faq-card-icon">📍</div>
+          <h4>Cara Pakai Peta Evakuasi</h4>
+          <ol class="faq-steps-list">
+            <li>Aktifkan GPS via tombol <strong>"📍 GPS: Aktifkan"</strong> di kartu status.</li>
+            <li>Aplikasi akan menghitung titik kumpul terdekat dari posisi Anda.</li>
+            <li>Ketuk <strong>"↗ Rute"</strong> atau <strong>"Buka Peta Evakuasi di Google Maps"</strong> untuk navigasi.</li>
+            <li>Peta tetap bisa dibuka meski tanpa koneksi internet (mode offline).</li>
+          </ol>
+        </div>
+
+        <div class="faq-card">
+          <div class="faq-card-icon">📊</div>
+          <h4>Cara Baca Data Gempa BMKG</h4>
+          <ol class="faq-steps-list">
+            <li>Lihat bagian <strong>"Gempa Terkini Real-Time"</strong> — diperbarui otomatis setiap 60 detik.</li>
+            <li>Gunakan filter <strong>Zona Sumatra-Aceh</strong>, <strong>M 5.0+</strong>, atau <strong>Potensi Tsunami</strong> untuk menyaring data.</li>
+            <li>Kartu hijau = rendah, kuning = siaga, oranye = waspada, merah = bahaya.</li>
+            <li>Ketuk <strong>"🔄 Perbarui Data"</strong> untuk muat ulang data BMKG sekarang.</li>
+          </ol>
+        </div>
+
+        <div class="faq-card">
+          <div class="faq-card-icon">⚡</div>
+          <h4>Pertanyaan Umum (FAQ)</h4>
+          <ul class="faq-qa-list">
+            <li><strong>Apakah aplikasi ini gratis?</strong> Ya, sepenuhnya gratis tanpa iklan.</li>
+            <li><strong>Bisa pakai tanpa internet?</strong> Ya, panduan &amp; peta evakuasi tersimpan offline.</li>
+            <li><strong>Data gempa dari mana?</strong> Langsung dari API resmi BMKG Real-Time.</li>
+            <li><strong>Notifikasi tidak muncul?</strong> Pastikan izin notifikasi sudah diaktifkan &amp; aplikasi terpasang di layar utama.</li>
+            <li><strong>SOS tidak terkirim?</strong> Pastikan sudah menambahkan kontak darurat dan izin GPS aktif.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="faq-wa-cta-box">
+        <div class="faq-wa-cta-text">
+          <span class="faq-wa-cta-icon">💬</span>
+          <div>
+            <strong>Masih bingung atau ada pertanyaan?</strong>
+            <p>Hubungi developer langsung via WhatsApp — kami siap membantu!</p>
+          </div>
+        </div>
+        <a href="https://wa.me/6281360946051?text=Halo%20Developer%20Siaga%20Gempa%2C%20saya%20ingin%20bertanya%20tentang%20aplikasi%20ini." target="_blank" rel="noopener noreferrer" class="btn-wa-developer">
+          <span class="btn-wa-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </span>
+          <span>Hubungi Developer</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
   <footer class="site-footer">
     <div class="footer-container">
       <div>Siaga Gempa — Edukasi Kesiapsiagaan Bencana Wilayah Aceh</div>
       <div class="footer-source">Sumber data: BMKG • BPBD Aceh</div>
+      <a href="https://wa.me/6281360946051?text=Halo%20Developer%20Siaga%20Gempa%2C%20saya%20ingin%20bertanya%20tentang%20aplikasi%20ini." target="_blank" rel="noopener noreferrer" class="footer-wa-link">
+        💬 Bantuan WhatsApp
+      </a>
     </div>
   </footer>
 
