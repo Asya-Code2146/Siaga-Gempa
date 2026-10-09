@@ -23,7 +23,6 @@ export default async function handler(req, res) {
   }
 
   const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] EMERGENCY SMS TRIGGERED -> TO: ${cleanPhone} | MSG: ${fullMessage}`);
 
   return res.status(200).json({
     success: true,

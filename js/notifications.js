@@ -1,9 +1,3 @@
-/**
- * Siaga Gempa - Notification & Alarm Audio Synthesizer
- * Handles Full-Screen Emergency Takeover (Level 3 & Tsunami Aceh)
- * and gentle Toast Notifications for outside/mild earthquakes.
- */
-
 class NotificationManager {
   constructor() {
     this.audioCtx = null;
@@ -22,9 +16,7 @@ class NotificationManager {
       if (AudioCtxClass) {
         this.audioCtx = new AudioCtxClass();
       }
-    } catch (e) {
-      console.warn('Web Audio API not supported:', e);
-    }
+    } catch (e) {}
   }
 
   ensureAudioReady() {
@@ -47,7 +39,6 @@ class NotificationManager {
       const permission = await Notification.requestPermission();
       return { supported: true, granted: permission === 'granted', status: permission };
     } catch (err) {
-      console.error('Error requesting notification permission:', err);
       return { supported: true, granted: false, error: err.message };
     }
   }
@@ -78,16 +69,12 @@ class NotificationManager {
       }).catch(() => {
         try {
           new Notification(title, defaultOptions);
-        } catch (e) {
-          console.warn('Direct notification error:', e);
-        }
+        } catch (e) {}
       });
     } else {
       try {
         new Notification(title, defaultOptions);
-      } catch (e) {
-        console.warn('Direct notification error:', e);
-      }
+      } catch (e) {}
     }
   }
 
@@ -110,9 +97,7 @@ class NotificationManager {
 
       osc.start();
       osc.stop(this.audioCtx.currentTime + duration);
-    } catch (e) {
-      console.warn('Tone error:', e);
-    }
+    } catch (e) {}
   }
 
   startEmergencySiren() {
@@ -146,9 +131,7 @@ class NotificationManager {
       }, 480);
 
       this.activeOscillators.push({ osc, gain });
-    } catch (e) {
-      console.error('Failed to start siren audio:', e);
-    }
+    } catch (e) {}
 
     if ('vibrate' in navigator) {
       navigator.vibrate([1000, 300, 1000, 300, 1500]);
@@ -203,17 +186,22 @@ class NotificationManager {
     if (magEl) magEl.textContent = `Magnitudo: ${mag} SR`;
     if (locEl) locEl.textContent = `Episentrum: ${loc}`;
     if (tsuEl) tsuEl.textContent = `Status: ${tsunami.toUpperCase()}`;
-    if (badgeEl) badgeEl.textContent = `ZONA DARURAT: SUMATRA - ACEH (LEVEL 3)`;
+    if (badgeEl) badgeEl.textContent = `ZONA DARURAT: SUMATRA - ACEH`;
 
     if (mapsBtn) {
-      mapsBtn.href = `https://www.google.com/maps/dir/?api=1&destination=Lapangan+Blang+Padang+Banda+Aceh`;
+      const uCoords = window.evacuationService?.userCoords || window.emergencyService?.userCoords;
+      if (uCoords) {
+        mapsBtn.href = `https://www.google.com/maps/dir/?api=1&origin=${uCoords.lat},${uCoords.lon}&destination=5.5412,95.3045+(Gedung+Evakuasi+Tsunami+Lambung)&travelmode=walking`;
+      } else {
+        mapsBtn.href = `https://www.google.com/maps/dir/?api=1&destination=5.5412,95.3045+(Gedung+Evakuasi+Tsunami+Lambung)&travelmode=walking`;
+      }
     }
 
     overlay.classList.add('active');
     this.startEmergencySiren();
 
     this.sendBrowserNotification(`🚨 PERINGATAN TSUNAMI & GEMPA M ${mag}!`, {
-      body: `Wilayah Sumatra-Aceh: ${loc}. ${tsunami}. Segera evakuasi ke tempat tinggi!`,
+      body: `Wilayah Sumatra-Aceh: ${loc}. ${tsunami}. Segera evakuasi ke tempat tinggi atau shelter vertikal!`,
       requireInteraction: true
     });
   }

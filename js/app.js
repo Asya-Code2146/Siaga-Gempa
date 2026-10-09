@@ -1,43 +1,32 @@
-/**
- * Siaga Gempa - Main Application Orchestrator
- */
-
 class AppController {
   constructor() {
     this.init();
   }
 
   async init() {
-    console.log('⚡ Siaga Gempa PWA Engine Initializing...');
-
-    // 1. Registrasi Service Worker untuk kapabilitas offline
     this.registerServiceWorker();
 
-    // 2. Ambil data gempa awal dari BMKG
+    if (window.mapService) {
+      window.mapService.initMap('map');
+    }
+
     await window.earthquakeService?.fetchLiveEarthquakeData();
 
-    // 3. Setup otomatis visibilitas tombol pasang PWA
+    if (window.evacuationService) {
+      window.evacuationService.loadSheltersFromApi();
+    }
+
     window.systemManager?.updateInstallButtonsVisibility();
   }
 
   registerServiceWorker() {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(reg => {
-            console.log('✅ Service Worker terdaftar dengan scope:', reg.scope);
-          })
-          .catch(err => {
-            console.warn('⚠️ Registrasi Service Worker gagal:', err);
-          });
+        navigator.serviceWorker.register('service-worker.js').catch(() => {});
       });
     }
   }
 
-  /**
-   * Interaktivitas Mockup Smartphone pada Hero Section:
-   * Mengubah isi kartu pada layar mockup dengan animasi saat pengguna memilih fase Sebelum, Saat, atau Sesudah
-   */
   selectMockupPhase(phase) {
     document.querySelectorAll('.mockup-action-box').forEach(btn => {
       if (btn.getAttribute('data-fase') === phase) {
@@ -51,7 +40,6 @@ class AppController {
     const locLabelEl = document.getElementById('mockup-loc-label');
     const dots = document.querySelectorAll('#mockup-dots .mockup-dot');
 
-    // Update active dot
     dots.forEach((dot, idx) => {
       dot.classList.remove('active');
       if (phase === 'sebelum' && idx === 0) dot.classList.add('active');

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'siagagempa-pwa-v3.4';
+const CACHE_NAME = 'siagagempa-pwa-v4.0';
 
 const STATIC_ASSETS = [
   './',
@@ -6,8 +6,11 @@ const STATIC_ASSETS = [
   'manifest.json',
   'css/style.css',
   'js/notifications.js',
+  'js/map.js',
   'js/earthquake.js',
   'js/emergency.js',
+  'js/evacuation.js',
+  'js/ai_analyst.js',
   'js/system.js',
   'js/app.js',
   'icons/logo.svg',
@@ -19,10 +22,7 @@ const STATIC_ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW] Pre-caching static assets for offline use...');
-      return cache.addAll(STATIC_ASSETS).catch(err => {
-        console.warn('[SW] Beberapa asset gagal dicache:', err);
-      });
+      return cache.addAll(STATIC_ASSETS).catch(() => {});
     })
   );
   self.skipWaiting();
@@ -34,7 +34,6 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('[SW] Removing old cache:', key);
             return caches.delete(key);
           }
         })
@@ -47,7 +46,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  if (url.hostname.includes('bmkg.go.id')) {
+  if (url.hostname.includes('bmkg.go.id') || url.pathname.includes('/api/')) {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
@@ -87,8 +86,8 @@ self.addEventListener('fetch', (event) => {
 
 self.addEventListener('push', (event) => {
   let payload = {
-    title: '⚠️ Siaga Gempa - Peringatan Gempa!',
-    body: 'Terdeteksi aktivitas seismik di Indonesia. Buka aplikasi untuk info detail.'
+    title: 'Peringatan Gempa BMKG',
+    body: 'Terdeteksi aktivitas gempa terkini. Buka aplikasi untuk rincian dan panduan evakuasi.'
   };
 
   if (event.data) {

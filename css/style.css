@@ -4,7 +4,7 @@
   --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Color Palette - Matching reference image */
+  
   --hero-dark-1: #0e2027;
   --hero-dark-2: #143834;
   --hero-dark-3: #184c3e;
@@ -76,9 +76,7 @@ button {
   transition: all 0.2s ease;
 }
 
-/* ========================================================
-   HEADER & NAVBAR
-   ======================================================== */
+
 .site-header {
   position: absolute;
   top: 0;
@@ -228,9 +226,7 @@ button {
   font-weight: 600;
 }
 
-/* ========================================================
-   HERO SECTION & SEISMIC AMBIENT ANIMATION
-   ======================================================== */
+
 .hero-section {
   position: relative;
   background: radial-gradient(circle at 85% 35%, rgba(33, 114, 91, 0.45) 0%, transparent 55%),
@@ -241,7 +237,7 @@ button {
   overflow: hidden;
 }
 
-/* Ambient Animated Seismic Wave in Background */
+
 .hero-seismic-aura {
   position: absolute;
   top: 40%;
@@ -398,9 +394,7 @@ button {
   font-size: 18px;
 }
 
-/* ========================================================
-   ANIMATED SMARTPHONE MOCKUP (INTERAKTIF & MUNCUL TERBUKA)
-   ======================================================== */
+
 .hero-mockup-wrapper {
   display: flex;
   justify-content: center;
@@ -422,7 +416,7 @@ button {
   aspect-ratio: 9 / 18.5;
   display: flex;
   flex-direction: column;
-  /* Animasi HP Muncul & Terbuka */
+  
   animation: phoneEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards,
              phoneFloatBob 6s ease-in-out 1.2s infinite;
   transform-origin: center bottom;
@@ -455,7 +449,7 @@ button {
   50% { transform: translateY(-9px); }
 }
 
-/* Glass Sheen Light Streak Effect */
+
 .phone-mockup-frame::after {
   content: '';
   position: absolute;
@@ -654,9 +648,7 @@ button {
   border-radius: 4px;
 }
 
-/* ========================================================
-   3 FEATURE CARDS (UNDER HERO)
-   ======================================================== */
+
 .features-trio-section {
   max-width: var(--container-max);
   margin: -35px auto 60px;
@@ -701,9 +693,7 @@ button {
   color: rgba(255, 255, 255, 0.78);
 }
 
-/* ========================================================
-   SECTION: DATA GEMPA TERKINI & RIWAYAT REAL-TIME (BMKG)
-   ======================================================== */
+
 .earthquake-data-section {
   max-width: var(--container-max);
   margin: 0 auto 90px;
@@ -754,7 +744,7 @@ button {
   animation: statusPulse 1.8s infinite;
 }
 
-/* Highlight Card for Latest Earthquake */
+
 .latest-eq-spotlight-card {
   background: linear-gradient(135deg, #12332c 0%, #174238 60%, #1e5246 100%);
   border-radius: var(--radius-xl);
@@ -863,7 +853,7 @@ button {
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
 }
 
-/* Filter Buttons */
+
 .eq-filter-bar {
   display: flex;
   align-items: center;
@@ -898,7 +888,7 @@ button {
   box-shadow: 0 4px 14px rgba(20, 62, 59, 0.2);
 }
 
-/* Earthquake History Grid */
+
 .eq-history-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -982,9 +972,7 @@ button {
   border: 1px solid #a7f3d0;
 }
 
-/* ========================================================
-   SECTION: TIGA FASE YANG PERLU DIKUASAI
-   ======================================================== */
+
 .three-phases-section {
   max-width: var(--container-max);
   margin: 0 auto 90px;
@@ -1082,9 +1070,7 @@ button {
   line-height: 1.5;
 }
 
-/* ========================================================
-   SECTION: JALUR EVAKUASI & ANIMATED PETA
-   ======================================================== */
+
 .evacuation-section {
   background-color: var(--bg-evac-section);
   padding: 85px 32px;
@@ -1130,7 +1116,7 @@ button {
   height: 100%;
 }
 
-/* Animated Marching Dashes for Evacuation Routes */
+
 .animated-evac-line {
   stroke-dasharray: 6 5;
   animation: marchingDash 1.2s linear infinite;
@@ -1140,7 +1126,7 @@ button {
   to { stroke-dashoffset: -22; }
 }
 
-/* Animated Glowing Beacon for Main Assembly Point */
+
 .beacon-beacon-pulse {
   transform-origin: 220px 120px;
   animation: beaconPing 2s infinite ease-out;
@@ -1249,9 +1235,7 @@ button {
   box-shadow: 0 12px 26px rgba(20, 62, 59, 0.3);
 }
 
-/* ========================================================
-   SECTION: EMERGENCY CONTACTS BANNER
-   ======================================================== */
+
 .emergency-banner-section {
   max-width: var(--container-max);
   margin: 0 auto 80px;
@@ -1348,9 +1332,7 @@ button {
   white-space: nowrap;
 }
 
-/* ========================================================
-   FOOTER
-   ======================================================== */
+
 .site-footer {
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   padding: 32px;
@@ -1371,9 +1353,7 @@ button {
   color: var(--text-dark-subtle);
 }
 
-/* ========================================================
-   FULL-SCREEN ALARM TAKEOVER (LEVEL 3 & TSUNAMI ACEH)
-   ======================================================== */
+
 #alarm-overlay {
   display: none;
   position: fixed;
@@ -1509,9 +1489,7 @@ button {
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* ========================================================
-   TOAST NOTIFICATION (GEMPA BIASA / LUAR DAERAH)
-   ======================================================== */
+
 .toast-container {
   position: fixed;
   top: 24px;
@@ -1578,9 +1556,7 @@ button {
   cursor: pointer;
 }
 
-/* ========================================================
-   MODALS: INSTALASI & PERIZINAN
-   ======================================================== */
+
 .custom-modal-overlay {
   display: none;
   position: fixed;
@@ -1788,7 +1764,7 @@ button {
   cursor: default;
 }
 
-/* Wrapper untuk dua tombol dalam satu permission-item-box */
+
 .perm-btn-group {
   display: flex;
   flex-direction: column;
@@ -1796,7 +1772,7 @@ button {
   flex-shrink: 0;
 }
 
-/* Tombol SOS merah agar jelas berbeda */
+
 .btn-sos {
   background: #b91c1c;
   color: #ffffff;
@@ -1820,9 +1796,7 @@ button {
   background: #0d2a28;
 }
 
-/* ========================================================
-   RESPONSIVE DESIGN (HP, TABLET, DESKTOP)
-   ======================================================== */
+
 @media (max-width: 1024px) {
   .hero-container {
     grid-template-columns: 1fr;
@@ -1879,7 +1853,7 @@ button {
 }
 
 @media (max-width: 768px) {
-  /* Header: lebih kompak di mobile */
+  
   .site-header {
     padding: 12px 16px;
   }
@@ -1892,27 +1866,27 @@ button {
     display: none;
   }
 
-  /* Perkecil tombol "Izin & GPS" di header mobile */
+  
   .btn-header-perm {
     padding: 6px 10px;
     font-size: 12px;
     gap: 4px;
   }
 
-  /* Perkecil tombol "Pasang Aplikasi" di header mobile */
+  
   .btn-header-install {
     padding: 6px 10px;
     font-size: 12px;
     gap: 4px;
   }
 
-  /* Badge "Terpasang" di header — perkecil */
+  
   .badge-app-installed {
     font-size: 11px;
     padding: 5px 10px;
   }
 
-  /* Hero: single column, mockup di bawah konten */
+  
   .hero-section {
     padding: 90px 20px 50px;
   }
@@ -1923,7 +1897,7 @@ button {
     text-align: center;
   }
 
-  /* Tampilkan mockup HP di mobile — di bawah konten */
+  
   .hero-mockup-wrapper {
     display: flex;
     justify-content: center;
@@ -1965,7 +1939,7 @@ button {
     max-width: 340px;
   }
 
-  /* Features */
+  
   .features-trio-section {
     margin-top: -20px;
     padding: 0 20px;
@@ -2031,9 +2005,7 @@ button {
   }
 }
 
-/* ========================================================
-   STANDALONE PWA RULES: HIDE INSTALL BUTTONS
-   ======================================================== */
+
 @media (display-mode: standalone) {
   .btn-install-pwa {
     display: none !important;
@@ -2043,9 +2015,7 @@ button {
   }
 }
 
-/* ========================================================
-   TOMBOL SOS DASHBOARD (HERO SECTION)
-   ======================================================== */
+
 .btn-sos-dashboard {
   display: flex;
   align-items: center;
@@ -2097,9 +2067,7 @@ button {
   font-weight: 400;
 }
 
-/* ========================================================
-   MODAL SOS: PILIH KONTAK
-   ======================================================== */
+
 .sos-modal-box {
   max-width: 420px;
 }
@@ -2177,9 +2145,7 @@ button {
   color: var(--text-dark-muted);
 }
 
-/* ========================================================
-   BADGE WARNA LEVEL GEMPA: TAMBAHAN KUNING & ORANGE
-   ======================================================== */
+
 .eq-mag-badge.yellow {
   background: #fef9c3;
   color: #854d0e;
@@ -2192,9 +2158,7 @@ button {
   border: 1.5px solid #fb923c;
 }
 
-/* ========================================================
-   LEGENDA 4 TINGKAT BAHAYA GEMPA
-   ======================================================== */
+
 .eq-level-legend {
   display: flex;
   align-items: center;
@@ -2234,9 +2198,7 @@ button {
 .level-orange .eq-legend-dot { background: #f97316; }
 .level-red .eq-legend-dot    { background: #ef4444; }
 
-/* ========================================================
-   SOS MODAL: FORM COMPOSE PESAN
-   ======================================================== */
+
 .sos-compose-area {
   display: flex;
   flex-direction: column;
@@ -2333,9 +2295,7 @@ button {
   box-shadow: 0 6px 22px rgba(185, 28, 28, 0.5);
 }
 
-/* ========================================================
-   HERO SOS ROW — tombol SOS + Tambah Kontak berdampingan
-   ======================================================== */
+
 .hero-sos-row {
   display: flex;
   flex-wrap: wrap;
@@ -2397,9 +2357,7 @@ button {
   font-weight: 400;
 }
 
-/* ========================================================
-   HERO PERMISSION CARD & STATUS PILLS
-   ======================================================== */
+
 .hero-permission-card {
   margin-top: 18px;
   background: rgba(14, 32, 39, 0.75);
@@ -2530,7 +2488,7 @@ button {
   line-height: 1.4;
 }
 
-/* Tombol WhatsApp & Telepon di SOS Modal */
+
 .sos-btn-wa {
   padding: 12px 16px;
   background: linear-gradient(135deg, #16a34a, #15803d);
@@ -2573,9 +2531,7 @@ button {
   background: #0d9488;
 }
 
-/* ========================================================
-   MODAL TAMBAH / KELOLA KONTAK SOS
-   ======================================================== */
+
 .add-contact-saved-list {
   display: flex;
   flex-direction: column;
@@ -2697,9 +2653,7 @@ button {
   transform: translateY(-1px);
 }
 
-/* ========================================================
-   RIWAYAT GEMPA REAL-TIME: ANIMASI HIGHLIGHT DATA BARU
-   ======================================================== */
+
 @keyframes eq-new-entry {
   0%   { background-color: #d1fae5; transform: scale(1.01); box-shadow: 0 0 0 3px rgba(13,148,136,0.3); }
   60%  { background-color: #ecfdf5; transform: scale(1.005); }
@@ -2710,7 +2664,7 @@ button {
   animation: eq-new-entry 1.8s ease forwards;
 }
 
-/* Badge "BARU" di kartu gempa terkini */
+
 .eq-new-badge {
   display: inline-block;
   background: #0d9488;
@@ -2731,7 +2685,7 @@ button {
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* Indikator "Update" di header riwayat saat data baru datang */
+
 .live-updated-flash {
   animation: live-flash 1s ease;
 }
@@ -2741,21 +2695,21 @@ button {
   40% { color: #0d9488; font-weight: 700; }
 }
 
-/* Mobile: hero-sos-row stack vertikal */
+
 @media (max-width: 480px) {
-  /* Hero pill badge — agar tidak overflow */
+  
   .hero-pill-badge {
     font-size: 12px;
     padding: 5px 12px;
     text-align: center;
   }
 
-  /* Headline lebih kecil di HP kecil */
+  
   .hero-headline {
     font-size: 28px;
   }
 
-  /* Tombol hero actions stack vertikal */
+  
   .hero-actions-row {
     flex-direction: column;
     align-items: center;
@@ -2769,7 +2723,7 @@ button {
     justify-content: center;
   }
 
-  /* SOS row vertikal */
+  
   .hero-sos-row {
     flex-direction: column;
     align-items: center;
@@ -2782,12 +2736,12 @@ button {
     max-width: 320px;
   }
 
-  /* Permission card pills: 2 kolom */
+  
   .perm-card-pills {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Sembunyikan teks panjang tombol header — tinggalkan ikon */
+  
   .btn-header-perm span:last-child {
     display: none;
   }
@@ -2803,9 +2757,7 @@ button {
   }
 }
 
-/* ========================================================
-   LIVE HEADER ACTIONS & MANUAL REFRESH BUTTON
-   ======================================================== */
+
 .live-header-actions {
   display: flex;
   align-items: center;
@@ -2856,9 +2808,7 @@ button {
   100% { transform: rotate(360deg); }
 }
 
-/* ========================================================
-   PRESET KONTAK RESMI & ACTION LINK MODAL SOS
-   ======================================================== */
+
 .quick-preset-contacts {
   margin-bottom: 16px;
   padding: 12px 14px;
@@ -2935,9 +2885,7 @@ button {
   transform: translateY(-1px);
 }
 
-/* ========================================================
-   BADGE REAL-TIME GEMPA TERKINI (HARI INI & DIRASAKAN)
-   ======================================================== */
+
 .eq-tag-today {
   display: inline-block;
   background: linear-gradient(135deg, #10b981, #059669);
@@ -3231,3 +3179,852 @@ button {
 }
 
 
+
+.network-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+.network-badge.online {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.network-badge.offline {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+.network-badge .status-indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.offline-alert-banner {
+  display: none;
+  background: #fef3c7;
+  border-bottom: 1px solid #fde68a;
+  color: #92400e;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.sync-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.sync-status-badge.live {
+  background: #dcfce7;
+  color: #15803d;
+}
+.sync-status-badge.warning {
+  background: #fef9c3;
+  color: #a16207;
+}
+.sync-status-badge.offline {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.interactive-map-section {
+  padding: 40px 20px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.map-container-box {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+.map-header-bar {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: #f8fafc;
+}
+.map-title-block h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #0f172a;
+  font-weight: 800;
+}
+.map-title-block p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+.map-controls-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.map-canvas {
+  width: 100%;
+  height: 480px;
+  background: #0f172a;
+}
+.map-legend-bar {
+  padding: 12px 20px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 12px;
+  color: #475569;
+}
+.map-legend-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.evac-control-panel {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.evac-control-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.btn-get-gps {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+.btn-get-gps:hover {
+  background: #0369a1;
+}
+.btn-get-gps.active {
+  background: #059669;
+}
+.select-manual-city {
+  padding: 9px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: #1e293b;
+  background: #ffffff;
+  outline: none;
+  font-family: inherit;
+}
+.select-manual-city:focus {
+  border-color: #0284c7;
+}
+.user-loc-text {
+  font-size: 12px;
+  color: #0369a1;
+  font-weight: 600;
+}
+.shelter-filters-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.shelter-filter-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.shelter-filter-btn:hover {
+  border-color: #0284c7;
+  color: #0284c7;
+}
+.shelter-filter-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+.shelter-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+.shelter-info-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.shelter-info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+.shelter-info-card.nearest-card {
+  border: 2px solid #0284c7;
+  background: #f0f9ff;
+}
+.shelter-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.shelter-type-pill {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.shelter-tsunami-safe-badge {
+  font-size: 10px;
+  font-weight: 800;
+  background: #dcfce7;
+  color: #15803d;
+  padding: 3px 7px;
+  border-radius: 6px;
+}
+.shelter-warning-badge {
+  font-size: 10px;
+  font-weight: 800;
+  background: #fef3c7;
+  color: #b45309;
+  padding: 3px 7px;
+  border-radius: 6px;
+}
+.shelter-title {
+  margin: 0;
+  font-size: 15px;
+  color: #0f172a;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.shelter-address {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+}
+.shelter-metrics-row {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px dashed #e2e8f0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+.shelter-metric-item {
+  display: flex;
+  flex-direction: column;
+}
+.shelter-metric-item .metric-label {
+  font-size: 10px;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.shelter-metric-item .metric-val {
+  font-size: 12px;
+  color: #1e293b;
+  font-weight: 800;
+}
+.shelter-metric-item.highlight-distance .metric-val {
+  color: #0284c7;
+}
+.shelter-time-estimate {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #334155;
+  background: #f1f5f9;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.shelter-verified-meta {
+  font-size: 11px;
+  color: #64748b;
+}
+.shelter-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+.btn-shelter-route {
+  flex: 1;
+  background: #0284c7;
+  color: #ffffff;
+  text-decoration: none;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 700;
+  transition: background 0.2s ease;
+}
+.btn-shelter-route:hover {
+  background: #0369a1;
+}
+.btn-shelter-preview {
+  background: #f8fafc;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-shelter-preview:hover {
+  background: #e2e8f0;
+}
+.btn-saya-aman {
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.btn-saya-aman:hover {
+  background: #059669;
+}
+.ai-analyst-section {
+  padding: 40px 20px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.ai-analyst-container {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 32px 28px;
+}
+.ai-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.ai-metrics-trio {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.ai-metric-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+}
+.ai-metric-box .box-label {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.ai-metric-box .box-value {
+  font-size: 26px;
+  color: #0f172a;
+  font-weight: 800;
+  margin-top: 4px;
+}
+.ai-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+.ai-chart-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+.ai-chart-card h4 {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: #0f172a;
+  font-weight: 800;
+}
+.stat-bar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.stat-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-bar-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #475569;
+  font-weight: 700;
+}
+.stat-bar-track {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+.ai-narrative-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-top: 20px;
+}
+.ai-narrative-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #166534;
+  margin-bottom: 8px;
+}
+.ai-narrative-content {
+  font-size: 13.5px;
+  color: #1e293b;
+  line-height: 1.6;
+}
+.ai-disclaimer-note {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+.ai-qa-pills-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.ai-qa-pill-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.ai-qa-pill-btn:hover {
+  background: #eff6ff;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+.checklist-section {
+  padding: 40px 20px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.checklist-container {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  border: 1px solid #e2e8f0;
+  padding: 32px 28px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+.checklist-progress-wrap {
+  margin: 16px 0 24px;
+}
+.checklist-progress-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 6px;
+  display: block;
+}
+.checklist-progress-track {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.checklist-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #0284c7, #10b981);
+  width: 0%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+.checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.checklist-item-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.checklist-item-box:hover {
+  background: #f1f5f9;
+}
+.checklist-item-cb {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  accent-color: #0284c7;
+  cursor: pointer;
+}
+.checklist-item-label {
+  display: flex;
+  flex-direction: column;
+}
+.checklist-item-label strong {
+  font-size: 13px;
+  color: #1e293b;
+}
+.checklist-item-label small {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+.saya-aman-box {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.saya-aman-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 13px;
+  color: #1e293b;
+  box-sizing: border-box;
+  resize: vertical;
+}
+.saya-aman-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 1024px) {
+  .ai-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 768px) {
+  .map-canvas {
+    height: 340px;
+  }
+  .map-header-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .evac-control-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .shelter-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .ai-metrics-trio {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 430px) {
+  .map-canvas {
+    height: 280px;
+  }
+  .interactive-map-section,
+  .ai-analyst-section,
+  .checklist-section {
+    padding: 24px 12px;
+  }
+  .ai-analyst-container,
+  .checklist-container {
+    padding: 20px 14px;
+  }
+  .saya-aman-actions {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 360px) {
+  .map-canvas {
+    height: 240px;
+  }
+  .btn-get-gps {
+    width: 100%;
+    justify-content: center;
+  }
+  .select-manual-city {
+    width: 100%;
+  }
+}
+
+.site-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 48px 24px 24px;
+  background: #ffffff;
+}
+
+.site-footer .footer-container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1.2fr;
+  gap: 36px;
+  align-items: flex-start;
+}
+
+.footer-brand-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.footer-brand-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-dark-muted);
+  margin-bottom: 16px;
+}
+
+.footer-legal-seal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.footer-legal-col h5,
+.footer-contact-col h5 {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 14px;
+}
+
+.footer-legal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-legal-btn-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0284c7;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.15s ease;
+}
+
+.footer-legal-btn-link:hover {
+  color: #0369a1;
+  text-decoration: underline;
+}
+
+.footer-source-note {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-dark-muted);
+  margin-bottom: 14px;
+}
+
+.footer-copyright-strip {
+  max-width: var(--container-max);
+  margin: 36px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.haki-modal-box {
+  max-width: 640px;
+  width: 92%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.haki-tabs-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+}
+
+.haki-tab-btn {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.haki-tab-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.haki-tab-pane {
+  display: none;
+}
+
+.haki-tab-pane.active {
+  display: block;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@media (max-width: 900px) {
+  .site-footer .footer-container {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .footer-copyright-strip {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 320px) {
+  .hero-headline {
+    font-size: 24px;
+  }
+  .hero-pill-badge {
+    font-size: 10px;
+  }
+  .hero-primary-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-primary-actions button {
+    width: 100%;
+  }
+  .brand-text {
+    font-size: 14px;
+  }
+  .eq-history-card {
+    padding: 10px;
+  }
+  .shelter-metrics-row {
+    grid-template-columns: 1fr;
+  }
+  .haki-tabs-nav {
+    flex-wrap: wrap;
+  }
+  .haki-tab-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --container-max: 1440px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,12 +1,9 @@
-/**
- * Siaga Gempa - System, PWA Installation & Permissions Onboarding Manager
- */
-
 class SystemManager {
   constructor() {
     this.deferredPrompt = null;
     this.initPwaHandlers();
     this.initModalTriggers();
+    this.initNetworkStatus();
     this.checkInitialPermissions();
     this.checkFirstVisitPrompt();
   }
@@ -18,6 +15,46 @@ class SystemManager {
     const isFlagged = localStorage.getItem('siagagempa_installed') === 'true';
 
     return isStandalone || isIosStandalone || isAndroidTwa || isFlagged;
+  }
+
+  initNetworkStatus() {
+    const updateStatus = () => {
+      const isOnline = navigator.onLine;
+      const badge = document.getElementById('network-status-badge');
+      if (badge) {
+        if (isOnline) {
+          badge.className = 'network-badge online';
+          badge.innerHTML = '<span class="status-indicator-dot"></span> Online';
+        } else {
+          badge.className = 'network-badge offline';
+          badge.innerHTML = '<span class="status-indicator-dot"></span> Offline (Mode Darurat)';
+        }
+      }
+      const banner = document.getElementById('offline-alert-banner');
+      if (banner) {
+        banner.style.display = isOnline ? 'none' : 'flex';
+      }
+    };
+
+    window.addEventListener('online', () => {
+      updateStatus();
+      window.notificationManager?.showNormalToast(
+        'Koneksi Internet Kembali Aktif',
+        'Data gempa dan peta BMKG disinkronkan kembali secara real-time.',
+        0
+      );
+    });
+
+    window.addEventListener('offline', () => {
+      updateStatus();
+      window.notificationManager?.showNormalToast(
+        'Mode Darurat Offline Aktif',
+        'Koneksi internet terputus. Panduan keselamatan, checklist siaga, dan kontak darurat tetap siap digunakan.',
+        0
+      );
+    });
+
+    updateStatus();
   }
 
   updateInstallButtonsVisibility() {
@@ -32,7 +69,6 @@ class SystemManager {
       installedBadges.forEach(badge => {
         badge.style.setProperty('display', 'inline-flex', 'important');
       });
-      console.log('📱 Siaga Gempa berjalan dalam mode aplikasi terpasang (PWA / Standalone). Tombol pasang disembunyikan.');
     } else {
       installBtns.forEach(btn => {
         btn.style.display = '';
@@ -49,19 +85,17 @@ class SystemManager {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredPrompt = e;
-      console.log('✅ Browser native install prompt siap digunakan.');
       this.updateInstallButtonsVisibility();
     });
 
     window.addEventListener('appinstalled', () => {
-      console.log('🎉 Siaga Gempa berhasil dipasang sebagai aplikasi!');
       this.deferredPrompt = null;
       localStorage.setItem('siagagempa_installed', 'true');
       this.updateInstallButtonsVisibility();
 
       window.notificationManager?.showNormalToast(
         'Aplikasi Berhasil Dipasang',
-        'Siaga Gempa telah terpasang di layar utama Anda. Ikon pasang aplikasi telah disembunyikan.',
+        'Siaga Gempa telah terpasang di layar utama perangkat Anda.',
         0
       );
     });
@@ -71,7 +105,6 @@ class SystemManager {
         this.deferredPrompt.prompt();
         this.deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
-            console.log('Pengguna menyetujui instalasi PWA.');
             localStorage.setItem('siagagempa_installed', 'true');
             this.updateInstallButtonsVisibility();
           }
@@ -154,18 +187,13 @@ class SystemManager {
     }
   }
 
-  /**
-   * Perbarui status semua tombol izin di Hero Section dan Modal Pengaturan
-   */
   updatePermissionStatuses() {
-    // 1. Cek Konteks Keamanan (HTTPS vs HTTP)
     const isHttps = window.isSecureContext || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
     const httpWarn = document.getElementById('insecure-http-warning');
     if (httpWarn) {
       httpWarn.style.display = isHttps ? 'none' : 'block';
     }
 
-    // 2. Status Izin Notifikasi
     const notifPill = document.getElementById('pill-perm-notif');
     const notifTxt = document.getElementById('txt-perm-notif');
     const notifBtn = document.getElementById('btn-perm-notif');
@@ -198,7 +226,6 @@ class SystemManager {
       if (notifTxt) { notifTxt.textContent = 'Tidak Didukung'; }
     }
 
-    // 3. Status Izin GPS Lokasi
     const locPill = document.getElementById('pill-perm-loc');
     const locTxt = document.getElementById('txt-perm-loc');
     const locBtn = document.getElementById('btn-perm-loc');
@@ -215,7 +242,6 @@ class SystemManager {
       if (locTxt) { locTxt.textContent = 'Aktifkan'; }
     }
 
-    // 4. Status Kontak SOS
     const contactPill = document.getElementById('pill-perm-contact');
     const contactTxt = document.getElementById('txt-perm-contact');
     const contactBtn = document.getElementById('btn-perm-contacts');
@@ -243,36 +269,32 @@ class SystemManager {
   }
 
   async requestNotificationPermission() {
-    // 1. Cek browser support
     if (!('Notification' in window)) {
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       if (isIOS) {
-        alert('ℹ️ Pada iPhone/iPad (iOS):\nFitur notifikasi Web Push memerlukan aplikasi dipasang ke Layar Utama (Home Screen).\n\nLangkah: Ketuk ikon Bagikan (Share) di Safari -> "Tambahkan ke Layar Utama" (Add to Home Screen).');
+        alert('Pada iPhone/iPad:\nFitur notifikasi Web Push memerlukan aplikasi dipasang ke Layar Utama (Home Screen).\n\nLangkah: Ketuk ikon Bagikan di Safari -> Tambah ke Layar Utama.');
       } else {
         alert('Browser ponsel Anda tidak mendukung fitur Notifikasi Web Push.');
       }
       return;
     }
 
-    // 2. Cek jika sudah pernah ditolak
     if (Notification.permission === 'denied') {
-      alert('⚠️ Izin notifikasi sebelumnya telah ditolak di browser HP Anda.\n\nCara mengaktifkan kembali:\n1. Ketuk ikon gembok / pengaturan situs di bilah alamat browser HP.\n2. Masuk ke "Izin" (Permissions) -> "Notifikasi".\n3. Pilih "Izinkan" (Allow), lalu segarkan halaman ini.');
+      alert('Izin notifikasi sebelumnya telah ditolak.\n\nCara mengaktifkan kembali:\n1. Ketuk ikon gembok di bilah alamat browser.\n2. Buka Izin Situs -> Notifikasi.\n3. Pilih Izinkan, lalu muat ulang halaman ini.');
       this.updatePermissionStatuses();
       return;
     }
 
-    // 3. Minta izin ke browser
     const res = await window.notificationManager?.requestPermission();
     this.updatePermissionStatuses();
 
     if (res?.granted) {
       window.notificationManager?.showNormalToast(
         'Notifikasi Berhasil Diaktifkan',
-        'Ponsel Anda kini siap menerima notifikasi peringatan gempa & potensi tsunami secara otomatis!',
+        'Ponsel Anda kini siap menerima notifikasi peringatan gempa & potensi tsunami secara otomatis.',
         0
       );
-      // Kirim contoh notifikasi browser sistem
-      window.notificationManager?.sendBrowserNotification('🔔 Siaga Gempa Aktif', {
+      window.notificationManager?.sendBrowserNotification('Siaga Gempa Aktif', {
         body: 'Sistem peringatan dini gempa bumi & tsunami aktif di ponsel Anda.',
         vibrate: [300, 100, 300]
       });
@@ -281,26 +303,21 @@ class SystemManager {
     }
   }
 
-  /**
-   * Uji coba simulasi bunyi alarm & notifikasi gempa agar pengguna yakin HP-nya berfungsi
-   */
   testEarthquakeNotification() {
     if (!('Notification' in window) || Notification.permission !== 'granted') {
-      alert('⚠️ Izin notifikasi belum aktif di HP Anda. Silakan ketuk tombol "Aktifkan" pada Notifikasi terlebih dahulu.');
+      alert('Izin notifikasi belum aktif di perangkat Anda. Silakan ketuk tombol Aktifkan pada Notifikasi terlebih dahulu.');
       this.requestNotificationPermission();
       return;
     }
 
-    // Play tone & Show in-app Toast
     window.notificationManager?.showNormalToast(
-      '🧪 Uji Coba: Gempa Simulasi',
+      'Uji Coba: Gempa Simulasi',
       'M 5.4 SR • Laut Banda Aceh • Ini adalah uji coba notifikasi Siaga Gempa.',
       5.4
     );
 
-    // Kirim notifikasi sistem browser ponsel
-    window.notificationManager?.sendBrowserNotification('🧪 Tes Siaga Gempa: Gempa M 5.4', {
-      body: 'Pusat gempa 35 km Barat Daya Banda Aceh. Notifikasi sistem dan getar berfungsi normal di ponsel Anda!',
+    window.notificationManager?.sendBrowserNotification('Tes Siaga Gempa: Gempa M 5.4', {
+      body: 'Pusat gempa 35 km Barat Daya Banda Aceh. Notifikasi sistem dan getar berfungsi normal di ponsel Anda.',
       vibrate: [500, 200, 500],
       requireInteraction: false
     });
@@ -311,6 +328,36 @@ class SystemManager {
     window.emergencyService?.startLocationTracking();
     this.updatePermissionStatuses();
   }
+
+  openHakiModal(tab = 'haki') {
+    const modal = document.getElementById('haki-modal');
+    if (!modal) return;
+    this.switchHakiTab(tab);
+    modal.classList.add('active');
+  }
+
+  closeHakiModal() {
+    const modal = document.getElementById('haki-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  switchHakiTab(tabName) {
+    document.querySelectorAll('.haki-tab-btn').forEach(btn => {
+      if (btn.getAttribute('data-haki-tab') === tabName) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    document.querySelectorAll('.haki-tab-pane').forEach(pane => {
+      pane.classList.remove('active');
+    });
+
+    const activePane = document.getElementById(`haki-pane-${tabName}`);
+    if (activePane) activePane.classList.add('active');
+  }
 }
 
 window.systemManager = new SystemManager();
+

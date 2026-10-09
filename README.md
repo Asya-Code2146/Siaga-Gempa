@@ -5,62 +5,91 @@
 
 [![Status](https://img.shields.io/badge/System-Online-10B981?style=for-the-badge&logo=icloud&logoColor=white)]()
 [![PWA Ready](https://img.shields.io/badge/PWA-Supported-06B6D4?style=for-the-badge&logo=pwa&logoColor=white)]()
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)]()
+[![BMKG Verified](https://img.shields.io/badge/Data_Feed-BMKG_InaTEWS-0284C7?style=for-the-badge)]()
+[![HAKI Protected](https://img.shields.io/badge/HAKI-UU_No._28_Tahun_2014-4F46E5?style=for-the-badge)]()
 
 </div>
 
 ---
 
 ## 📖 Ringkasan Proyek
-Aplikasi Web **Siaga Gempa** dibangun dengan antarmuka elegan, responsif untuk ponsel/tablet/laptop, dan berfungsi sebagai Progressive Web App (PWA) yang dapat dipasang di layar utama pengguna layaknya aplikasi native.
+Aplikasi Web **Siaga Gempa** adalah platform informasi gempa bumi, sistem peringatan dini, dan edukasi kesiapsiagaan bencana terintegrasi data BMKG (Badan Meteorologi, Klimatologi, dan Geofisika).
 
-Aplikasi ini dirancang khusus untuk mitigasi dan kesiapsiagaan bencana gempa bumi & tsunami di wilayah Aceh dan Sumatra, dengan panduan tiga fase kesiapsiagaan, peta jalur evakuasi, nomor darurat nasional dan daerah, serta integrasi Google Maps.
+Dibangun dengan arsitektur frontend HTML5, CSS3, dan Vanilla JavaScript, didukung oleh backend PHP native dan basis data MySQL, serta kompatibel untuk deployment serverless Vercel dan web hosting PHP.
+
+Website produksi: https://siaga-gempa-five.vercel.app/
 
 ---
 
 ## ✨ Fitur-Fitur Utama
 
-1. **📱 Tampilan Responsif & Desain Modern:**
-   - Desain persis seperti referensi visual: Header SG Siaga Gempa, Hero gradient hijau toska gelap, Mockup Smartphone interaktif beranimasi muncul, 3 Kartu Fitur, Bagian Tiga Fase Kesiapsiagaan, Visual Jalur Evakuasi Aceh, dan Banner Nomor Darurat (112, 117, BMKG).
-   - Sepenuhnya responsif untuk smartphone (Android & iPhone), tablet (iPad & Android), maupun laptop/desktop.
+1. **📡 Sistem Data Gempa BMKG Real-Time:**
+   - Mengambil data resmi BMKG (Autogempa, Gempa Dirasakan, dan Gempa Terkini M 5.0+).
+   - Pembaruan otomatis setiap 60 detik disertai penghitung mundur waktu nyata.
+   - Indikator status sinkronisasi: Tersinkron BMKG, Mode Offline, atau Data Cache Degradasi.
+   - Deduplikasi data berbasis identitas unik lokasi dan waktu kejadian.
+   - Pembedaan data simulasi/drill versus kejadian nyata untuk mencegah kepanikan publik.
 
-2. **⚡ PWA Standalone & Sembunyikan Tombol Pasang Otomatis:**
-   - Ketika dibuka melalui browser biasa, tombol **"+ Pasang Aplikasi"** dan **"+ Pasang sebagai Aplikasi"** akan muncul.
-   - Begitu pengguna memasang aplikasi ke layar utama (mode *standalone* / *PWA*), tombol pasang akan **otomatis hilang / disembunyikan** karena sudah menjadi aplikasi terpasang di perangkat.
+2. **🌊 Sistem Peringatan Dini & Klasifikasi Bahaya Resmi:**
+   - Membedakan informasi gempa biasa, waspada M 6.0+, dan peringatan dini tsunami resmi BMKG.
+   - Mendeteksi status peringatan tsunami: Aktif (Active Warning), Dicabut/Berakhir (Ended), atau Aman (No Tsunami).
+   - Full-Screen Alarm Takeover dengan sirine Web Audio API dan getaran hanya aktif jika terdapat potensi tsunami nyata atau gempa destruktif terverifikasi.
 
-3. **📋 Tata Cara Instalasi Lengkap per Perangkat:**
-   - Modal panduan instalasi langkah demi langkah untuk:
-     - 📱 **Android**: Buka Chrome -> Menu titik tiga (⋮) -> "Instal aplikasi" / "Tambahkan ke Layar Utama".
-     - 💻 **Laptop / PC**: Klik ikon instal di address bar Chrome/Edge atau menu "Simpan dan Bagikan".
-     - 📟 **Tablet**: Android Tablet (Chrome) vs Apple iPad (Safari Share -> Add to Home Screen).
-     - 🍏 **iPhone (iOS)**: Wajib via Safari -> Tombol Bagikan / Share -> "Tambah ke Layar Utama" (Add to Home Screen).
-     - 🖥️ **macOS**: Safari (Menu File -> Tambahkan ke Dock) dan Chrome (Ikon instal di URL bar).
+3. **🗺️ Peta Interaktif Episentrum & Titik Evakuasi (Leaflet):**
+   - Menampilkan titik episentrum gempa riil dari koordinat BMKG lengkap dengan popup informasi magnitudo, kedalaman, dan radius getaran.
+   - Filter data berdasarkan Zona Sumatra-Aceh, Magnitudo M 5.0+, dan Potensi Tsunami.
+   - Responsif di seluruh ukuran layar ponsel, tablet, dan komputer desktop.
 
-4. **🛡️ Onboarding Perizinan Otomatis (Saat Pertama Masuk):**
-   - **Izin Notifikasi Dini**: Untuk menerima peringatan gempa seketika bahkan saat layar terkunci.
-   - **Izin Lokasi GPS & Navigasi Google Maps**: Menghitung jarak ke titik kumpul terdekat (Lapangan Blang Padang) dan membuka rute navigasi Google Maps.
-   - **Akses Kontak Darurat**: Mendukung Contact Picker API modern atau form simpan kontak keluarga lokal, serta tombol unduh file vCard (.vcf) resmi untuk menyimpan 112, 117, dan BMKG ke buku telepon HP dengan sekali klik.
+4. **📍 Smart Evacuation Routing — Google Maps Integration:**
+   - Deteksi posisi pengguna menggunakan HTML5 Geolocation API dengan izin eksplisit.
+   - Pilihan pemilihan wilayah manual jika GPS tidak aktif atau izin ditolak.
+   - Daftar shelter keselamatan resmi terverifikasi: Gedung Evakuasi Vertikal Tsunami (TES Lambung, TES Deah Glumpang, TES Alue Deah Teungoh, TDMRC USK), Dataran Tinggi Bukit Mata Ie, Lapangan Blang Padang, dan Stadion Harapan Bangsa.
+   - Perhitungan jarak matematis Haversine, estimasi waktu tempuh jalan kaki (~4.5 km/jam) dan berkendara (~30 km/jam).
+   - Penentuan rute aman cerdas: Jika ancaman tsunami aktif, sistem memprioritaskan gedung vertikal TES dan bukit serta memperingatkan pengguna untuk menjauhi area datar pesisir.
+   - Tombol satu ketukan buka rute Google Maps langsung (mode jalan kaki dan berkendara).
 
-5. **🚨 Logika Peringatan Gempa Ganda:**
-   - **Kondisi 1: Gempa Sangat Kuat Level 3 & Potensi Tsunami di Sumatra / Aceh:**
-     - Memenuhi **SELURUH LAYAR HP (Full-Screen Alarm Takeover)** dengan lampu berkedip merah menyala.
-     - Suara sirine alarm keras Web Audio API berbunyi secara berulang tanpa henti.
-     - Pola getaran darurat HP aktif.
-     - Tombol cepat buka rute evakuasi Google Maps dan tombol matikan alarm jika sudah aman.
-   - **Kondisi 2: Gempa Biasa / Luar Daerah Sumatra-Aceh (atau < Level 3 Tanpa Tsunami):**
-     - **TIDAK MUNCUL ALARM FULL-SCREEN** dan tidak ada sirine panik.
-     - Hanya memunculkan notifikasi banner (toast) lembut yang informatif.
+5. **🤖 AI Seismic Analyst & Modul Edukasi:**
+   - Analisis statistik deskriptif dari data observasi BMKG aktual (distribusi kedalaman dangkal/menengah/dalam, sebaran magnitudo, dan frekuensi zona busur Sumatra).
+   - Sintesis penjelasan ilmiah dalam bahasa Indonesia yang objektif tanpa klaim ramalan palsu.
+   - Pusat tanya jawab interaktif kesiapsiagaan (gempa susulan, fenomena gempa dangkal, tanda alami tsunami pesisir, dan standar tas siaga bencana).
+
+6. **🎒 Mode Darurat Offline & Kesiapsiagaan Keluarga:**
+   - Panduan tiga fase keselamatan (Sebelum, Saat, Sesudah gempa).
+   - Checklist digital Tas Siaga Bencana 72 jam mandiri tersimpan di localStorage.
+   - Konfirmasi keselamatan keluarga ("Saya Aman") dengan tautan lokasi GPS opsional via WhatsApp dan SMS tanpa pengumpulan data pribadi.
+   - Tombol unduh file kontak vCard darurat (112 Darurat Nasional, 117 BPBD Aceh, 196 BMKG).
+   - Dukungan Progressive Web App (PWA) dan Service Worker cache offline.
+
+7. **⚖️ Perlindungan Hak Kekayaan Intelektual (HAKI):**
+   - Dilindungi Undang-Undang Republik Indonesia Nomor 28 Tahun 2014 tentang Hak Cipta.
+   - Dilindungi Undang-Undang Republik Indonesia Nomor 11 Tahun 2008 jo. UU Nomor 1 Tahun 2024 tentang ITE.
+   - Atribusi resmi terbuka kepada BMKG Indonesia, BNPB, BPBD Kota Banda Aceh, dan TDMRC Universitas Syiah Kuala.
+   - Modal informasi HAKI, Kebijakan Privasi GPS tanpa pelacakan, dan Batasan Tanggung Jawab (Disclaimer Kebencanaan) terpasang di antarmuka web.
 
 ---
 
-## 🚀 Cara Menjalankan Secara Lokal
+## 🗄️ Struktur Database MySQL
 
+File skema database tersedia di `database/database.sql`:
+- `earthquakes`: Menyimpan riwayat kejadian gempa BMKG dengan kolom event_id unik, magnitudo, kedalaman, koordinat, potensi tsunami, status peringatan tsunami, dan penanda simulasi.
+- `evacuation_shelters`: Titik shelter vertikal tsunami dan titik kumpul terverifikasi beserta kapasitas, elevasi, dan koordinat.
+- `devices`: Menyimpan endpoint langganan Web Push Notification jika diaktifkan.
+- `sync_logs`: Catatan log sinkronisasi feed API BMKG.
+
+---
+
+## 🚀 Panduan Menjalankan
+
+### Frontend (Lokal / Vercel):
 ```bash
-# Menggunakan Python 3:
-python -m http.server 8080
-
-# Atau menggunakan Node.js:
 npx serve .
 ```
+Atau buka langsung file `index.html` pada peramban modern.
 
-Buka peramban di `http://localhost:8080` untuk melihat aplikasi.
+### Backend PHP:
+Impor file `database/database.sql` ke MySQL database server Anda, lalu sesuaikan kredensial koneksi melalui environment variable (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_PORT`) di hosting backend.
+
+---
+
+## ⚖️ Hak Cipta
+Hak Cipta © 2024–2026 Siaga Gempa. Seluruh Hak Cipta dan Hak Kekayaan Intelektual Dilindungi Undang-Undang Republik Indonesia.
