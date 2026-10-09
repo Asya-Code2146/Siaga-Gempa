@@ -87,7 +87,7 @@ npx serve .
 Atau buka langsung file `index.html` pada peramban modern.
 
 ### Backend PHP:
-Impor file `database/database.sql` ke MySQL database server Anda, lalu sesuaikan kredensial koneksi melalui environment variable (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_PORT`) di hosting backend.
+Impor file `database/database.sql` ke MySQL database server Anda, lalu unggah file dalam folder `backend/` ke hosting PHP terpisah Anda dan sesuaikan kredensial koneksi melalui environment variable (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_PORT`).
 
 ---
 
