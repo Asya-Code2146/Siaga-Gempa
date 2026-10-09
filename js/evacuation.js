@@ -13,7 +13,7 @@ class EvacuationService {
         id: 1,
         name: 'Gedung Evakuasi Tsunami Lambung (TES Lambung)',
         type: 'gedung_tsunami',
-        type_label: 'Gedung Evakuasi Vertikal Tsunami',
+        type_label: 'Gedung Evakuasi (TES)',
         latitude: 5.5412,
         longitude: 95.3045,
         elevation_meters: 18,
@@ -29,7 +29,7 @@ class EvacuationService {
         id: 2,
         name: 'Gedung Evakuasi Tsunami Deah Glumpang',
         type: 'gedung_tsunami',
-        type_label: 'Gedung Evakuasi Vertikal Tsunami',
+        type_label: 'Gedung Evakuasi (TES)',
         latitude: 5.5563,
         longitude: 95.2981,
         elevation_meters: 18,
@@ -45,7 +45,7 @@ class EvacuationService {
         id: 3,
         name: 'Gedung Evakuasi Tsunami Alue Deah Teungoh',
         type: 'gedung_tsunami',
-        type_label: 'Gedung Evakuasi Vertikal Tsunami',
+        type_label: 'Gedung Evakuasi (TES)',
         latitude: 5.5512,
         longitude: 95.2905,
         elevation_meters: 18,
@@ -61,7 +61,7 @@ class EvacuationService {
         id: 4,
         name: 'Gedung Escape Building Kantor TDMRC USK',
         type: 'gedung_tsunami',
-        type_label: 'Gedung Riset & Evakuasi Vertikal',
+        type_label: 'Gedung Evakuasi Vertikal',
         latitude: 5.5788,
         longitude: 95.3421,
         elevation_meters: 16,
@@ -77,7 +77,7 @@ class EvacuationService {
         id: 5,
         name: 'Kawasan Dataran Tinggi Bukit Mata Ie',
         type: 'tempat_tinggi',
-        type_label: 'Perbukitan / Dataran Tinggi Alami',
+        type_label: 'Dataran Tinggi / Bukit',
         latitude: 5.5015,
         longitude: 95.2891,
         elevation_meters: 75,
@@ -93,7 +93,7 @@ class EvacuationService {
         id: 6,
         name: 'Lapangan Blang Padang',
         type: 'titik_kumpul_terbuka',
-        type_label: 'Titik Kumpul Terbuka (Gempa)',
+        type_label: 'Titik Kumpul Terbuka',
         latitude: 5.5526,
         longitude: 95.3175,
         elevation_meters: 4,
@@ -109,7 +109,7 @@ class EvacuationService {
         id: 7,
         name: 'Stadion Harapan Bangsa Lhong Raya',
         type: 'titik_kumpul_terbuka',
-        type_label: 'Titik Kumpul Terbuka & Posko Pengungsian',
+        type_label: 'Titik Kumpul Terbuka',
         latitude: 5.5218,
         longitude: 95.3283,
         elevation_meters: 7,
@@ -192,14 +192,14 @@ class EvacuationService {
         };
 
         if (btn) {
-          btn.textContent = 'Lokasi Terdeteksi';
+          btn.textContent = '✓ Lokasi Terdeteksi';
           btn.classList.add('active');
           btn.disabled = false;
         }
 
         const locLabel = document.getElementById('user-loc-display');
         if (locLabel) {
-          locLabel.textContent = `Koordinat Anda: ${this.userCoords.lat.toFixed(4)}, ${this.userCoords.lon.toFixed(4)} (±${Math.round(pos.coords.accuracy)}m)`;
+          locLabel.textContent = `Koordinat: ${this.userCoords.lat.toFixed(4)}, ${this.userCoords.lon.toFixed(4)} (±${Math.round(pos.coords.accuracy)}m)`;
         }
 
         if (window.emergencyService) {
@@ -224,7 +224,7 @@ class EvacuationService {
       },
       (err) => {
         if (btn) {
-          btn.textContent = 'Gunakan Lokasi Saya';
+          btn.textContent = '🧭 Gunakan Lokasi Saya';
           btn.disabled = false;
         }
         let msg = 'Izin lokasi tidak dapat diakses. Anda dapat memilih wilayah secara manual.';
@@ -254,7 +254,7 @@ class EvacuationService {
 
     const locLabel = document.getElementById('user-loc-display');
     if (locLabel) {
-      locLabel.textContent = `Lokasi manual: ${target.name} (${target.lat.toFixed(4)}, ${target.lon.toFixed(4)})`;
+      locLabel.textContent = `Lokasi: ${target.name} (${target.lat.toFixed(4)}, ${target.lon.toFixed(4)})`;
     }
 
     if (window.mapService) {
@@ -297,7 +297,7 @@ class EvacuationService {
 
     if (items.length === 0) {
       listEl.innerHTML = `
-        <div style="padding:24px; text-align:center; color:#64748b; background:#f8fafc; border-radius:12px; border:1px dashed #cbd5e1;">
+        <div style="grid-column:1/-1; padding:24px; text-align:center; color:#64748b; background:#f8fafc; border-radius:12px; border:1px dashed #cbd5e1;">
           Tidak ada shelter yang cocok dengan kategori yang dipilih.
         </div>
       `;
@@ -320,11 +320,11 @@ class EvacuationService {
     }
 
     const threatBanner = isTsunamiThreat ? `
-      <div class="evac-threat-alert-box" style="grid-column: 1 / -1; background:#fef2f2; border:2px solid #ef4444; border-radius:12px; padding:14px 18px; margin-bottom:12px; color:#991b1b; display:flex; align-items:center; gap:12px;">
-        <span style="font-size:24px;">🚨</span>
+      <div class="evac-threat-alert-box" style="grid-column: 1 / -1; background:#fef2f2; border:2px solid #ef4444; border-radius:12px; padding:12px 16px; margin-bottom:12px; color:#991b1b; display:flex; align-items:center; gap:12px;">
+        <span style="font-size:22px;">🚨</span>
         <div>
-          <strong style="font-size:14px; display:block;">ARAHAN EVAKUASI TSUNAMI AKTIF DARI BMKG</strong>
-          <span style="font-size:12.5px; line-height:1.4;">Prioritaskan Gedung Evakuasi Vertikal Tsunami (TES) atau Kawasan Dataran Tinggi. Hindari garis pantai dan area lapangan terbuka dataran rendah!</span>
+          <strong style="font-size:13.5px; display:block;">ARAHAN EVAKUASI TSUNAMI AKTIF BMKG</strong>
+          <span style="font-size:12px; line-height:1.4;">Prioritaskan Gedung Evakuasi Vertikal Tsunami (TES) atau Dataran Tinggi. Hindari garis pantai dan area datar rendah.</span>
         </div>
       </div>
     ` : '';
@@ -359,59 +359,49 @@ class EvacuationService {
             </span>
             ${s.is_tsunami_safe
               ? '<span class="shelter-tsunami-safe-badge">✓ Aman Tsunami</span>'
-              : '<span class="shelter-warning-badge" style="background:#fee2e2;color:#b91c1c;">⚠️ Khusus Gempa Darat (Bukan Tsunami)</span>'}
+              : '<span class="shelter-warning-badge">⚠️ Khusus Gempa Darat</span>'}
           </div>
 
           <h4 class="shelter-title">${s.name}</h4>
           <p class="shelter-address">${s.address}</p>
-          <div style="font-size:11px; color:#64748b; margin-top:-2px; margin-bottom:8px;">
-            <span>📍 Koordinat: <strong>${s.latitude.toFixed(4)}, ${s.longitude.toFixed(4)}</strong></span>
-            <span style="margin-left:8px;">🏛️ Wilayah: <strong>${s.city}</strong></span>
-          </div>
 
-          <div class="shelter-metrics-row">
-            <div class="shelter-metric-item">
-              <span class="metric-label">Ketinggian</span>
-              <span class="metric-val">${s.elevation_meters} m dpl</span>
+          <div class="shelter-specs-grid">
+            <div class="shelter-spec-pill">
+              <span class="spec-k">Ketinggian</span>
+              <span class="spec-v">${s.elevation_meters} m dpl</span>
             </div>
-            <div class="shelter-metric-item">
-              <span class="metric-label">Kapasitas</span>
-              <span class="metric-val">${s.capacity.toLocaleString()} jiwa</span>
+            <div class="shelter-spec-pill">
+              <span class="spec-k">Kapasitas</span>
+              <span class="spec-v">${s.capacity.toLocaleString()} jiwa</span>
             </div>
             ${s.distance_km !== null && s.distance_km !== undefined ? `
-              <div class="shelter-metric-item highlight-distance">
-                <span class="metric-label">Jarak</span>
-                <span class="metric-val">${s.distance_km} km</span>
+              <div class="shelter-spec-pill spec-dist">
+                <span class="spec-k">Jarak</span>
+                <span class="spec-v">${s.distance_km} km</span>
               </div>
             ` : ''}
           </div>
 
           ${s.walking_time_min ? `
-            <div class="shelter-time-estimate">
-              <span>🚶 Jalan Kaki: <strong>~${s.walking_time_min} menit</strong></span>
-              <span>🚗 Berkendara: <strong>~${s.driving_time_min} menit</strong></span>
+            <div class="shelter-est-line">
+              <span>🚶 ~${s.walking_time_min} mnt jalan kaki</span>
+              <span>🚗 ~${s.driving_time_min} mnt mobil</span>
             </div>
           ` : ''}
 
           <div class="shelter-verified-meta">
-            <span>Status: <strong style="color:#16a34a;">${s.verification_status || 'Terverifikasi'}</strong> oleh <strong>${s.verified_by}</strong></span>
+            <span>✓ Terverifikasi <strong>${s.verified_by}</strong></span>
           </div>
 
-          <div style="font-size:11px; color:#94a3b8; font-style:italic; margin:6px 0 10px; line-height:1.35;">
-            ⚠️ Catatan Jalur: Kondisi fisik jalan dan kemungkinan runtuhan tidak dapat dipantau langsung. Tetap waspada di rute.
-          </div>
-
-          <div class="shelter-card-actions" style="display:flex; flex-direction:column; gap:6px;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-              <a href="${walkUrl}" target="_blank" rel="noopener noreferrer" class="btn-shelter-route" style="padding:8px 4px; font-size:12px; text-align:center;">
-                🚶 Jalan Kaki
-              </a>
-              <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-shelter-route" style="background:#0284c7; padding:8px 4px; font-size:12px; text-align:center;">
-                🚗 Berkendara
-              </a>
-            </div>
-            <button type="button" class="btn-shelter-preview" onclick="window.evacuationService?.focusShelterMap(${s.latitude}, ${s.longitude})">
-              Tampilkan di Peta
+          <div class="shelter-compact-actions">
+            <a href="${walkUrl}" target="_blank" rel="noopener noreferrer" class="btn-shelter-compact btn-route-walk" title="Rute Jalan Kaki Google Maps">
+              🚶 Jalan Kaki
+            </a>
+            <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-shelter-compact btn-route-drive" title="Rute Berkendara Google Maps">
+              🚗 Berkendara
+            </a>
+            <button type="button" class="btn-shelter-compact btn-preview-map" onclick="window.evacuationService?.focusShelterMap(${s.latitude}, ${s.longitude})" title="Fokuskan Peta ke Shelter Ini">
+              📍 Peta
             </button>
           </div>
         </div>

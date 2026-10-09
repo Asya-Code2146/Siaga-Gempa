@@ -7,6 +7,7 @@ class EarthquakeService {
     this.countdownSec = 60;
     this.isRefreshing = false;
     this.lastUpdatedTimestamp = null;
+    this.showAllHistory = false;
     this.sumatraKeywords = [
       'aceh', 'banda aceh', 'meulaboh', 'sabang', 'simeulue', 'lhokseumawe',
       'pidie', 'sigli', 'nagan raya', 'takengon', 'subulussalam', 'singkil',
@@ -153,7 +154,7 @@ class EarthquakeService {
               dateTime: item.DateTime || '',
               latitude: lat,
               longitude: lon,
-              tsunami: item.Potensi || (item.Dirasakan ? `Dirasakan: ${item.Dirasakan}` : 'Tidak berpotensi tsunami'),
+              tsunami: item.Potensi || 'Tidak berpotensi tsunami',
               dirasakan: item.Dirasakan || '-',
               isLatest: false,
               isToday: this.checkIsToday(item.Tanggal, item.DateTime)
@@ -352,7 +353,7 @@ class EarthquakeService {
       time: '30 Sep 2026 09:35:54 WIB',
       latitude: 4.84,
       longitude: 95.14,
-      tsunami: 'Dirasakan di Calang, Banda Aceh, Aceh Besar',
+      tsunami: 'Tidak berpotensi tsunami',
       dirasakan: 'III-IV Calang, III Aceh Besar, III Banda Aceh, II Sigli',
       isToday: false
     };
@@ -367,7 +368,7 @@ class EarthquakeService {
         time: '28 Sep 2026 21:43:09 WIB',
         latitude: 5.19,
         longitude: 94.41,
-        tsunami: 'Dirasakan di Sabang & Banda Aceh',
+        tsunami: 'Tidak berpotensi tsunami',
         dirasakan: 'III-IV Aceh Besar, III-IV Banda Aceh',
         isToday: false
       },
@@ -456,6 +457,11 @@ class EarthquakeService {
     }
   }
 
+  toggleHistoryLimit() {
+    this.showAllHistory = !this.showAllHistory;
+    this.renderHistoryUI();
+  }
+
   renderHistoryUI() {
     const container = document.getElementById('eq-history-container');
     if (!container) return;
@@ -482,11 +488,19 @@ class EarthquakeService {
       return;
     }
 
-    container.innerHTML = items.map((item, idx) => {
+    const displayCount = this.showAllHistory ? items.length : 6;
+    const visibleItems = items.slice(0, displayCount);
+
+    const cardsHtml = visibleItems.map((item, idx) => {
       const isSumatra = this.isSumatraAcehRegion(item.location, item.latitude, item.longitude);
       const classification = this.classifyLevel(item.magnitude, item.tsunami, item.tsunami_alert_state);
       const badgeClass = classification.badgeClass;
       const isTopRecent = idx === 0 || item.isToday;
+
+      let displayTsunami = item.tsunami || 'Tidak berpotensi tsunami';
+      if (displayTsunami.toLowerCase().startsWith('dirasakan:')) {
+        displayTsunami = 'Tidak berpotensi tsunami';
+      }
 
       return `
         <div class="eq-history-card ${isTopRecent ? 'is-realtime-entry' : ''}" onclick="window.earthquakeService?.focusOnMap(${item.latitude}, ${item.longitude}, ${item.magnitude}, '${item.location.replace(/'/g, "\\'")}')">
@@ -496,14 +510,13 @@ class EarthquakeService {
           <div class="eq-info-block">
             <div class="eq-location-name">
               ${item.location}
-              ${item.is_simulation ? '<span class="eq-tag-sim" style="background:#64748b;color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;margin-left:6px;">🧪 DATA SIMULASI</span>' : ''}
               ${item.isToday && !item.is_simulation ? '<span class="eq-tag-today">⚡ HARI INI</span>' : ''}
               ${idx === 0 && !item.is_simulation ? '<span class="eq-tag-latest">🔥 TERBARU</span>' : ''}
             </div>
             <div class="eq-meta-details">
               <span>🕒 ${item.time}</span>
               <span>📏 Kedalaman: ${item.depth} km</span>
-              <span>🛡️ ${item.tsunami}</span>
+              <span>🌊 ${displayTsunami}</span>
             </div>
             ${item.dirasakan && item.dirasakan !== '-' ? `
               <div class="eq-meta-dirasakan">
@@ -515,6 +528,16 @@ class EarthquakeService {
         </div>
       `;
     }).join('');
+
+    const toggleBtnHtml = items.length > 6 ? `
+      <div class="eq-toggle-more-wrap">
+        <button type="button" class="btn-eq-toggle-more" onclick="window.earthquakeService?.toggleHistoryLimit()">
+          ${this.showAllHistory ? '▲ Tampilkan Lebih Sedikit' : `▼ Tampilkan Seluruh Riwayat Gempa (${items.length} Gempa BMKG)`}
+        </button>
+      </div>
+    ` : '';
+
+    container.innerHTML = cardsHtml + toggleBtnHtml;
   }
 
   focusOnMap(lat, lon, mag, loc) {

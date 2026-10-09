@@ -27,6 +27,19 @@ class AppController {
     }
   }
 
+  toggleMobileNav(forceClose = false) {
+    const nav = document.getElementById('mobile-nav-drawer');
+    const btn = document.getElementById('btn-mobile-nav');
+    if (!nav) return;
+    if (forceClose) {
+      nav.classList.remove('active');
+      if (btn) btn.classList.remove('active');
+    } else {
+      nav.classList.toggle('active');
+      if (btn) btn.classList.toggle('active');
+    }
+  }
+
   selectMockupPhase(phase) {
     document.querySelectorAll('.mockup-action-box').forEach(btn => {
       if (btn.getAttribute('data-fase') === phase) {
@@ -68,4 +81,5 @@ class AppController {
 
 document.addEventListener('DOMContentLoaded', () => {
   window.appController = new AppController();
+  window.toggleMobileNav = (force) => window.appController?.toggleMobileNav(force);
 });

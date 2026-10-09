@@ -58,23 +58,11 @@
         <span class="brand-text">Siaga Gempa</span>
       </a>
 
-      <div id="network-status-badge" class="network-badge online">
-        <span class="status-indicator-dot"></span> Online
-      </div>
-
       <nav class="header-nav">
+        <a href="#fitur" class="nav-link-item">Fitur Aplikasi</a>
         <a href="#gempa-realtime" class="nav-link-item">Data Gempa</a>
-        <a href="#peta-gempa" class="nav-link-item">Peta</a>
-        <a href="#evakuasi" class="nav-link-item">Evakuasi Cerdas</a>
-        <a href="#analisis-ai" class="nav-link-item">Analisis AI</a>
-        <a href="#tas-siaga" class="nav-link-item">Tas Siaga</a>
+        <a href="#evakuasi" class="nav-link-item">Jalur Evakuasi</a>
         <a href="#bantuan" class="nav-link-item">Bantuan</a>
-        <a href="#haki" class="nav-link-item" onclick="window.systemManager?.openHakiModal(); return false;">HAKI &amp; Legal</a>
-
-        <button id="btn-header-saya-aman" class="btn-saya-aman" onclick="window.evacuationService?.openSayaAmanModal()" title="Kirim Kabar Saya Aman">
-          <span>🛡️</span>
-          <span>Saya Aman</span>
-        </button>
 
         <button id="btn-header-perm" class="btn-header-perm" onclick="window.systemManager?.openPermissionModal()" title="Pengaturan Izin Notifikasi & GPS">
           <span>🔔</span>
@@ -86,8 +74,45 @@
           <span>Pasang Aplikasi</span>
         </button>
 
-        <span class="badge-app-installed">✓ Terpasang sebagai Aplikasi</span>
+        <span class="badge-app-installed">✓ Terpasang</span>
       </nav>
+
+      <div class="header-mobile-actions">
+        <button class="btn-mobile-quick-perm" onclick="window.systemManager?.openPermissionModal()" title="Izin Notifikasi & GPS">🔔</button>
+        <button id="btn-mobile-nav" class="btn-mobile-nav-toggle" onclick="window.toggleMobileNav()" aria-label="Menu Navigasi">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-nav-drawer" class="mobile-nav-drawer">
+      <div id="network-status-badge" class="network-badge online" style="margin-bottom:12px;">
+        <span class="status-indicator-dot"></span> Online
+      </div>
+      <div class="mobile-nav-menu">
+        <a href="#fitur" class="mobile-nav-link" onclick="window.toggleMobileNav(true)">✨ Fitur Aplikasi</a>
+        <a href="#gempa-realtime" class="mobile-nav-link" onclick="window.toggleMobileNav(true)">⚡ Data Gempa Terkini</a>
+        <a href="#peta-gempa" class="mobile-nav-link" onclick="window.toggleMobileNav(true)">🗺️ Peta Episentrum & Shelter</a>
+        <a href="#evakuasi" class="mobile-nav-link" onclick="window.toggleMobileNav(true)">🧭 Jalur Evakuasi Cerdas</a>
+        <a href="#analisis-ai" class="mobile-nav-link" onclick="window.toggleMobileNav(true)">🤖 Analisis Seismik AI</a>
+        <a href="#tiga-fase" class="mobile-nav-link" onclick="window.toggleMobileNav(true)">📖 Tiga Fase Gempa</a>
+        <a href="#tas-siaga" class="mobile-nav-link" onclick="window.toggleMobileNav(true)">🎒 Checklist Tas Siaga</a>
+        <a href="#bantuan" class="mobile-nav-link" onclick="window.toggleMobileNav(true)">❓ Bantuan & FAQ</a>
+        <a href="#haki" class="mobile-nav-link" onclick="window.systemManager?.openHakiModal(); window.toggleMobileNav(true); return false;">⚖️ Ketentuan & HAKI</a>
+      </div>
+      <div class="mobile-nav-drawer-actions">
+        <button class="btn-drawer-saya-aman" onclick="window.evacuationService?.openSayaAmanModal(); window.toggleMobileNav(true);">
+          🛡️ Kabari: Saya Aman
+        </button>
+        <button class="btn-drawer-perm" onclick="window.systemManager?.openPermissionModal(); window.toggleMobileNav(true);">
+          🔔 Pengaturan Izin & GPS
+        </button>
+        <button class="btn-drawer-install btn-install-pwa" onclick="window.systemManager?.openInstallModal(); window.toggleMobileNav(true);">
+          + Pasang Aplikasi ke HP
+        </button>
+      </div>
     </div>
   </header>
 
@@ -104,95 +129,97 @@
           dari layar utama.
         </h1>
 
-        <p class="hero-subheadline">
+        <p class="hero-description">
           Pasang Siaga Gempa sebagai aplikasi untuk dapat notifikasi peringatan dini, panduan tiga fase, dan peta jalur evakuasi — bahkan saat sinyal internet hilang.
         </p>
 
-        <div class="hero-install-area">
-          <div class="hero-primary-actions">
-            <button id="btn-hero-install" class="btn-hero-install btn-install-pwa">
-              <span>+</span>
-              <span>Pasang sebagai Aplikasi</span>
-            </button>
-            <button id="btn-hero-sos" class="btn-hero-sos" onclick="window.emergencyService?.openSOSFlow()" title="Kirim Pesan Darurat SOS">
-              <span>🆘</span>
-              <span>Kirim Pesan SOS</span>
-            </button>
-            <button id="btn-hero-aman" class="btn-saya-aman" onclick="window.evacuationService?.openSayaAmanModal()" title="Konfirmasi Keselamatan Keluarga">
-              <span>🛡️</span>
-              <span>Saya Aman</span>
-            </button>
-          </div>
+        <div class="hero-actions-row">
+          <button id="btn-hero-install" class="btn-hero-primary btn-install-pwa">
+            <span>+</span>
+            <span>Pasang sebagai Aplikasi</span>
+          </button>
 
-          <div class="hero-secondary-actions">
-            <button class="btn-secondary-link" onclick="window.systemManager?.openInstallModal()">
-              <span>❓</span>
-              <span>Lihat Panduan Pemasangan</span>
-            </button>
-            <button class="btn-secondary-link" onclick="window.emergencyService?.pickOrSetupContacts()">
-              <span>👤➕</span>
-              <span id="hero-contact-count">Kelola Kontak SOS</span>
-            </button>
-          </div>
+          <span class="badge-app-installed" style="font-size:15px; padding:10px 20px;">
+            ✓ Aplikasi Siaga Gempa Terpasang
+          </span>
+
+          <a href="#fitur" class="btn-hero-secondary">
+            <span>Pelajari fitur</span>
+          </a>
         </div>
 
-        <div class="hero-perm-quickbar">
-          <div class="perm-quick-item" onclick="window.systemManager?.openPermissionModal()">
-            <span class="perm-status-pill pill-warning" id="pill-perm-notif">
-              <span class="perm-dot"></span>
-              <span id="txt-perm-notif">Aktifkan</span>
-            </span>
-            <span class="perm-quick-label">Notifikasi Gempa</span>
-          </div>
-
-          <div class="perm-quick-item" onclick="window.emergencyService?.startLocationTracking()">
-            <span class="perm-status-pill pill-warning" id="pill-perm-loc">
-              <span class="perm-dot"></span>
-              <span id="txt-perm-loc">Aktifkan</span>
-            </span>
-            <span class="perm-quick-label">GPS Evakuasi</span>
-          </div>
-
-          <div class="perm-quick-item" onclick="window.emergencyService?.openAddContactModal()">
-            <span class="perm-status-pill pill-neutral" id="pill-perm-contact">
-              <span class="perm-dot"></span>
-              <span id="txt-perm-contact">Atur</span>
-            </span>
-            <span class="perm-quick-label">Kontak SOS</span>
-          </div>
+        <div class="hero-check-list">
+          <div class="hero-check-item">Bekerja offline</div>
+          <div class="hero-check-item">Notifikasi peringatan dini</div>
+          <div class="hero-check-item">Akses satu ketukan</div>
         </div>
 
-        <div id="insecure-http-warning" class="insecure-http-box" style="display:none;">
-          <span>⚠️</span>
-          <span>Akses via HTTPS untuk mengaktifkan notifikasi latar belakang.</span>
+        <div class="hero-sos-row">
+          <button id="btn-dashboard-sos" class="btn-sos-dashboard" onclick="window.emergencyService?.openSOSFlow()" title="Buka menu kirim SMS darurat">
+            <span class="sos-btn-icon">🆘</span>
+            <span class="sos-btn-text">
+              <strong>Kirim Pesan SOS</strong>
+              <small>SMS & WhatsApp + lokasi GPS siap kirim</small>
+            </span>
+          </button>
+
+          <button id="btn-add-contact-hero" class="btn-add-contact-hero" onclick="window.emergencyService?.openAddContactModal()" title="Tambah nomor kontak darurat keluarga atau kerabat">
+            <span class="add-contact-icon">👤➕</span>
+            <span class="add-contact-text">
+              <strong>+ Tambah Kontak</strong>
+              <small id="hero-contact-count">0 kontak tersimpan</small>
+            </span>
+          </button>
         </div>
 
+        <div class="hero-permission-card">
+          <div class="perm-card-header">
+            <span class="perm-card-title">🛡️ Status Izin & Notifikasi HP:</span>
+            <button type="button" class="btn-perm-settings-link" onclick="window.systemManager?.openPermissionModal()">⚙️ Atur Izin</button>
+          </div>
+          <div class="perm-card-pills">
+            <button id="pill-perm-notif" class="perm-status-pill pill-warning" onclick="window.systemManager?.requestNotificationPermission()" title="Ketuk untuk meminta izin notifikasi gempa">
+              <span class="pill-icon">🔔</span>
+              <span class="pill-label">Notif: <strong id="txt-perm-notif">Aktifkan</strong></span>
+            </button>
+            <button id="pill-perm-loc" class="perm-status-pill pill-warning" onclick="window.emergencyService?.startLocationTracking()" title="Ketuk untuk meminta izin lokasi GPS">
+              <span class="pill-icon">📍</span>
+              <span class="pill-label">GPS: <strong id="txt-perm-loc">Aktifkan</strong></span>
+            </button>
+            <button id="pill-perm-contact" class="perm-status-pill pill-neutral" onclick="window.emergencyService?.openAddContactModal()" title="Kelola kontak darurat">
+              <span class="pill-icon">👥</span>
+              <span class="pill-label">SOS: <strong id="txt-perm-contact">0 Kontak</strong></span>
+            </button>
+            <button id="pill-test-alert" class="perm-status-pill pill-test" onclick="window.systemManager?.testEarthquakeNotification()" title="Uji coba suara alarm & notifikasi gempa di HP">
+              <span class="pill-icon">🧪</span>
+              <span class="pill-label">Tes Notif</span>
+            </button>
+          </div>
+          <div id="insecure-http-warning" class="insecure-http-warning" style="display:none;">
+            ⚠️ <em>Perhatian: Anda mengakses situs ini via HTTP biasa. Browser ponsel hanya memunculkan dialog izin Notifikasi & GPS pada alamat <strong>HTTPS</strong> atau jika dipasang ke Layar Utama (PWA).</em>
+          </div>
+        </div>
       </div>
 
       <div class="hero-mockup-wrapper">
-        <div class="smartphone-frame">
-          <div class="phone-speaker-notch"></div>
-          
-          <div class="phone-screen-content">
+        <div class="phone-mockup-frame" id="phone-mockup">
+          <div class="mockup-inner-screen">
             
-            <div class="mockup-header-bar">
-              <div class="mockup-brand">
-                <span class="mockup-logo">SG</span>
-                <span class="mockup-title">Siaga Gempa</span>
-              </div>
-              <div class="mockup-live-indicator">
-                <span class="live-dot-beacon"></span>
-                <span>SIAGA</span>
+            <div class="mockup-top-bar">
+              <span>9:41</span>
+              <div>
+                <span class="mockup-status-dot-pulse"></span>
+                <span>Siaga Gempa</span>
               </div>
             </div>
 
-            <div class="mockup-card-primary">
-              <div class="card-kicker-row">
-                <span class="card-loc-kicker" id="mockup-loc-label">BMKG Real-time</span>
-                <span class="card-status-badge">Terkini</span>
+            <div class="mockup-card-alert" id="mockup-alert-card">
+              <div class="card-label">
+                <span>📍</span>
+                <span id="mockup-loc-label">Peringatan dini • Banda Aceh</span>
               </div>
               <div class="card-main-title" id="mockup-status-title">
-                Memuat data gempa...
+                Tidak ada aktivitas signifikan
               </div>
             </div>
 
@@ -225,7 +252,7 @@
             <div class="mockup-card-evac" onclick="window.emergencyService?.openNearestEvacGoogleMaps()" title="Klik untuk membuka rute di Google Maps">
               <div class="evac-label">Titik kumpul terdekat</div>
               <div class="evac-location">
-                <span id="mockup-evac-name">Lapangan Blang Padang</span>
+                <span id="mockup-evac-name">Lapangan Blang Padang - 8 mnt</span>
                 <span style="font-size:12px; color:#34d399;">↗ Rute</span>
               </div>
             </div>

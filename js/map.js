@@ -22,20 +22,11 @@ class MapService {
       attributionControl: true
     });
 
-    const darkTileUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-    const fallbackOsmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const osmTileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
-    const baseTile = L.tileLayer(darkTileUrl, {
+    const baseTile = L.tileLayer(osmTileUrl, {
       maxZoom: 19,
-      subdomains: 'abcd',
-      attribution: '&copy; CARTO &copy; OpenStreetMap'
-    });
-
-    baseTile.on('tileerror', () => {
-      L.tileLayer(fallbackOsmUrl, {
-        maxZoom: 18,
-        attribution: '&copy; OpenStreetMap'
-      }).addTo(this.map);
+      attribution: '&copy; OpenStreetMap contributors'
     });
 
     baseTile.addTo(this.map);
