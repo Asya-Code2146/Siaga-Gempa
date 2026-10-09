@@ -125,13 +125,13 @@ button {
   transition: transform 0.25s ease;
 }
 
-.footer-logo-badge {
+.footer-brand-col .brand-logo-badge {
     background: #ffffff !important;
     color: #0d5c3b !important;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e2e8f0 !important;
 }
 
-.footer-logo-badge span {
+.footer-brand-col .brand-logo-badge span {
     color: #0d5c3b !important;
     font-weight: 800;
 }
