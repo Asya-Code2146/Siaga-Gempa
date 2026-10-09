@@ -92,4 +92,4 @@ Impor file `database/database.sql` ke MySQL database server Anda, lalu unggah fi
 ---
 
 ## ⚖️ Hak Cipta
-Hak Cipta © 2024–2026 Siaga Gempa. Seluruh Hak Cipta dan Hak Kekayaan Intelektual Dilindungi Undang-Undang Republik Indonesia.
+Hak Cipta © 2026 Siaga Gempa. Seluruh Hak Cipta dan Hak Kekayaan Intelektual Dilindungi Undang-Undang Republik Indonesia.
