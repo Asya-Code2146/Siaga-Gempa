@@ -17,6 +17,45 @@ class AppController {
     }
 
     window.systemManager?.updateInstallButtonsVisibility();
+    this.initAntiTamperingProtection();
+  }
+
+  initAntiTamperingProtection() {
+    console.log(
+      '%cPERINGATAN SISTEM KEAMANAN SIAGA GEMPA\n%cPlatform ini dilindungi oleh mekanisme anti-tampering dan verifikasi integritas data.\nModifikasi lokal melalui Developer Tools diisolasi hanya pada peramban Anda dan tidak berpengaruh pada basis data atau sistem backend.',
+      'color: #dc2626; font-size: 15px; font-weight: 800; font-family: sans-serif;',
+      'color: #334155; font-size: 12px; line-height: 1.5; font-family: sans-serif;'
+    );
+
+    const serviceKeys = ['appController', 'earthquakeService', 'evacuationService', 'mapService', 'notificationManager', 'systemManager', 'emergencyService', 'aiAnalyst'];
+    serviceKeys.forEach(key => {
+      try {
+        if (window[key]) {
+          Object.defineProperty(window, key, {
+            configurable: false,
+            writable: false
+          });
+        }
+      } catch (err) {}
+    });
+
+    try {
+      const targetNode = document.getElementById('shelter-cards-list');
+      if (targetNode && window.MutationObserver) {
+        let isRestoring = false;
+        const observer = new MutationObserver(() => {
+          if (isRestoring) return;
+          if (!targetNode.children.length) {
+            isRestoring = true;
+            setTimeout(() => {
+              window.evacuationService?.renderSheltersUI();
+              isRestoring = false;
+            }, 100);
+          }
+        });
+        observer.observe(targetNode, { childList: true });
+      }
+    } catch (e) {}
   }
 
   registerServiceWorker() {

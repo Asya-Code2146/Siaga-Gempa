@@ -8,11 +8,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    http_response_code(405);
+    echo json_encode(['error' => 'Method Not Allowed']);
+    exit();
+}
+
 require_once __DIR__ . '/database.php';
 
-$userLat = isset($_GET['lat']) ? (float)$_GET['lat'] : null;
-$userLon = isset($_GET['lon']) ? (float)$_GET['lon'] : null;
-$typeFilter = isset($_GET['type']) ? trim($_GET['type']) : '';
+$userLat = (isset($_GET['lat']) && is_numeric($_GET['lat']) && $_GET['lat'] >= -90 && $_GET['lat'] <= 90) ? (float)$_GET['lat'] : null;
+$userLon = (isset($_GET['lon']) && is_numeric($_GET['lon']) && $_GET['lon'] >= -180 && $_GET['lon'] <= 180) ? (float)$_GET['lon'] : null;
+$allowedTypes = ['all', 'gedung_tsunami', 'tempat_tinggi', 'titik_kumpul_terbuka'];
+$typeFilter = (isset($_GET['type']) && in_array(trim($_GET['type']), $allowedTypes)) ? trim($_GET['type']) : '';
 
 function calculateHaversine($lat1, $lon1, $lat2, $lon2) {
     $earthRadius = 6371;

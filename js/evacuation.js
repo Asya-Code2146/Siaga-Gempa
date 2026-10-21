@@ -289,6 +289,85 @@ class EvacuationService {
     return this.shelters.filter(s => s.type === this.selectedType);
   }
 
+  buildShelterCardHtml(s, idx) {
+    let badgeBg = '#0d9488';
+    let typeIcon = '🏢';
+    if (s.type === 'gedung_tsunami') {
+      badgeBg = '#0284c7';
+      typeIcon = '🏢';
+    } else if (s.type === 'tempat_tinggi') {
+      badgeBg = '#16a34a';
+      typeIcon = '⛰️';
+    } else {
+      badgeBg = '#64748b';
+      typeIcon = '📍';
+    }
+
+    const walkUrl = this.userCoords
+      ? `https://www.google.com/maps/dir/?api=1&origin=${this.userCoords.lat},${this.userCoords.lon}&destination=${s.latitude},${s.longitude}&travelmode=walking`
+      : `https://www.google.com/maps/dir/?api=1&destination=${s.latitude},${s.longitude}&travelmode=walking`;
+
+    const driveUrl = this.userCoords
+      ? `https://www.google.com/maps/dir/?api=1&origin=${this.userCoords.lat},${this.userCoords.lon}&destination=${s.latitude},${s.longitude}&travelmode=driving`
+      : `https://www.google.com/maps/dir/?api=1&destination=${s.latitude},${s.longitude}&travelmode=driving`;
+
+    return `
+      <div class="shelter-info-card ${idx === 0 && this.userCoords ? 'nearest-card' : ''}">
+        <div class="shelter-card-top">
+          <span class="shelter-type-pill" style="background:${badgeBg}; color:#fff;">
+            ${typeIcon} ${s.type_label}
+          </span>
+          ${s.is_tsunami_safe
+            ? '<span class="shelter-tsunami-safe-badge">✓ Aman Tsunami</span>'
+            : '<span class="shelter-warning-badge">⚠️ Khusus Gempa Darat</span>'}
+        </div>
+
+        <h4 class="shelter-title">${s.name}</h4>
+        <p class="shelter-address">${s.address}</p>
+
+        <div class="shelter-specs-grid">
+          <div class="shelter-spec-pill">
+            <span class="spec-k">Ketinggian</span>
+            <span class="spec-v">${s.elevation_meters} m dpl</span>
+          </div>
+          <div class="shelter-spec-pill">
+            <span class="spec-k">Kapasitas</span>
+            <span class="spec-v">${s.capacity.toLocaleString()} jiwa</span>
+          </div>
+          ${s.distance_km !== null && s.distance_km !== undefined ? `
+            <div class="shelter-spec-pill spec-dist">
+              <span class="spec-k">Jarak</span>
+              <span class="spec-v">${s.distance_km} km</span>
+            </div>
+          ` : ''}
+        </div>
+
+        ${s.walking_time_min ? `
+          <div class="shelter-est-line">
+            <span>🚶 ~${s.walking_time_min} mnt jalan kaki</span>
+            <span>🚗 ~${s.driving_time_min} mnt mobil</span>
+          </div>
+        ` : ''}
+
+        <div class="shelter-verified-meta">
+          <span>✓ Terverifikasi <strong>${s.verified_by}</strong></span>
+        </div>
+
+        <div class="shelter-compact-actions">
+          <a href="${walkUrl}" target="_blank" rel="noopener noreferrer" class="btn-shelter-compact btn-route-walk" title="Rute Jalan Kaki Google Maps">
+            🚶 Jalan Kaki
+          </a>
+          <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-shelter-compact btn-route-drive" title="Rute Berkendara Google Maps">
+            🚗 Berkendara
+          </a>
+          <button type="button" class="btn-shelter-compact btn-preview-map" onclick="window.evacuationService?.focusShelterMap(${s.latitude}, ${s.longitude})" title="Fokuskan Peta ke Shelter Ini">
+            📍 Peta
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
   renderSheltersUI() {
     const listEl = document.getElementById('shelter-cards-list');
     if (!listEl) return;
@@ -329,84 +408,69 @@ class EvacuationService {
       </div>
     ` : '';
 
-    listEl.innerHTML = threatBanner + displayItems.map((s, idx) => {
-      let badgeBg = '#0d9488';
-      let typeIcon = '🏢';
-      if (s.type === 'gedung_tsunami') {
-        badgeBg = '#0284c7';
-        typeIcon = '🏢';
-      } else if (s.type === 'tempat_tinggi') {
-        badgeBg = '#16a34a';
-        typeIcon = '⛰️';
-      } else {
-        badgeBg = '#64748b';
-        typeIcon = '📍';
-      }
+    const initialCards = displayItems.slice(0, 3);
+    const extraItems = displayItems.slice(3);
 
-      const walkUrl = this.userCoords
-        ? `https://www.google.com/maps/dir/?api=1&origin=${this.userCoords.lat},${this.userCoords.lon}&destination=${s.latitude},${s.longitude}&travelmode=walking`
-        : `https://www.google.com/maps/dir/?api=1&destination=${s.latitude},${s.longitude}&travelmode=walking`;
+    let cardsHtml = initialCards.map((s, idx) => this.buildShelterCardHtml(s, idx)).join('');
 
-      const driveUrl = this.userCoords
-        ? `https://www.google.com/maps/dir/?api=1&origin=${this.userCoords.lat},${this.userCoords.lon}&destination=${s.latitude},${s.longitude}&travelmode=driving`
-        : `https://www.google.com/maps/dir/?api=1&destination=${s.latitude},${s.longitude}&travelmode=driving`;
-
-      return `
-        <div class="shelter-info-card ${idx === 0 && this.userCoords ? 'nearest-card' : ''}">
-          <div class="shelter-card-top">
-            <span class="shelter-type-pill" style="background:${badgeBg}; color:#fff;">
-              ${typeIcon} ${s.type_label}
+    let dropdownHtml = '';
+    if (extraItems.length > 0) {
+      dropdownHtml = `
+        <div class="shelters-dropdown-section">
+          <div class="shelters-dropdown-header">
+            <span class="shelters-dropdown-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              Shelter Lainnya (${extraItems.length} Lokasi Tersedia):
             </span>
-            ${s.is_tsunami_safe
-              ? '<span class="shelter-tsunami-safe-badge">✓ Aman Tsunami</span>'
-              : '<span class="shelter-warning-badge">⚠️ Khusus Gempa Darat</span>'}
+            <select id="shelter-dropdown-select" class="shelters-dropdown-select" onchange="window.evacuationService?.onSelectOtherShelter(this.value)">
+              <option value="">-- Pilih dari ${extraItems.length} shelter lainnya --</option>
+              ${extraItems.map(s => `<option value="${s.id}">${s.name} (${s.elevation_meters} m dpl${s.distance_km ? ` • ${s.distance_km} km` : ''})</option>`).join('')}
+            </select>
           </div>
-
-          <h4 class="shelter-title">${s.name}</h4>
-          <p class="shelter-address">${s.address}</p>
-
-          <div class="shelter-specs-grid">
-            <div class="shelter-spec-pill">
-              <span class="spec-k">Ketinggian</span>
-              <span class="spec-v">${s.elevation_meters} m dpl</span>
-            </div>
-            <div class="shelter-spec-pill">
-              <span class="spec-k">Kapasitas</span>
-              <span class="spec-v">${s.capacity.toLocaleString()} jiwa</span>
-            </div>
-            ${s.distance_km !== null && s.distance_km !== undefined ? `
-              <div class="shelter-spec-pill spec-dist">
-                <span class="spec-k">Jarak</span>
-                <span class="spec-v">${s.distance_km} km</span>
-              </div>
-            ` : ''}
-          </div>
-
-          ${s.walking_time_min ? `
-            <div class="shelter-est-line">
-              <span>🚶 ~${s.walking_time_min} mnt jalan kaki</span>
-              <span>🚗 ~${s.driving_time_min} mnt mobil</span>
-            </div>
-          ` : ''}
-
-          <div class="shelter-verified-meta">
-            <span>✓ Terverifikasi <strong>${s.verified_by}</strong></span>
-          </div>
-
-          <div class="shelter-compact-actions">
-            <a href="${walkUrl}" target="_blank" rel="noopener noreferrer" class="btn-shelter-compact btn-route-walk" title="Rute Jalan Kaki Google Maps">
-              🚶 Jalan Kaki
-            </a>
-            <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-shelter-compact btn-route-drive" title="Rute Berkendara Google Maps">
-              🚗 Berkendara
-            </a>
-            <button type="button" class="btn-shelter-compact btn-preview-map" onclick="window.evacuationService?.focusShelterMap(${s.latitude}, ${s.longitude})" title="Fokuskan Peta ke Shelter Ini">
-              📍 Peta
-            </button>
+          <div id="shelter-dropdown-preview-slot" class="shelter-dropdown-preview-slot"></div>
+          <button type="button" id="btn-toggle-all-shelters" class="btn-toggle-all-shelters" onclick="window.evacuationService?.toggleAllShelters()">
+            Buka Semua Shelter (${displayItems.length}) ▼
+          </button>
+          <div id="shelters-extra-grid" class="shelters-extra-grid" style="display:none;">
+            ${extraItems.map((s, idx) => this.buildShelterCardHtml(s, idx + 3)).join('')}
           </div>
         </div>
       `;
-    }).join('');
+    }
+
+    listEl.innerHTML = threatBanner + cardsHtml + dropdownHtml;
+  }
+
+  onSelectOtherShelter(shelterId) {
+    const slot = document.getElementById('shelter-dropdown-preview-slot');
+    if (!slot) return;
+    if (!shelterId) {
+      slot.innerHTML = '';
+      return;
+    }
+    const found = this.shelters.find(s => String(s.id) === String(shelterId));
+    if (!found) return;
+    slot.innerHTML = this.buildShelterCardHtml(found, -1);
+    this.focusShelterMap(found.latitude, found.longitude);
+  }
+
+  toggleAllShelters() {
+    const grid = document.getElementById('shelters-extra-grid');
+    const btn = document.getElementById('btn-toggle-all-shelters');
+    if (!grid || !btn) return;
+
+    const total = this.getFilteredShelters().length;
+    if (grid.style.display === 'none' || !grid.style.display) {
+      grid.style.display = 'grid';
+      btn.innerHTML = `Tutup Shelter Tambahan ▲`;
+    } else {
+      grid.style.display = 'none';
+      btn.innerHTML = `Buka Semua Shelter (${total}) ▼`;
+    }
   }
 
   focusShelterMap(lat, lon) {

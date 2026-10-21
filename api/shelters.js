@@ -2,14 +2,26 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=120');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  const userLat = req.query.lat ? parseFloat(req.query.lat) : null;
-  const userLon = req.query.lon ? parseFloat(req.query.lon) : null;
-  const typeFilter = req.query.type ? req.query.type.trim() : '';
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  const rawLat = parseFloat(req.query.lat);
+  const rawLon = parseFloat(req.query.lon);
+  const userLat = (!isNaN(rawLat) && rawLat >= -90 && rawLat <= 90) ? rawLat : null;
+  const userLon = (!isNaN(rawLon) && rawLon >= -180 && rawLon <= 180) ? rawLon : null;
+  const allowedTypes = ['all', 'gedung_tsunami', 'tempat_tinggi', 'titik_kumpul_terbuka'];
+  const reqType = (req.query.type || '').trim().toLowerCase();
+  const typeFilter = allowedTypes.includes(reqType) ? reqType : '';
 
   const calculateHaversine = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
